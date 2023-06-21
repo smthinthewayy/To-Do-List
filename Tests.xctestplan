@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "4779D299-49AB-4845-9947-41CEEEF1C621",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:To-Do List.xcodeproj",
+        "identifier" : "716B18022A3AD91A0028C660",
+        "name" : "Tests"
+      }
+    }
+  ],
+  "version" : 1
+}
