@@ -16,7 +16,7 @@ protocol ParametersViewDelegate: AnyObject {
 
 // MARK: - ParametersView
 
-class ParametersView: UIView {
+class ParametersView: UIStackView {
   weak var delegate: ParametersViewDelegate?
 
   private let dividerView: UIView = {
@@ -28,6 +28,25 @@ class ParametersView: UIView {
     return view
   }()
 
+  private let hiddenDividerView: UIView = {
+    let view = UIView()
+    view.translatesAutoresizingMaskIntoConstraints = false
+    view.heightAnchor.constraint(equalToConstant: 0.75).isActive = true
+    view.widthAnchor.constraint(equalToConstant: Constants.dividerViewWidth).isActive = true
+    view.isHidden = true
+    view.backgroundColor = Colors.color(for: .supportSeparator)
+    return view
+  }()
+
+//  private let clearDividerView: UIView = {
+//    let view = UIView()
+//    view.translatesAutoresizingMaskIntoConstraints = false
+//    view.heightAnchor.constraint(equalToConstant: 0.75).isActive = true
+//    view.widthAnchor.constraint(equalToConstant: Constants.dividerViewWidth).isActive = true
+//    view.backgroundColor = .clear
+//    return view
+//  }()
+
   private let importanceLabel: UILabel = {
     let label = UILabel()
     label.text = "Важность"
@@ -37,13 +56,33 @@ class ParametersView: UIView {
     return label
   }()
 
-  private let deadlineLabel: UILabel = {
+  private let deadlineStackView: UIStackView = {
+    let stackView = UIStackView()
+    stackView.axis = .vertical
+    stackView.spacing = 0
+    stackView.alignment = .leading
+    stackView.translatesAutoresizingMaskIntoConstraints = false
+    return stackView
+  }()
+
+  private let doneByLabel: UILabel = {
     let label = UILabel()
     label.text = "Сделать до"
     label.font = Fonts.font(for: .body)
     label.textColor = Colors.color(for: .labelPrimary)
     label.translatesAutoresizingMaskIntoConstraints = false
     return label
+  }()
+
+  private lazy var deadlineDateLabel: UIButton = {
+    let button = UIButton()
+    button.setTitle("2 июня 2021", for: .normal)
+    button.titleLabel?.font = Fonts.font(for: .footnote)
+    button.setTitleColor(Colors.color(for: .blue), for: .normal)
+    button.addTarget(self, action: #selector(deadlineDateTapped), for: .touchUpInside)
+    button.translatesAutoresizingMaskIntoConstraints = false
+    button.isHidden = true
+    return button
   }()
 
   private lazy var importancePicker: UISegmentedControl = {
@@ -66,47 +105,44 @@ class ParametersView: UIView {
     return deadlineSwitch
   }()
 
+  private lazy var calendarView: UICalendarView = {
+    let calendarView = UICalendarView()
+    calendarView.calendar = .current
+    calendarView.locale = .current
+    calendarView.availableDateRange = DateInterval(start: .now, end: .distantFuture)
+    calendarView.isHidden = true
+    calendarView.translatesAutoresizingMaskIntoConstraints = false
+    return calendarView
+  }()
+
   init() {
     super.init(frame: .zero)
 
+    axis = .vertical
+    layer.cornerRadius = 16
     backgroundColor = Colors.color(for: .backSecondary)
-    layer.cornerRadius = Constants.cornerRadius
+    spacing = 10
     translatesAutoresizingMaskIntoConstraints = false
 
-    setupDividerView()
     setupImportanceLabel()
-    setupDeadlineLabel()
     setupImportancePicker()
+    setupDividerView()
+    setupDeadlineStackView()
     setupDeadlineSwitch()
+    setupHiddenDividerView()
+    setupCalendarView()
   }
 
   @available(*, unavailable)
-  required init?(coder _: NSCoder) {
+  required init(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
 
-  private func setupDividerView() {
-    addSubview(dividerView)
-    NSLayoutConstraint.activate([
-      dividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.dividerViewLeftPadding),
-      dividerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Constants.dividerViewRightPadding),
-      dividerView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.dividerViewTopPadding),
-    ])
-  }
-
   private func setupImportanceLabel() {
-    addSubview(importanceLabel)
+    addArrangedSubview(importanceLabel)
     NSLayoutConstraint.activate([
       importanceLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.importanceLabelLeftPadding),
       importanceLabel.topAnchor.constraint(equalTo: topAnchor, constant: Constants.importanceLabelTopPadding),
-    ])
-  }
-
-  private func setupDeadlineLabel() {
-    addSubview(deadlineLabel)
-    NSLayoutConstraint.activate([
-      deadlineLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.deadlineLabelLeftPadding),
-      deadlineLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: Constants.deadlinLabelBottomPadding),
     ])
   }
 
@@ -120,22 +156,91 @@ class ParametersView: UIView {
     ])
   }
 
+  private func setupDividerView() {
+    addArrangedSubview(dividerView)
+    NSLayoutConstraint.activate([
+      dividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.dividerViewLeftPadding),
+      dividerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Constants.dividerViewRightPadding),
+      dividerView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.dividerViewTopPadding),
+    ])
+  }
+
+  private func setupDeadlineStackView() {
+    addArrangedSubview(deadlineStackView)
+    NSLayoutConstraint.activate([
+      deadlineStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+      deadlineStackView.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 8),
+      deadlineStackView.heightAnchor.constraint(equalToConstant: 40),
+      deadlineStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -80),
+    ])
+
+    setupDoneByLabel()
+    setupDeadlineDateLabel()
+  }
+
+  private func setupDoneByLabel() {
+    deadlineStackView.addArrangedSubview(doneByLabel)
+  }
+
+  private func setupDeadlineDateLabel() {
+    deadlineStackView.addArrangedSubview(deadlineDateLabel)
+  }
+
   private func setupDeadlineSwitch() {
     addSubview(deadlineSwitch)
     NSLayoutConstraint.activate([
       deadlineSwitch.widthAnchor.constraint(equalToConstant: Constants.deadlineSwitchWidth),
       deadlineSwitch.heightAnchor.constraint(equalToConstant: Constants.deadlineSwitchHeight),
       deadlineSwitch.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Constants.deadlineSwitchRightPadding),
-      deadlineSwitch.bottomAnchor.constraint(equalTo: bottomAnchor, constant: Constants.deadlineSwitchBottomPadding),
+      deadlineSwitch.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 16),
+    ])
+  }
+
+  private func setupHiddenDividerView() {
+    addArrangedSubview(hiddenDividerView)
+    NSLayoutConstraint.activate([
+      hiddenDividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.dividerViewLeftPadding),
+      hiddenDividerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Constants.dividerViewRightPadding),
+      hiddenDividerView.topAnchor.constraint(equalTo: bottomAnchor, constant: Constants.dividerViewTopPadding),
+    ])
+  }
+
+  private func setupCalendarView() {
+    addArrangedSubview(calendarView)
+    let selection = UICalendarSelectionSingleDate(delegate: self)
+    calendarView.selectionBehavior = selection
+    NSLayoutConstraint.activate([
+      calendarView.topAnchor.constraint(equalTo: hiddenDividerView.bottomAnchor, constant: 8),
+      calendarView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+      calendarView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
+      calendarView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+      calendarView.heightAnchor.constraint(equalToConstant: 332),
+      calendarView.widthAnchor.constraint(equalToConstant: 343),
     ])
   }
 
   @objc func switchTapped(_ sender: UISwitch) {
+    UIView.animate(withDuration: 0.25) {
+      if sender.isOn {
+        self.deadlineDateLabel.isHidden = false
+      } else {
+        self.deadlineDateLabel.isHidden = true
+        self.hiddenDividerView.isHidden = true
+        self.calendarView.isHidden = true
+      }
+    }
+
     delegate?.switchTapped(sender)
   }
 
   @objc func segmentControlTapped(_ sender: UISegmentedControl) {
     delegate?.segmentControlTapped(sender)
+  }
+
+  @objc func deadlineDateTapped() {
+    UIView.animate(withDuration: 0.25) {
+      self.calendarView.isHidden = false
+    }
   }
 
   private enum Constants {
@@ -162,5 +267,16 @@ class ParametersView: UIView {
 
     static let deadlineLabelLeftPadding: CGFloat = 16
     static let deadlinLabelBottomPadding: CGFloat = -17
+  }
+}
+
+// MARK: UICalendarSelectionSingleDateDelegate
+
+extension ParametersView: UICalendarSelectionSingleDateDelegate {
+  func dateSelection(_: UICalendarSelectionSingleDate, didSelectDate _: DateComponents?) {
+    UIView.animate(withDuration: 0.25) {
+      self.hiddenDividerView.isHidden = true
+      self.calendarView.isHidden = true
+    }
   }
 }

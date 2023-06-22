@@ -41,7 +41,27 @@ class TodoItemDetailsView: UIView, UITextViewDelegate {
 
   private let parametersView = ParametersView()
 
-  private let deleteButton = DeleteButton()
+  private lazy var calendarView: UICalendarView = {
+    let calendar = UICalendarView()
+    calendar.availableDateRange = DateInterval(start: .now, end: Date.distantFuture)
+    let selection = UICalendarSelectionSingleDate(delegate: self)
+    calendar.selectionBehavior = selection
+    calendar.isHidden = true
+    return calendar
+  }()
+
+  private lazy var deleteButton: UIButton = {
+    let button = UIButton()
+    button.backgroundColor = Colors.color(for: .backSecondary)
+    button.setTitle("Удалить", for: .normal)
+    button.setTitleColor(Colors.color(for: .red), for: .normal)
+    button.isEnabled = false
+    button.setTitleColor(Colors.color(for: .labelTertiary), for: .disabled)
+    button.layer.cornerRadius = Constants.cornerRadius
+    button.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+    button.translatesAutoresizingMaskIntoConstraints = false
+    return button
+  }()
 
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -58,7 +78,7 @@ class TodoItemDetailsView: UIView, UITextViewDelegate {
     backgroundColor = Colors.color(for: .backPrimary)
     taskDescriptionTextView.myDelegate = self
     parametersView.delegate = self
-    deleteButton.delegate = self
+//    deleteButton.delegate = self
     translatesAutoresizingMaskIntoConstraints = false
 
     setupScrollView()
@@ -101,14 +121,19 @@ class TodoItemDetailsView: UIView, UITextViewDelegate {
   private func setupParametersView() {
     stackView.addArrangedSubview(parametersView)
     NSLayoutConstraint.activate([
-      parametersView.heightAnchor.constraint(equalToConstant: Constants.parametersViewHeight),
+//      parametersView.topAnchor.constraint(equalTo: topAnchor),
+//      parametersView.leadingAnchor.constraint(equalTo: leadingAnchor),
+//      parametersView.trailingAnchor.constraint(equalTo: trailingAnchor),
+      parametersView.heightAnchor.constraint(greaterThanOrEqualToConstant: 112.5),
     ])
   }
-
   private func setupDeleteButton() {
-    stackView.addArrangedSubview(deleteButton)
+    addSubview(deleteButton)
     NSLayoutConstraint.activate([
-      deleteButton.heightAnchor.constraint(equalToConstant: Constants.deleteButtonHeight),
+      deleteButton.topAnchor.constraint(equalTo: parametersView.bottomAnchor, constant: 16),
+      deleteButton.leadingAnchor.constraint(equalTo: parametersView.leadingAnchor),
+      deleteButton.heightAnchor.constraint(equalToConstant: 56),
+      deleteButton.widthAnchor.constraint(equalToConstant: 343),
     ])
   }
 
@@ -119,6 +144,10 @@ class TodoItemDetailsView: UIView, UITextViewDelegate {
 
   @objc private func handleTap() {
     endEditing(true)
+  }
+  
+  @objc func deleteButtonTapped() {
+    print("deleteButtonTapped")
   }
 
   private enum Constants {
@@ -176,8 +205,16 @@ extension TodoItemDetailsView: ParametersViewDelegate {
 
 // MARK: DeleteButtonDelegate
 
-extension TodoItemDetailsView: DeleteButtonDelegate {
-  func deleteButtonTapped() {
-    delegate?.deleteButtonTapped()
+//extension TodoItemDetailsView: DeleteButtonDelegate {
+//  func deleteButtonTapped() {
+//    delegate?.deleteButtonTapped()
+//  }
+//}
+
+// MARK: UICalendarSelectionSingleDateDelegate
+
+extension TodoItemDetailsView: UICalendarSelectionSingleDateDelegate {
+  func dateSelection(_: UICalendarSelectionSingleDate, didSelectDate _: DateComponents?) {
+    print("df")
   }
 }
