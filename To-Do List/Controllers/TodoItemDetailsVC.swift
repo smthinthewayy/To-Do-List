@@ -11,6 +11,8 @@ import UIKit
 
 class TodoItemDetailsVC: UIViewController {
   private let todoItemDetailsView = TodoItemDetailsView()
+  private let fileCache = FileCache()
+  private var item = TodoItem(text: "", createdAt: .now, importance: Importance.normal, isDone: false)
 
   lazy var cancelButton: UIBarButtonItem = {
     let button = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(cancelTapped))
@@ -59,7 +61,19 @@ extension TodoItemDetailsVC: TodoItemDetailsViewDelegate {
   }
 
   @objc func saveTapped() {
-    print("saveTapped")
+    let _ = fileCache.add(item)
+    fileCache.saveToJSON(to: "task.json") { error in
+      switch error {
+      case nil:
+        let alert = UIAlertController(title: "Успех", message: "Файл успешно создан", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+      default:
+        let alert = UIAlertController(title: "Ошибка", message: "Не удалось сохранить файл.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+      }
+    }
   }
 
   func deleteButtonTapped() {
@@ -79,10 +93,22 @@ extension TodoItemDetailsVC: TodoItemDetailsViewDelegate {
 
 extension TodoItemDetailsVC: ParametersViewDelegate {
   func switchTapped(_ sender: UISwitch) {
-    print("\(sender.isOn)")
+    if sender.isOn {
+      item.deadline = .now + 24 * 60 * 60
+    } else {
+      item.deadline = nil
+    }
   }
 
   func segmentControlTapped(_ sender: UISegmentedControl) {
-    print("\(sender.selectedSegmentIndex)")
+    switch sender.selectedSegmentIndex {
+    case 0: item.importance = .low
+    case 2: item.importance = .important
+    default: item.importance = .normal
+    }
+  }
+
+  func dateSelection(_ date: DateComponents?) {
+    item.deadline = date!.date
   }
 }

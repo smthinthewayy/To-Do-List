@@ -14,6 +14,7 @@ protocol TodoItemDetailsViewDelegate: AnyObject {
   func segmentControlTapped(_ sender: UISegmentedControl)
   func deleteButtonTapped()
   func toggleSaveButton(_ textView: UITextView)
+  func dateSelection(_ date: DateComponents?)
 }
 
 // MARK: - TodoItemDetailsView
@@ -41,14 +42,14 @@ class TodoItemDetailsView: UIView, UITextViewDelegate {
 
   private let parametersView = ParametersView()
 
-  private lazy var calendarView: UICalendarView = {
-    let calendar = UICalendarView()
-    calendar.availableDateRange = DateInterval(start: .now, end: Date.distantFuture)
-    let selection = UICalendarSelectionSingleDate(delegate: self)
-    calendar.selectionBehavior = selection
-    calendar.isHidden = true
-    return calendar
-  }()
+//  private lazy var calendarView: UICalendarView = {
+//    let calendar = UICalendarView()
+//    calendar.availableDateRange = DateInterval(start: .now, end: Date.distantFuture)
+//    let selection = UICalendarSelectionSingleDate(delegate: self)
+//    calendar.selectionBehavior = selection
+//    calendar.isHidden = true
+//    return calendar
+//  }()
 
   private lazy var deleteButton: UIButton = {
     let button = UIButton()
@@ -121,12 +122,10 @@ class TodoItemDetailsView: UIView, UITextViewDelegate {
   private func setupParametersView() {
     stackView.addArrangedSubview(parametersView)
     NSLayoutConstraint.activate([
-//      parametersView.topAnchor.constraint(equalTo: topAnchor),
-//      parametersView.leadingAnchor.constraint(equalTo: leadingAnchor),
-//      parametersView.trailingAnchor.constraint(equalTo: trailingAnchor),
       parametersView.heightAnchor.constraint(greaterThanOrEqualToConstant: 112.5),
     ])
   }
+
   private func setupDeleteButton() {
     addSubview(deleteButton)
     NSLayoutConstraint.activate([
@@ -145,7 +144,7 @@ class TodoItemDetailsView: UIView, UITextViewDelegate {
   @objc private func handleTap() {
     endEditing(true)
   }
-  
+
   @objc func deleteButtonTapped() {
     print("deleteButtonTapped")
   }
@@ -194,6 +193,10 @@ extension TodoItemDetailsView: TaskDescriptionTextViewDelegate {
 // MARK: ParametersViewDelegate
 
 extension TodoItemDetailsView: ParametersViewDelegate {
+  func dateSelection(_ date: DateComponents?) {
+    delegate?.dateSelection(date)
+  }
+  
   @objc func switchTapped(_ sender: UISwitch) {
     delegate?.switchTapped(sender)
   }
@@ -203,18 +206,10 @@ extension TodoItemDetailsView: ParametersViewDelegate {
   }
 }
 
-// MARK: DeleteButtonDelegate
-
-//extension TodoItemDetailsView: DeleteButtonDelegate {
-//  func deleteButtonTapped() {
-//    delegate?.deleteButtonTapped()
-//  }
-//}
-
 // MARK: UICalendarSelectionSingleDateDelegate
 
-extension TodoItemDetailsView: UICalendarSelectionSingleDateDelegate {
-  func dateSelection(_: UICalendarSelectionSingleDate, didSelectDate _: DateComponents?) {
-    print("df")
-  }
-}
+//extension TodoItemDetailsView: UICalendarSelectionSingleDateDelegate {
+//  func dateSelection(_: UICalendarSelectionSingleDate, didSelectDate date: DateComponents?) {
+//    delegate?.dateSelection(date)
+//  }
+//}

@@ -19,13 +19,13 @@ import Foundation
 /// - importance: A value that represents the importance of the to-do item
 /// - isDone: A Boolean value that indicates whether the to-do item is complete or not
 struct TodoItem {
-  let id: String
-  let text: String
-  let createdAt: Date
-  let deadline: Date?
-  let changedAt: Date?
-  let importance: Importance
-  let isDone: Bool
+  var id: String
+  var text: String
+  var createdAt: Date
+  var deadline: Date?
+  var changedAt: Date?
+  var importance: Importance
+  var isDone: Bool
 
   init(
     id: String = UUID().uuidString,

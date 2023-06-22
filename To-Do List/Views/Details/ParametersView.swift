@@ -12,6 +12,7 @@ import UIKit
 protocol ParametersViewDelegate: AnyObject {
   func switchTapped(_ sender: UISwitch)
   func segmentControlTapped(_ sender: UISegmentedControl)
+  func dateSelection(_ date: DateComponents?)
 }
 
 // MARK: - ParametersView
@@ -74,7 +75,7 @@ class ParametersView: UIStackView {
     return label
   }()
 
-  private lazy var deadlineDateLabel: UIButton = {
+  private lazy var deadlineDateButton: UIButton = {
     let button = UIButton()
     button.setTitle("2 июня 2021", for: .normal)
     button.titleLabel?.font = Fonts.font(for: .footnote)
@@ -183,7 +184,7 @@ class ParametersView: UIStackView {
   }
 
   private func setupDeadlineDateLabel() {
-    deadlineStackView.addArrangedSubview(deadlineDateLabel)
+    deadlineStackView.addArrangedSubview(deadlineDateButton)
   }
 
   private func setupDeadlineSwitch() {
@@ -222,9 +223,9 @@ class ParametersView: UIStackView {
   @objc func switchTapped(_ sender: UISwitch) {
     UIView.animate(withDuration: 0.25) {
       if sender.isOn {
-        self.deadlineDateLabel.isHidden = false
+        self.deadlineDateButton.isHidden = false
       } else {
-        self.deadlineDateLabel.isHidden = true
+        self.deadlineDateButton.isHidden = true
         self.hiddenDividerView.isHidden = true
         self.calendarView.isHidden = true
       }
@@ -273,7 +274,19 @@ class ParametersView: UIStackView {
 // MARK: UICalendarSelectionSingleDateDelegate
 
 extension ParametersView: UICalendarSelectionSingleDateDelegate {
-  func dateSelection(_: UICalendarSelectionSingleDate, didSelectDate _: DateComponents?) {
+  func dateSelection(_: UICalendarSelectionSingleDate, didSelectDate date: DateComponents?) {
+    guard let date = date else {
+      return
+    }
+    
+    delegate?.dateSelection(date)
+
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "d MMMM yyyy"
+    let dateString = dateFormatter.string(from: date.date!)
+
+    deadlineDateButton.setTitle(dateString, for: .normal)
+
     UIView.animate(withDuration: 0.25) {
       self.hiddenDividerView.isHidden = true
       self.calendarView.isHidden = true
