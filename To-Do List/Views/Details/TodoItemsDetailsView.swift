@@ -129,7 +129,7 @@ class TodoItemDetailsView: UIView {
       scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: stackView.widthAnchor),
       scrollView.contentLayoutGuide.heightAnchor.constraint(
         equalTo: stackView.heightAnchor,
-        constant: Constants.scrollViewContentLayoutGuideHeightPadding
+        constant: 16 + Constants.deleteButtonHeight + Constants.scrollViewContentLayoutGuideHeightPadding
       ),
     ])
   }
@@ -144,7 +144,6 @@ class TodoItemDetailsView: UIView {
   private func setupParametersView() {
     stackView.addArrangedSubview(parametersView)
     NSLayoutConstraint.activate([
-      //      parametersView.topAnchor.constraint(equalTo: taskDescriptionTextView.bottomAnchor, constant: 16)
       parametersView.heightAnchor.constraint(greaterThanOrEqualToConstant: 112.5),
       parametersView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
     ])
