@@ -93,7 +93,7 @@ extension TodoItemDetailsVC: TodoItemDetailsViewDelegate {
       present(alert, animated: true, completion: nil)
 
       todoItemDetailsView.taskDescriptionTextView.text = "Что надо сделать?"
-      todoItemDetailsView.taskDescriptionTextView.textColor = Colors.color(for: .labelSecondary)
+      todoItemDetailsView.taskDescriptionTextView.textColor = Colors.color(for: .labelTertiary)
       todoItemDetailsView.parametersView.importancePicker.selectedSegmentIndex = 2
       todoItemDetailsView.parametersView.deadlineSwitch.isOn = false
       todoItemDetailsView.parametersView.deadlineDateButton.isHidden = true
