@@ -73,6 +73,7 @@ extension TodoItemDetailsVC: TodoItemDetailsViewDelegate {
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
         self.todoItemDetailsView.deleteButton.isEnabled = true
+        self.saveButton.isEnabled = false
       default:
         let alert = UIAlertController(title: "Не удалось сохранить файл", message: error?.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -125,6 +126,7 @@ extension TodoItemDetailsVC: ParametersViewDelegate {
     } else {
       todoItemDetailsView.item.deadline = nil
     }
+    saveButton.isEnabled = true
   }
 
   func segmentControlTapped(_ sender: UISegmentedControl) {
@@ -133,9 +135,11 @@ extension TodoItemDetailsVC: ParametersViewDelegate {
     case 2: todoItemDetailsView.item.importance = .important
     default: todoItemDetailsView.item.importance = .normal
     }
+    saveButton.isEnabled = true
   }
 
   func dateSelection(_ date: DateComponents?) {
     todoItemDetailsView.item.deadline = date!.date
+    saveButton.isEnabled = true
   }
 }
