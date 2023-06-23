@@ -113,7 +113,7 @@ class ParametersView: UIStackView {
     axis = .vertical
     layer.cornerRadius = 16
     backgroundColor = Colors.color(for: .backSecondary)
-    spacing = 10
+    spacing = 9
     translatesAutoresizingMaskIntoConstraints = false
 
     setupImportanceLabel()
@@ -196,7 +196,7 @@ class ParametersView: UIStackView {
     NSLayoutConstraint.activate([
       hiddenDividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.dividerViewLeftPadding),
       hiddenDividerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Constants.dividerViewRightPadding),
-      hiddenDividerView.topAnchor.constraint(equalTo: deadlineSwitch.bottomAnchor, constant: 8),
+//      hiddenDividerView.topAnchor.constraint(equalTo: deadlineSwitch.bottomAnchor, constant: 8),
     ])
   }
 
@@ -236,9 +236,16 @@ class ParametersView: UIStackView {
 
   @objc func deadlineDateTapped() {
     UIView.animate(withDuration: 0.25) {
-      self.calendarView.isHidden = false
       self.hiddenDividerView.isHidden = false
       self.hiddenDividerView.backgroundColor = Colors.color(for: .supportSeparator)
+
+      // Баг: при быстром нажатии на UISwitch, и последующем нажатии на дату, отрисовывается только разделитель
+      // Этот костыль фиксит этот баг
+      while self.calendarView.isHidden == true {
+        self.calendarView.isHidden = false
+      }
+
+      print(self.calendarView.isHidden)
     }
   }
 

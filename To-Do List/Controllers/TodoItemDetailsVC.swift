@@ -72,6 +72,7 @@ extension TodoItemDetailsVC: TodoItemDetailsViewDelegate {
         let alert = UIAlertController(title: "Успех", message: "Файл успешно создан", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
+        self.todoItemDetailsView.deleteButton.isEnabled = true
       default:
         let alert = UIAlertController(title: "Не удалось сохранить файл", message: error?.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -97,6 +98,8 @@ extension TodoItemDetailsVC: TodoItemDetailsViewDelegate {
       todoItemDetailsView.parametersView.importancePicker.selectedSegmentIndex = 2
       todoItemDetailsView.parametersView.deadlineSwitch.isOn = false
       todoItemDetailsView.parametersView.deadlineDateButton.isHidden = true
+      todoItemDetailsView.deleteButton.isEnabled = false
+      saveButton.isEnabled = false
     } catch {
       let alert = UIAlertController(title: "Не удалось удалить файл", message: error.localizedDescription, preferredStyle: .alert)
       alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))

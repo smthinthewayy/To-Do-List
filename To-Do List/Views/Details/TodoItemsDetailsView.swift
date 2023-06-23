@@ -51,7 +51,7 @@ class TodoItemDetailsView: UIView {
     button.backgroundColor = Colors.color(for: .backSecondary)
     button.setTitle("Удалить", for: .normal)
     button.setTitleColor(Colors.color(for: .red), for: .normal)
-    button.isEnabled = true
+    button.isEnabled = false
     button.setTitleColor(Colors.color(for: .labelTertiary), for: .disabled)
     button.layer.cornerRadius = Constants.cornerRadius
     button.translatesAutoresizingMaskIntoConstraints = false
@@ -84,6 +84,8 @@ class TodoItemDetailsView: UIView {
 
         parametersView.deadlineDateButton.setTitle(dateString, for: .normal)
         parametersView.deadlineDateButton.isHidden = false
+
+        deleteButton.isEnabled = true
       }
     }
 
