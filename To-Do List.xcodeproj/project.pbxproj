@@ -22,6 +22,7 @@
 		71B1DFE42A3DC0AB0069C2E8 /* TodoItemDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71B1DFE32A3DC0AB0069C2E8 /* TodoItemDetailsVC.swift */; };
 		71B1DFE62A3DDE690069C2E8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71B1DFE52A3DDE690069C2E8 /* Colors.swift */; };
 		71D4BBC02A41DFF7001E373D /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D4BBBF2A41DFF7001E373D /* Fonts.swift */; };
+		71E763EC2A45E0EB0086E853 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E763EB2A45E0EB0086E853 /* DataManager.swift */; };
 		71F9B1912A3EFDA8000CB4EF /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F9B1902A3EFDA8000CB4EF /* Images.swift */; };
 		71F9B1952A3F0690000CB4EF /* TodoItemsDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F9B1942A3F0690000CB4EF /* TodoItemsDetailsView.swift */; };
 /* End PBXBuildFile section */
@@ -55,6 +56,7 @@
 		71B1DFE32A3DC0AB0069C2E8 /* TodoItemDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItemDetailsVC.swift; sourceTree = "<group>"; };
 		71B1DFE52A3DDE690069C2E8 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		71D4BBBF2A41DFF7001E373D /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
+		71E763EB2A45E0EB0086E853 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		71F9B1902A3EFDA8000CB4EF /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		71F9B1942A3F0690000CB4EF /* TodoItemsDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItemsDetailsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -178,6 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				7170CC752A35900F00323CCA /* FileCache.swift */,
+				71E763EB2A45E0EB0086E853 /* DataManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -302,6 +305,7 @@
 				711584BF2A42405700BE6913 /* DeleteButton.swift in Sources */,
 				71F9B1952A3F0690000CB4EF /* TodoItemsDetailsView.swift in Sources */,
 				71D4BBC02A41DFF7001E373D /* Fonts.swift in Sources */,
+				71E763EC2A45E0EB0086E853 /* DataManager.swift in Sources */,
 				71228CA02A356BB300405091 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
