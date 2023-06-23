@@ -15,11 +15,12 @@ protocol TodoItemDetailsViewDelegate: AnyObject {
   func deleteButtonTapped()
   func toggleSaveButton(_ textView: UITextView)
   func dateSelection(_ date: DateComponents?)
+  func fetchTaskDescription(_ textView: UITextView)
 }
 
 // MARK: - TodoItemDetailsView
 
-class TodoItemDetailsView: UIView, UITextViewDelegate {
+class TodoItemDetailsView: UIView {
   weak var delegate: TodoItemDetailsViewDelegate?
 
   private let scrollView: UIScrollView = {
@@ -59,6 +60,27 @@ class TodoItemDetailsView: UIView, UITextViewDelegate {
     super.init(frame: frame)
     setupView()
     setupTapGesture()
+  }
+
+  init(item: TodoItem) {
+    super.init(frame: .zero)
+    taskDescriptionTextView.text = item.text
+    print("taskDescriptionTextView.text = \(taskDescriptionTextView.text)")
+
+    switch item.importance {
+    case .important:
+      parametersView.importancePicker.selectedSegmentIndex = 2
+    case .low:
+      parametersView.importancePicker.selectedSegmentIndex = 0
+    default:
+      parametersView.importancePicker.selectedSegmentIndex = 1
+    }
+
+    print("parametersView.importancePicker = \(parametersView.importancePicker.selectedSegmentIndex)")
+
+    parametersView.deadlineSwitch.isOn = (item.deadline != nil)
+
+    print("parametersView.deadlineSwitch.isOn = \(item.deadline != nil)")
   }
 
   @available(*, unavailable)
@@ -112,7 +134,9 @@ class TodoItemDetailsView: UIView, UITextViewDelegate {
   private func setupParametersView() {
     stackView.addArrangedSubview(parametersView)
     NSLayoutConstraint.activate([
+      //      parametersView.topAnchor.constraint(equalTo: taskDescriptionTextView.bottomAnchor, constant: 16)
       parametersView.heightAnchor.constraint(greaterThanOrEqualToConstant: 112.5),
+      parametersView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
     ])
   }
 
@@ -176,8 +200,13 @@ class TodoItemDetailsView: UIView, UITextViewDelegate {
 // MARK: TaskDescriptionTextViewDelegate
 
 extension TodoItemDetailsView: TaskDescriptionTextViewDelegate {
+  func fetchTaskDescription(_ textView: UITextView) {
+    delegate?.fetchTaskDescription(textView)
+  }
+
   func textViewDidChangeText(_ textView: UITextView) {
     taskDescription = textView.text
+    delegate?.fetchTaskDescription(textView)
     delegate?.toggleSaveButton(textView)
   }
 }
@@ -197,11 +226,3 @@ extension TodoItemDetailsView: ParametersViewDelegate {
     delegate?.segmentControlTapped(sender)
   }
 }
-
-// MARK: UICalendarSelectionSingleDateDelegate
-
-// extension TodoItemDetailsView: UICalendarSelectionSingleDateDelegate {
-//  func dateSelection(_: UICalendarSelectionSingleDate, didSelectDate date: DateComponents?) {
-//    delegate?.dateSelection(date)
-//  }
-// }

@@ -11,6 +11,7 @@ import UIKit
 
 protocol TaskDescriptionTextViewDelegate: AnyObject {
   func textViewDidChangeText(_ textView: UITextView)
+  func fetchTaskDescription(_ textView: UITextView)
 }
 
 // MARK: - TaskDescriptionTextView
@@ -59,7 +60,7 @@ class TaskDescriptionTextView: UITextView {
 
 extension TaskDescriptionTextView: UITextViewDelegate {
   func textViewDidBeginEditing(_ textView: UITextView) {
-    if !textView.text.isEmpty && textView.textColor == Colors.color(for: .labelTertiary) {
+    if !textView.text.isEmpty && textView.text == "Что надо сделать?" {
       textView.text = nil
       textView.textColor = Colors.color(for: .labelPrimary)
     }
@@ -67,6 +68,7 @@ extension TaskDescriptionTextView: UITextViewDelegate {
 
   func textViewDidChange(_ textView: UITextView) {
     myDelegate?.textViewDidChangeText(textView)
+    myDelegate?.fetchTaskDescription(textView)
   }
 
   func textViewDidEndEditing(_ textView: UITextView) {

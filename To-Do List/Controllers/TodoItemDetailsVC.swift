@@ -10,7 +10,8 @@ import UIKit
 // MARK: - TodoItemDetailsVC
 
 class TodoItemDetailsVC: UIViewController {
-  private let todoItemDetailsView = TodoItemDetailsView()
+  private var todoItemDetailsView = TodoItemDetailsView()
+  private var taskDescription: String = ""
   private let fileCache = FileCache()
   private var item = TodoItem(text: "", createdAt: .now, importance: Importance.normal, isDone: false)
 
@@ -35,12 +36,23 @@ class TodoItemDetailsVC: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
+    fileCache.loadFromJSON(from: "task", completion: { error in
+      switch error {
+      case nil:
+        print("ухты мы успешно прочитали файл и загрузили его")
+        self.item = self.fileCache.items.first!.value
+        print(self.item)
+        self.todoItemDetailsView = TodoItemDetailsView(item: self.item)
+      default:
+        print("блинб грустно")
+      }
+    })
+
     navigationItem.title = "Дело"
     navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: Fonts.font(for: .headline)]
     navigationItem.leftBarButtonItem = cancelButton
     navigationItem.rightBarButtonItem = saveButton
 
-    let todoItemDetailsView = TodoItemDetailsView()
     todoItemDetailsView.delegate = self
     view.addSubview(todoItemDetailsView)
 
@@ -60,8 +72,14 @@ extension TodoItemDetailsVC: TodoItemDetailsViewDelegate {
     print("cancelTapped")
   }
 
+  func fetchTaskDescription(_ textView: UITextView) {
+    taskDescription = textView.text
+  }
+
   @objc func saveTapped() {
-    item.text = todoItemDetailsView.taskDescription
+    item.text = taskDescription
+    print(item.text)
+
     let _ = fileCache.add(item)
     fileCache.saveToJSON(to: "task") { error in
       switch error {

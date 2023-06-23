@@ -206,8 +206,6 @@ class ParametersView: UIStackView {
       calendarView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
       calendarView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
       calendarView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-      calendarView.heightAnchor.constraint(equalToConstant: 332),
-      calendarView.widthAnchor.constraint(equalToConstant: 343),
     ])
   }
 
