@@ -23,6 +23,8 @@ protocol TodoItemDetailsViewDelegate: AnyObject {
 class TodoItemDetailsView: UIView {
   weak var delegate: TodoItemDetailsViewDelegate?
 
+  var item: TodoItem = DataManager.shared.getData()
+
   private let scrollView: UIScrollView = {
     let scrollView = UIScrollView()
     scrollView.showsVerticalScrollIndicator = false
@@ -56,31 +58,37 @@ class TodoItemDetailsView: UIView {
     return button
   }()
 
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    setupView()
-    setupTapGesture()
-  }
-
-  init(item: TodoItem) {
+  init() {
     super.init(frame: .zero)
-    taskDescriptionTextView.text = item.text
-    print("taskDescriptionTextView.text = \(taskDescriptionTextView.text)")
 
-    switch item.importance {
-    case .important:
-      parametersView.importancePicker.selectedSegmentIndex = 2
-    case .low:
-      parametersView.importancePicker.selectedSegmentIndex = 0
-    default:
-      parametersView.importancePicker.selectedSegmentIndex = 1
+    item = DataManager.shared.getData()
+
+    if !item.text.isEmpty {
+      taskDescriptionTextView.text = item.text
+      taskDescriptionTextView.textColor = Colors.color(for: .labelPrimary)
+
+      switch item.importance {
+      case .important:
+        parametersView.importancePicker.selectedSegmentIndex = 2
+      case .low:
+        parametersView.importancePicker.selectedSegmentIndex = 0
+      default:
+        parametersView.importancePicker.selectedSegmentIndex = 1
+      }
+
+      if item.deadline != nil {
+        parametersView.deadlineSwitch.isOn = (item.deadline != nil)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "d MMMM yyyy"
+        let dateString = dateFormatter.string(from: item.deadline!)
+
+        parametersView.deadlineDateButton.setTitle(dateString, for: .normal)
+        parametersView.deadlineDateButton.isHidden = false
+      }
     }
 
-    print("parametersView.importancePicker = \(parametersView.importancePicker.selectedSegmentIndex)")
-
-    parametersView.deadlineSwitch.isOn = (item.deadline != nil)
-
-    print("parametersView.deadlineSwitch.isOn = \(item.deadline != nil)")
+    setupView()
+    setupTapGesture()
   }
 
   @available(*, unavailable)
@@ -153,6 +161,7 @@ class TodoItemDetailsView: UIView {
 
   private func setupTapGesture() {
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+    tapGesture.cancelsTouchesInView = false
     addGestureRecognizer(tapGesture)
   }
 

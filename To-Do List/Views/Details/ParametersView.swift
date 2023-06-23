@@ -66,7 +66,7 @@ class ParametersView: UIStackView {
     return label
   }()
 
-  private lazy var deadlineDateButton: UIButton = {
+  lazy var deadlineDateButton: UIButton = {
     let button = UIButton()
     button.setTitle("2 июня 2021", for: .normal)
     button.titleLabel?.font = Fonts.font(for: .footnote)
@@ -176,6 +176,9 @@ class ParametersView: UIStackView {
 
   private func setupDeadlineDateLabel() {
     deadlineStackView.addArrangedSubview(deadlineDateButton)
+    NSLayoutConstraint.activate([
+      deadlineDateButton.bottomAnchor.constraint(equalTo: deadlineStackView.bottomAnchor),
+    ])
   }
 
   private func setupDeadlineSwitch() {

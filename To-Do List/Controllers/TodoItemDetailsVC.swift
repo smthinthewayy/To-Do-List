@@ -11,9 +11,8 @@ import UIKit
 
 class TodoItemDetailsVC: UIViewController {
   private var todoItemDetailsView = TodoItemDetailsView()
+
   private var taskDescription: String = ""
-  private let fileCache = FileCache()
-  private var item = TodoItem(text: "", createdAt: .now, importance: Importance.normal, isDone: false)
 
   lazy var cancelButton: UIBarButtonItem = {
     let button = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(cancelTapped))
@@ -35,18 +34,6 @@ class TodoItemDetailsVC: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
-    fileCache.loadFromJSON(from: "task", completion: { error in
-      switch error {
-      case nil:
-        print("ухты мы успешно прочитали файл и загрузили его")
-        self.item = self.fileCache.items.first!.value
-        print(self.item)
-        self.todoItemDetailsView = TodoItemDetailsView(item: self.item)
-      default:
-        print("блинб грустно")
-      }
-    })
 
     navigationItem.title = "Дело"
     navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.font: Fonts.font(for: .headline)]
@@ -77,11 +64,9 @@ extension TodoItemDetailsVC: TodoItemDetailsViewDelegate {
   }
 
   @objc func saveTapped() {
-    item.text = taskDescription
-    print(item.text)
+    todoItemDetailsView.item.text = taskDescription
 
-    let _ = fileCache.add(item)
-    fileCache.saveToJSON(to: "task") { error in
+    DataManager.shared.add(todoItemDetailsView.item) { error in
       switch error {
       case nil:
         let alert = UIAlertController(title: "Успех", message: "Файл успешно создан", preferredStyle: .alert)
@@ -106,6 +91,12 @@ extension TodoItemDetailsVC: TodoItemDetailsViewDelegate {
       let alert = UIAlertController(title: "Успех", message: "Файл успешно удален", preferredStyle: .alert)
       alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
       present(alert, animated: true, completion: nil)
+
+      todoItemDetailsView.taskDescriptionTextView.text = "Что надо сделать?"
+      todoItemDetailsView.taskDescriptionTextView.textColor = Colors.color(for: .labelSecondary)
+      todoItemDetailsView.parametersView.importancePicker.selectedSegmentIndex = 2
+      todoItemDetailsView.parametersView.deadlineSwitch.isOn = false
+      todoItemDetailsView.parametersView.deadlineDateButton.isHidden = true
     } catch {
       let alert = UIAlertController(title: "Не удалось удалить файл", message: error.localizedDescription, preferredStyle: .alert)
       alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
@@ -127,21 +118,21 @@ extension TodoItemDetailsVC: TodoItemDetailsViewDelegate {
 extension TodoItemDetailsVC: ParametersViewDelegate {
   func switchTapped(_ sender: UISwitch) {
     if sender.isOn {
-      item.deadline = .now + 24 * 60 * 60
+      todoItemDetailsView.item.deadline = .now + 24 * 60 * 60
     } else {
-      item.deadline = nil
+      todoItemDetailsView.item.deadline = nil
     }
   }
 
   func segmentControlTapped(_ sender: UISegmentedControl) {
     switch sender.selectedSegmentIndex {
-    case 0: item.importance = .low
-    case 2: item.importance = .important
-    default: item.importance = .normal
+    case 0: todoItemDetailsView.item.importance = .low
+    case 2: todoItemDetailsView.item.importance = .important
+    default: todoItemDetailsView.item.importance = .normal
     }
   }
 
   func dateSelection(_ date: DateComponents?) {
-    item.deadline = date!.date
+    todoItemDetailsView.item.deadline = date!.date
   }
 }
