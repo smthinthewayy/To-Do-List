@@ -34,19 +34,10 @@ class ParametersView: UIStackView {
     view.translatesAutoresizingMaskIntoConstraints = false
     view.heightAnchor.constraint(equalToConstant: 0.75).isActive = true
     view.widthAnchor.constraint(equalToConstant: Constants.dividerViewWidth).isActive = true
-    view.isHidden = true
-    view.backgroundColor = Colors.color(for: .supportSeparator)
+    view.isHidden = false
+    view.backgroundColor = Colors.color(for: .backSecondary)
     return view
   }()
-
-//  private let clearDividerView: UIView = {
-//    let view = UIView()
-//    view.translatesAutoresizingMaskIntoConstraints = false
-//    view.heightAnchor.constraint(equalToConstant: 0.75).isActive = true
-//    view.widthAnchor.constraint(equalToConstant: Constants.dividerViewWidth).isActive = true
-//    view.backgroundColor = .clear
-//    return view
-//  }()
 
   private let importanceLabel: UILabel = {
     let label = UILabel()
@@ -86,7 +77,7 @@ class ParametersView: UIStackView {
     return button
   }()
 
-  private lazy var importancePicker: UISegmentedControl = {
+  lazy var importancePicker: UISegmentedControl = {
     let segmentedControl = UISegmentedControl(items: [Images.image(for: .lowImportance).withRenderingMode(.alwaysOriginal), "нет",
                                                       Images.image(for: .highImportance).withRenderingMode(.alwaysOriginal)])
     segmentedControl.selectedSegmentIndex = 2
@@ -99,7 +90,7 @@ class ParametersView: UIStackView {
     return segmentedControl
   }()
 
-  private lazy var deadlineSwitch: UISwitch = {
+  lazy var deadlineSwitch: UISwitch = {
     let deadlineSwitch = UISwitch()
     deadlineSwitch.addTarget(self, action: #selector(switchTapped), for: .valueChanged)
     deadlineSwitch.translatesAutoresizingMaskIntoConstraints = false
@@ -170,9 +161,9 @@ class ParametersView: UIStackView {
     addArrangedSubview(deadlineStackView)
     NSLayoutConstraint.activate([
       deadlineStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+      deadlineStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -80),
       deadlineStackView.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 8),
       deadlineStackView.heightAnchor.constraint(equalToConstant: 40),
-      deadlineStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -80),
     ])
 
     setupDoneByLabel()
@@ -192,8 +183,8 @@ class ParametersView: UIStackView {
     NSLayoutConstraint.activate([
       deadlineSwitch.widthAnchor.constraint(equalToConstant: Constants.deadlineSwitchWidth),
       deadlineSwitch.heightAnchor.constraint(equalToConstant: Constants.deadlineSwitchHeight),
-      deadlineSwitch.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Constants.deadlineSwitchRightPadding),
-      deadlineSwitch.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 16),
+      deadlineSwitch.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
+      deadlineSwitch.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 12.5),
     ])
   }
 
@@ -202,7 +193,7 @@ class ParametersView: UIStackView {
     NSLayoutConstraint.activate([
       hiddenDividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.dividerViewLeftPadding),
       hiddenDividerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Constants.dividerViewRightPadding),
-      hiddenDividerView.topAnchor.constraint(equalTo: bottomAnchor, constant: Constants.dividerViewTopPadding),
+      hiddenDividerView.topAnchor.constraint(equalTo: deadlineSwitch.bottomAnchor, constant: 8),
     ])
   }
 
@@ -223,10 +214,14 @@ class ParametersView: UIStackView {
   @objc func switchTapped(_ sender: UISwitch) {
     UIView.animate(withDuration: 0.25) {
       if sender.isOn {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "d MMMM yyyy"
+        let dateString = dateFormatter.string(from: .now + 60 * 60 * 24)
+        self.deadlineDateButton.setTitle(dateString, for: .normal)
         self.deadlineDateButton.isHidden = false
       } else {
         self.deadlineDateButton.isHidden = true
-        self.hiddenDividerView.isHidden = true
+        self.hiddenDividerView.backgroundColor = Colors.color(for: .backSecondary)
         self.calendarView.isHidden = true
       }
     }
@@ -241,6 +236,8 @@ class ParametersView: UIStackView {
   @objc func deadlineDateTapped() {
     UIView.animate(withDuration: 0.25) {
       self.calendarView.isHidden = false
+      self.hiddenDividerView.isHidden = false
+      self.hiddenDividerView.backgroundColor = Colors.color(for: .supportSeparator)
     }
   }
 
@@ -278,7 +275,7 @@ extension ParametersView: UICalendarSelectionSingleDateDelegate {
     guard let date = date else {
       return
     }
-    
+
     delegate?.dateSelection(date)
 
     let dateFormatter = DateFormatter()
@@ -288,7 +285,7 @@ extension ParametersView: UICalendarSelectionSingleDateDelegate {
     deadlineDateButton.setTitle(dateString, for: .normal)
 
     UIView.animate(withDuration: 0.25) {
-      self.hiddenDividerView.isHidden = true
+      self.hiddenDividerView.backgroundColor = Colors.color(for: .backSecondary)
       self.calendarView.isHidden = true
     }
   }

@@ -61,15 +61,16 @@ extension TodoItemDetailsVC: TodoItemDetailsViewDelegate {
   }
 
   @objc func saveTapped() {
+    item.text = todoItemDetailsView.taskDescription
     let _ = fileCache.add(item)
-    fileCache.saveToJSON(to: "task.json") { error in
+    fileCache.saveToJSON(to: "task") { error in
       switch error {
       case nil:
         let alert = UIAlertController(title: "Успех", message: "Файл успешно создан", preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
       default:
-        let alert = UIAlertController(title: "Ошибка", message: "Не удалось сохранить файл.", preferredStyle: .alert)
+        let alert = UIAlertController(title: "Не удалось сохранить файл", message: error?.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
       }
@@ -77,7 +78,21 @@ extension TodoItemDetailsVC: TodoItemDetailsViewDelegate {
   }
 
   func deleteButtonTapped() {
-    print("deleteButtonTapped")
+    let fileManager = FileManager.default
+    let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+    let fileURL = documentsDirectory.appendingPathComponent("task.json")
+
+    do {
+      try fileManager.removeItem(at: fileURL)
+
+      let alert = UIAlertController(title: "Успех", message: "Файл успешно удален", preferredStyle: .alert)
+      alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+      present(alert, animated: true, completion: nil)
+    } catch {
+      let alert = UIAlertController(title: "Не удалось удалить файл", message: error.localizedDescription, preferredStyle: .alert)
+      alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+      present(alert, animated: true, completion: nil)
+    }
   }
 
   func toggleSaveButton(_ textView: UITextView) {
