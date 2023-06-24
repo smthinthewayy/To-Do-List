@@ -8,7 +8,7 @@
 @testable import To_Do_List
 import XCTest
 
-final class TodoItemTests: XCTestCase {
+final class TaskTests: XCTestCase {
   func testJsonParsing() {
     // Given
     let id = "123"
@@ -19,10 +19,18 @@ final class TodoItemTests: XCTestCase {
     let importance = Importance.important
     let isDone = false
 
-    let item = TodoItem(id: id, text: text, createdAt: createdAt, deadline: deadline, changedAt: changedAt, importance: importance, isDone: isDone)
+    let item = Task(
+      id: id,
+      text: text,
+      createdAt: createdAt,
+      deadline: deadline,
+      changedAt: changedAt,
+      importance: importance,
+      isDone: isDone
+    )
 
     // When
-    let parsedItem = TodoItem.parse(json: item.json)
+    let parsedItem = Task.parse(json: item.json)
 
     // Then
     XCTAssertEqual(parsedItem!.id, id)
@@ -47,7 +55,7 @@ final class TodoItemTests: XCTestCase {
     ]
 
     // When
-    let parsedItem = TodoItem.parse(json: json)
+    let parsedItem = Task.parse(json: json)
 
     // Then
     XCTAssertEqual(parsedItem!.id, json["id"] as! String)
@@ -68,10 +76,10 @@ final class TodoItemTests: XCTestCase {
     let importance = Importance.important
     let isDone = false
 
-    let item = TodoItem(text: text, createdAt: createdAt, deadline: deadline, changedAt: changedAt, importance: importance, isDone: isDone)
+    let item = Task(text: text, createdAt: createdAt, deadline: deadline, changedAt: changedAt, importance: importance, isDone: isDone)
 
     // When
-    let parsedItem = TodoItem.parse(json: item.json)
+    let parsedItem = Task.parse(json: item.json)
 
     // Then
     XCTAssertEqual(parsedItem!.text, text)
@@ -92,10 +100,18 @@ final class TodoItemTests: XCTestCase {
     let importance = Importance.normal
     let isDone = false
 
-    let item = TodoItem(id: id, text: text, createdAt: createdAt, deadline: deadline, changedAt: changedAt, importance: importance, isDone: isDone)
+    let item = Task(
+      id: id,
+      text: text,
+      createdAt: createdAt,
+      deadline: deadline,
+      changedAt: changedAt,
+      importance: importance,
+      isDone: isDone
+    )
 
     // When
-    let parsedItem = TodoItem.parse(json: item.json)
+    let parsedItem = Task.parse(json: item.json)
 
     // Then
     XCTAssertEqual(parsedItem!.id, id)
@@ -116,10 +132,10 @@ final class TodoItemTests: XCTestCase {
     let importance = Importance.normal
     let isDone = false
 
-    let item = TodoItem(id: id, text: text, createdAt: createdAt, changedAt: changedAt, importance: importance, isDone: isDone)
+    let item = Task(id: id, text: text, createdAt: createdAt, changedAt: changedAt, importance: importance, isDone: isDone)
 
     // When
-    let parsedItem = TodoItem.parse(json: item.json)
+    let parsedItem = Task.parse(json: item.json)
 
     // Then
     XCTAssertEqual(parsedItem!.id, id)
@@ -140,7 +156,7 @@ final class TodoItemTests: XCTestCase {
     ]
 
     // When
-    let parsedItem = TodoItem.parse(json: json)
+    let parsedItem = Task.parse(json: json)
 
     // Then
     XCTAssertNil(parsedItem)
@@ -153,10 +169,10 @@ final class TodoItemTests: XCTestCase {
     let importance = Importance.normal
     let isDone = false
 
-    let item = TodoItem(text: text, createdAt: createdAt, importance: importance, isDone: isDone)
+    let item = Task(text: text, createdAt: createdAt, importance: importance, isDone: isDone)
 
     // When
-    let parsedItem = TodoItem.parse(json: item.json)
+    let parsedItem = Task.parse(json: item.json)
 
     // Then
     XCTAssertNotNil(parsedItem!.id)
@@ -179,7 +195,7 @@ final class TodoItemTests: XCTestCase {
     ]
 
     // When
-    let parsedItem = TodoItem.parse(json: json)
+    let parsedItem = Task.parse(json: json)
 
     // Then
     XCTAssertNil(parsedItem)
@@ -196,7 +212,7 @@ final class TodoItemTests: XCTestCase {
     ]
 
     // When
-    let parsedItem = TodoItem.parse(json: json)
+    let parsedItem = Task.parse(json: json)
 
     // Then
     XCTAssertNil(parsedItem)
@@ -212,10 +228,18 @@ final class TodoItemTests: XCTestCase {
     let importance = Importance.important
     let isDone = false
 
-    let item = TodoItem(id: id, text: text, createdAt: createdAt, deadline: deadline, changedAt: changedAt, importance: importance, isDone: isDone)
+    let item = Task(
+      id: id,
+      text: text,
+      createdAt: createdAt,
+      deadline: deadline,
+      changedAt: changedAt,
+      importance: importance,
+      isDone: isDone
+    )
 
     // When
-    let parsedItem = TodoItem.parse(csv: item.csv)
+    let parsedItem = Task.parse(csv: item.csv)
 
     // Then
     XCTAssertEqual(parsedItem!.id, id)
@@ -232,7 +256,7 @@ final class TodoItemTests: XCTestCase {
     let csv = "123;Buy groceries;1686837637;1686841237;1686844837;important;false"
 
     // When
-    let parsedItem = TodoItem.parse(csv: csv)
+    let parsedItem = Task.parse(csv: csv)
 
     // Then
     XCTAssertEqual(parsedItem!.id, "123")
@@ -253,10 +277,10 @@ final class TodoItemTests: XCTestCase {
     let importance = Importance.important
     let isDone = false
 
-    let item = TodoItem(text: text, createdAt: createdAt, deadline: deadline, changedAt: changedAt, importance: importance, isDone: isDone)
+    let item = Task(text: text, createdAt: createdAt, deadline: deadline, changedAt: changedAt, importance: importance, isDone: isDone)
 
     // When
-    let parsedItem = TodoItem.parse(csv: item.csv)
+    let parsedItem = Task.parse(csv: item.csv)
 
     // Then
     XCTAssertEqual(parsedItem!.text, text)
@@ -277,10 +301,18 @@ final class TodoItemTests: XCTestCase {
     let importance = Importance.normal
     let isDone = false
 
-    let item = TodoItem(id: id, text: text, createdAt: createdAt, deadline: deadline, changedAt: changedAt, importance: importance, isDone: isDone)
+    let item = Task(
+      id: id,
+      text: text,
+      createdAt: createdAt,
+      deadline: deadline,
+      changedAt: changedAt,
+      importance: importance,
+      isDone: isDone
+    )
 
     // When
-    let parsedItem = TodoItem.parse(csv: item.csv)
+    let parsedItem = Task.parse(csv: item.csv)
 
     // Then
     XCTAssertEqual(parsedItem!.id, id)
@@ -301,10 +333,10 @@ final class TodoItemTests: XCTestCase {
     let importance = Importance.normal
     let isDone = false
 
-    let item = TodoItem(id: id, text: text, createdAt: createdAt, changedAt: changedAt, importance: importance, isDone: isDone)
+    let item = Task(id: id, text: text, createdAt: createdAt, changedAt: changedAt, importance: importance, isDone: isDone)
 
     // When
-    let parsedItem = TodoItem.parse(csv: item.csv)
+    let parsedItem = Task.parse(csv: item.csv)
 
     // Then
     XCTAssertEqual(parsedItem!.id, id)
@@ -321,7 +353,7 @@ final class TodoItemTests: XCTestCase {
     let csv = "123;Buy groceries;\(Int(Date().timeIntervalSince1970));;;;"
 
     // When
-    let parsedItem = TodoItem.parse(csv: csv)
+    let parsedItem = Task.parse(csv: csv)
 
     // Then
     XCTAssertNil(parsedItem)
@@ -334,10 +366,10 @@ final class TodoItemTests: XCTestCase {
     let importance = Importance.normal
     let isDone = false
 
-    let item = TodoItem(text: text, createdAt: createdAt, importance: importance, isDone: isDone)
+    let item = Task(text: text, createdAt: createdAt, importance: importance, isDone: isDone)
 
     // When
-    let parsedItem = TodoItem.parse(csv: item.csv)
+    let parsedItem = Task.parse(csv: item.csv)
 
     // Then
     XCTAssertNotNil(parsedItem!.id)
@@ -354,7 +386,7 @@ final class TodoItemTests: XCTestCase {
     let csv = "true;123;what???;hehehe;lol;!;?"
 
     // When
-    let parsedItem = TodoItem.parse(csv: csv)
+    let parsedItem = Task.parse(csv: csv)
 
     // Then
     XCTAssertNil(parsedItem)
@@ -365,7 +397,7 @@ final class TodoItemTests: XCTestCase {
     let csv = "123;Buy groceries;\(Int(Date().timeIntervalSince1970));;;what??;false"
 
     // When
-    let parsedItem = TodoItem.parse(csv: csv)
+    let parsedItem = Task.parse(csv: csv)
 
     // Then
     XCTAssertNil(parsedItem)

@@ -1,5 +1,5 @@
 //
-//  TodoItem.swift
+//  Task.swift
 //  To-Do List
 //
 //  Created by Danila Belyi on 11.06.2023.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-// MARK: - TodoItem
+// MARK: - Task
 
-/// This is a struct named TodoItem that holds information about a to-do item.
+/// This is a struct named Task that holds information about a to-do item.
 /// It has seven properties:
 /// - id: A unique identifier for the to-do item. Optional and generates a new `UUID` if not provided.
 /// - text: The text description of the to-do item
@@ -18,7 +18,7 @@ import Foundation
 /// - changedAt: An optional date the to-do item was last changed. Default to `nil` if not provided.
 /// - importance: A value that represents the importance of the to-do item
 /// - isDone: A Boolean value that indicates whether the to-do item is complete or not
-struct TodoItem {
+struct Task {
   var id: String
   var text: String
   var createdAt: Date
@@ -57,9 +57,9 @@ enum Importance: String {
   case important
 }
 
-extension TodoItem {
-  /// Converts a TodoItem instance to a dictionary that can be serialized to JSON.
-  /// The dictionary contains values for all non-nil TodoItem properties, with the
+extension Task {
+  /// Converts a Task instance to a dictionary that can be serialized to JSON.
+  /// The dictionary contains values for all non-nil Task properties, with the
   /// exception of .normal Importance. Dates are represented as Unix timestamps
   /// (seconds since January 1, 1970).
   var json: Any {
@@ -86,14 +86,14 @@ extension TodoItem {
     return dict
   }
 
-  /// The parse function converts a JSON object (represented as Any) to a TodoItem instance.
+  /// The parse function converts a JSON object (represented as Any) to a Task instance.
   /// The function returns nil if the JSON object doesn't contain all the required keys or if
   /// the values cannot be converted to the correct types. The Importance enum is parsed from
   /// a string representation. Dates are parsed from Unix timestamps.
   /// - Parameter json: JSON object
-  /// - Returns: TodoItem instance if the JSON object contains all the required keys and values,
+  /// - Returns: Task instance if the JSON object contains all the required keys and values,
   /// otherwise it returns nil.
-  static func parse(json: Any) -> TodoItem? {
+  static func parse(json: Any) -> Task? {
     guard let json = json as? [String: Any],
           let id = json[Keys.id.rawValue] as? String,
           let text = json[Keys.text.rawValue] as? String,
@@ -121,7 +121,7 @@ extension TodoItem {
     let deadline: Date? = (deadlineTimestamp != nil) ? Date(timeIntervalSince1970: TimeInterval(deadlineTimestamp!)) : nil
     let changedAt: Date? = (changedAtTimestamp != nil) ? Date(timeIntervalSince1970: TimeInterval(changedAtTimestamp!)) : nil
 
-    return TodoItem(
+    return Task(
       id: id,
       text: text,
       createdAt: createdAt,
@@ -134,7 +134,7 @@ extension TodoItem {
 
   /// This is a private enumeration named Keys that conforms to the RawRepresentable protocol with
   /// a raw value of type String. The enumeration contains cases for each key that is used in the
-  /// dictionary representation of a TodoItem.
+  /// dictionary representation of a Task.
   private enum Keys: String {
     case id
     case text
@@ -146,10 +146,10 @@ extension TodoItem {
   }
 }
 
-extension TodoItem {
-  /// This property is used to convert a `TodoItem` instance to a string that represents the object in
+extension Task {
+  /// This property is used to convert a `Task` instance to a string that represents the object in
   /// CSV format. The CSV format consists of a comma-separated list of values, with each row representing
-  /// a single `TodoItem`.
+  /// a single `Task`.
   var csv: String {
     var string = ""
 
@@ -178,13 +178,13 @@ extension TodoItem {
     return string
   }
 
-  /// This method is used to parse a CSV string and return a `TodoItem` instance. The `parse` method returns
+  /// This method is used to parse a CSV string and return a `Task` instance. The `parse` method returns
   /// nil if the CSV string does not contain all the required information or if the values cannot be converted
   /// to the correct types. The `Importance` enum is parsed from a string representation.
-  /// - Parameter csv: A string that represents a single TodoItem object in CSV format.
-  /// - Returns: Returns: `TodoItem` instance if the CSV string contains all the required keys and values,
+  /// - Parameter csv: A string that represents a single Task object in CSV format.
+  /// - Returns: Returns: `Task` instance if the CSV string contains all the required keys and values,
   /// otherwise it returns nil.
-  static func parse(csv: String) -> TodoItem? {
+  static func parse(csv: String) -> Task? {
     let items = csv.components(separatedBy: ";")
 
     guard items.filter({ $0 != "" }).count >= 4, items.count <= 7 else { return nil }
@@ -210,7 +210,7 @@ extension TodoItem {
     let deadline: Date? = (deadlineTimestamp != nil) ? Date(timeIntervalSince1970: TimeInterval(deadlineTimestamp!)) : nil
     let changedAt: Date? = (changedAtTimestamp != nil) ? Date(timeIntervalSince1970: TimeInterval(changedAtTimestamp!)) : nil
 
-    return TodoItem(
+    return Task(
       id: id,
       text: text,
       createdAt: createdAt,

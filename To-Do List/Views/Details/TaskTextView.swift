@@ -7,17 +7,25 @@
 
 import UIKit
 
-// MARK: - TaskDescriptionTextViewDelegate
+// MARK: - TaskTextViewDelegate
 
-protocol TaskDescriptionTextViewDelegate: AnyObject {
+protocol TaskTextViewDelegate: AnyObject {
   func textViewDidChangeText(_ textView: UITextView)
   func fetchTaskDescription(_ textView: UITextView)
 }
 
-// MARK: - TaskDescriptionTextView
+// MARK: - TaskTextView
 
-class TaskDescriptionTextView: UITextView {
-  weak var myDelegate: TaskDescriptionTextViewDelegate?
+class TaskTextView: UITextView {
+  private enum Constants {
+    static let textViewTextContainerTopPadding: CGFloat = 17
+    static let textViewTextContainerLeftPadding: CGFloat = 16
+    static let textViewTextContainerBottomPadding: CGFloat = 17
+    static let textViewTextContainerRightPadding: CGFloat = 16
+    static let cornerRadius: CGFloat = 16
+  }
+
+  weak var myDelegate: TaskTextViewDelegate?
 
   init() {
     super.init(frame: .zero, textContainer: nil)
@@ -41,24 +49,11 @@ class TaskDescriptionTextView: UITextView {
   required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-
-  private enum Constants {
-    static let textViewTopPadding: CGFloat = 17
-    static let textViewLeftPadding: CGFloat = 16
-    static let textViewRightPadding: CGFloat = -16
-    static let textViewHeight: CGFloat = 120
-    static let textViewTextContainerTopPadding: CGFloat = 17
-    static let textViewTextContainerLeftPadding: CGFloat = 16
-    static let textViewTextContainerBottomPadding: CGFloat = 17
-    static let textViewTextContainerRightPadding: CGFloat = 16
-
-    static let cornerRadius: CGFloat = 16
-  }
 }
 
 // MARK: UITextViewDelegate
 
-extension TaskDescriptionTextView: UITextViewDelegate {
+extension TaskTextView: UITextViewDelegate {
   func textViewDidBeginEditing(_ textView: UITextView) {
     if !textView.text.isEmpty && textView.text == "Что надо сделать?" {
       textView.text = nil

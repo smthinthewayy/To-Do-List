@@ -12,9 +12,9 @@ final class DataManager {
   private init() {}
 
   let fileCache = FileCache()
-  var todoItems: [String: TodoItem] = [:]
+  var tasks: [String: Task] = [:]
 
-  func getData() -> TodoItem {
+  func getData() -> Task {
     fileCache.loadFromJSON(from: "task") { error in
       switch error {
       case nil:
@@ -23,11 +23,11 @@ final class DataManager {
         print("\(String(describing: error?.localizedDescription))")
       }
     }
-    todoItems = fileCache.items
-    return todoItems.first?.value ?? TodoItem(text: "", createdAt: .now, importance: .important, isDone: false)
+    tasks = fileCache.items
+    return tasks.first?.value ?? Task(text: "", createdAt: .now, importance: .important, isDone: false)
   }
 
-  func delete(_ item: TodoItem, completion: @escaping (Error?) -> Void) {
+  func delete(_ item: Task, completion: @escaping (Error?) -> Void) {
     _ = fileCache.delete(item.id)
     fileCache.saveToJSON(to: "task") { error in
       switch error {
@@ -39,7 +39,7 @@ final class DataManager {
     }
   }
 
-  func add(_ item: TodoItem, completion: @escaping (Error?) -> Void) {
+  func add(_ item: Task, completion: @escaping (Error?) -> Void) {
     _ = fileCache.add(item)
     fileCache.saveToJSON(to: "task") { error in
       switch error {

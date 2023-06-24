@@ -16,6 +16,10 @@ protocol DeleteButtonDelegate: AnyObject {
 // MARK: - DeleteButton
 
 class DeleteButton: UIButton {
+  private enum Constants {
+    static let cornerRadius: CGFloat = 16
+  }
+
   weak var delegate: DeleteButtonDelegate?
 
   init() {
@@ -35,11 +39,7 @@ class DeleteButton: UIButton {
     fatalError("init(coder:) has not been implemented")
   }
 
-  @objc func deleteButtonTapped() {
+  @objc private func deleteButtonTapped() {
     delegate?.deleteButtonTapped()
-  }
-
-  private enum Constants {
-    static let cornerRadius: CGFloat = 16
   }
 }
