@@ -64,6 +64,20 @@ class ParametersView: UIStackView {
     return label
   }()
 
+  private let firstCell: UIView = {
+    let view = UIView()
+    view.backgroundColor = .clear
+    view.translatesAutoresizingMaskIntoConstraints = false
+    return view
+  }()
+
+  private let secondCell: UIView = {
+    let view = UIView()
+    view.backgroundColor = .clear
+    view.translatesAutoresizingMaskIntoConstraints = false
+    return view
+  }()
+
   private lazy var calendarView: UICalendarView = {
     let calendarView = UICalendarView()
     calendarView.calendar = .current
@@ -136,11 +150,13 @@ class ParametersView: UIStackView {
   init() {
     super.init(frame: .zero)
     setupView()
-    setupImportanceLabel()
-    setupImportancePicker()
+    setupFirstCell()
+//    setupImportanceLabel()
+//    setupImportancePicker()
     setupDividerView()
-    setupDeadlineStackView()
-    setupDeadlineSwitch()
+    setupSecondCell()
+//    setupDeadlineStackView()
+//    setupDeadlineSwitch()
     setupHiddenDividerView()
     setupCalendarView()
   }
@@ -152,17 +168,26 @@ class ParametersView: UIStackView {
 
   private func setupView() {
     axis = .vertical
+    alignment = .center
     layer.cornerRadius = 16
     backgroundColor = Colors.color(for: .backSecondary)
-    spacing = 9
+    spacing = 1
     translatesAutoresizingMaskIntoConstraints = false
   }
 
+  private func setupFirstCell() {
+    addArrangedSubview(firstCell)
+    firstCell.heightAnchor.constraint(equalToConstant: 56).isActive = true
+    setupImportanceLabel()
+    setupImportancePicker()
+  }
+
   private func setupImportanceLabel() {
-    addArrangedSubview(importanceLabel)
+    addSubview(importanceLabel)
     NSLayoutConstraint.activate([
+      importanceLabel.heightAnchor.constraint(equalToConstant: 36),
       importanceLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.importanceLabelLeftPadding),
-      importanceLabel.topAnchor.constraint(equalTo: topAnchor, constant: Constants.importanceLabelTopPadding),
+      importanceLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
     ])
   }
 
@@ -178,19 +203,21 @@ class ParametersView: UIStackView {
 
   private func setupDividerView() {
     addArrangedSubview(dividerView)
-    NSLayoutConstraint.activate([
-      dividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.dividerViewLeftPadding),
-      dividerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Constants.dividerViewRightPadding),
-      dividerView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.dividerViewTopPadding),
-    ])
+  }
+
+  private func setupSecondCell() {
+    addArrangedSubview(secondCell)
+    secondCell.heightAnchor.constraint(equalToConstant: 56).isActive = true
+    setupDeadlineStackView()
+    setupDeadlineSwitch()
   }
 
   private func setupDeadlineStackView() {
-    addArrangedSubview(deadlineStackView)
+    addSubview(deadlineStackView)
     NSLayoutConstraint.activate([
       deadlineStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
       deadlineStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -80),
-      deadlineStackView.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 8),
+      deadlineStackView.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 9),
       deadlineStackView.heightAnchor.constraint(equalToConstant: 40),
     ])
     setupDoneByLabel()
@@ -213,17 +240,17 @@ class ParametersView: UIStackView {
     NSLayoutConstraint.activate([
       deadlineSwitch.widthAnchor.constraint(equalToConstant: Constants.deadlineSwitchWidth),
       deadlineSwitch.heightAnchor.constraint(equalToConstant: Constants.deadlineSwitchHeight),
+      deadlineSwitch.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 13.5),
       deadlineSwitch.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -12),
-      deadlineSwitch.topAnchor.constraint(equalTo: dividerView.bottomAnchor, constant: 12.5),
     ])
   }
 
   private func setupHiddenDividerView() {
     addArrangedSubview(hiddenDividerView)
-    NSLayoutConstraint.activate([
-      hiddenDividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.dividerViewLeftPadding),
-      hiddenDividerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Constants.dividerViewRightPadding),
-    ])
+//    NSLayoutConstraint.activate([
+//      hiddenDividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.dividerViewLeftPadding),
+//      hiddenDividerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Constants.dividerViewRightPadding),
+//    ])
   }
 
   private func setupCalendarView() {
@@ -231,10 +258,7 @@ class ParametersView: UIStackView {
     let selection = UICalendarSelectionSingleDate(delegate: self)
     calendarView.selectionBehavior = selection
     NSLayoutConstraint.activate([
-      calendarView.topAnchor.constraint(equalTo: hiddenDividerView.bottomAnchor, constant: 8),
-      calendarView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-      calendarView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12),
-      calendarView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+      calendarView.widthAnchor.constraint(equalToConstant: 311),
     ])
   }
 

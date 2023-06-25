@@ -15,14 +15,7 @@ final class DataManager {
   var tasks: [String: Task] = [:]
 
   func getData() -> Task {
-    fileCache.loadFromJSON(from: "task") { error in
-      switch error {
-      case nil:
-        break
-      default:
-        print("\(String(describing: error?.localizedDescription))")
-      }
-    }
+    fileCache.loadFromJSON(from: "task") { _ in }
     tasks = fileCache.items
     return tasks.first?.value ?? Task(text: "", createdAt: .now, importance: .important, isDone: false)
   }
