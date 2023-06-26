@@ -61,14 +61,6 @@ class TaskCell: UITableViewCell {
 
     backgroundColor = Colors.color(for: .backSecondary)
 
-//    contentView.addSubview(titleLabel)
-//    NSLayoutConstraint.activate([
-//      titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
-//      titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 52),
-//      titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -39),
-//      titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
-//    ])
-
     contentView.addSubview(chevron)
     NSLayoutConstraint.activate([
       chevron.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -93,7 +85,16 @@ class TaskCell: UITableViewCell {
       taskStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
       taskStackView.leadingAnchor.constraint(equalTo: status.trailingAnchor, constant: 12),
       taskStackView.trailingAnchor.constraint(equalTo: chevron.leadingAnchor, constant: -16),
-      taskStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 56),
+      taskStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
+      taskStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 24),
+    ])
+    
+    taskStackView.addArrangedSubview(titleLabel)
+    NSLayoutConstraint.activate([
+//      titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
+//      titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 52),
+//      titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -39),
+//      titleLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -16),
     ])
   }
 

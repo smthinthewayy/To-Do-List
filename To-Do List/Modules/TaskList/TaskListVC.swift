@@ -26,7 +26,7 @@ class TaskListVC: UIViewController {
     Task(text: "Покормить собачек", createdAt: .now, importance: .normal, isDone: true),
     Task(text: "Пощупать капибару", createdAt: .now, deadline: .now + 24 * 60 * 60 * 3, importance: .low, isDone: false),
     Task(text: "Сделать зарядку", createdAt: .now, importance: .normal, isDone: false),
-    Task(text: "Вкусно позавтракать", createdAt: .now, importance: .normal, isDone: false),
+    Task(text: "Вкусно позавтракать и бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла бла ", createdAt: .now, importance: .normal, isDone: false),
   ]
 
   private enum Constants {
@@ -96,7 +96,10 @@ extension TaskListVC: UITableViewDelegate {
   }
 
   func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
-    print(UITableView.automaticDimension)
     return UITableView.automaticDimension
+  }
+  
+  func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+    56
   }
 }
