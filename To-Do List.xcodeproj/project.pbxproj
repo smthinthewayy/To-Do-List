@@ -92,7 +92,6 @@
 				2CCF517765CB0FC81C48B258 /* Pods-To-Do List.debug.xcconfig */,
 				254A31BC4887CFDD5C5CD49B /* Pods-To-Do List.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -111,14 +110,6 @@
 				71228C9D2A356BB300405091 /* AppDelegate.swift */,
 			);
 			path = App;
-			sourceTree = "<group>";
-		};
-		7112B17A2A41EF4500D1452C /* Assets */ = {
-			isa = PBXGroup;
-			children = (
-				71228CA62A356BB400405091 /* Assets.xcassets */,
-			);
-			path = Assets;
 			sourceTree = "<group>";
 		};
 		71228C912A356BB300405091 = {
@@ -146,26 +137,13 @@
 			isa = PBXGroup;
 			children = (
 				7112B1792A41EEFB00D1452C /* App */,
-				71D4BBBE2A41DCCB001E373D /* Enums */,
+				716EB92F2A49653D00C5F7C7 /* Modules */,
 				7199D3342A3B4184000469CD /* Models */,
-				71F9B1962A3F0695000CB4EF /* Views */,
-				71B1DFE22A3DC0290069C2E8 /* Controllers */,
-				71D4BBC42A41E158001E373D /* Services */,
-				7112B17A2A41EF4500D1452C /* Assets */,
+				716EB9322A49658700C5F7C7 /* Common */,
+				716EB9332A49682B00C5F7C7 /* Resources */,
 				71228CAB2A356BB400405091 /* Info.plist */,
 			);
 			path = "To-Do List";
-			sourceTree = "<group>";
-		};
-		716759C62A421835009F9305 /* Details */ = {
-			isa = PBXGroup;
-			children = (
-				71F9B1942A3F0690000CB4EF /* TaskDetailsView.swift */,
-				716759C72A421878009F9305 /* TaskTextView.swift */,
-				711584BC2A4236AD00BE6913 /* ParametersView.swift */,
-				711584BE2A42405700BE6913 /* DeleteButton.swift */,
-			);
-			path = Details;
 			sourceTree = "<group>";
 		};
 		716B18042A3AD91A0028C660 /* Tests */ = {
@@ -177,20 +155,58 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
+		716EB92F2A49653D00C5F7C7 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				716EB9312A49656500C5F7C7 /* TaskList */,
+				716EB9302A49655300C5F7C7 /* TaskDetails */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
+		716EB9302A49655300C5F7C7 /* TaskDetails */ = {
+			isa = PBXGroup;
+			children = (
+				71B1DFE32A3DC0AB0069C2E8 /* TaskDetailsVC.swift */,
+				71F9B1942A3F0690000CB4EF /* TaskDetailsView.swift */,
+				716759C72A421878009F9305 /* TaskTextView.swift */,
+				711584BC2A4236AD00BE6913 /* ParametersView.swift */,
+				711584BE2A42405700BE6913 /* DeleteButton.swift */,
+			);
+			path = TaskDetails;
+			sourceTree = "<group>";
+		};
+		716EB9312A49656500C5F7C7 /* TaskList */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = TaskList;
+			sourceTree = "<group>";
+		};
+		716EB9322A49658700C5F7C7 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				71D4BBC42A41E158001E373D /* Services */,
+				71D4BBBE2A41DCCB001E373D /* Enums */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		716EB9332A49682B00C5F7C7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				71228CA62A356BB400405091 /* Assets.xcassets */,
+				71228CA82A356BB400405091 /* LaunchScreen.storyboard */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		7199D3342A3B4184000469CD /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				71228CCD2A356C1700405091 /* Task.swift */,
 			);
 			path = Models;
-			sourceTree = "<group>";
-		};
-		71B1DFE22A3DC0290069C2E8 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				71B1DFE32A3DC0AB0069C2E8 /* TaskDetailsVC.swift */,
-			);
-			path = Controllers;
 			sourceTree = "<group>";
 		};
 		71D4BBBE2A41DCCB001E373D /* Enums */ = {
@@ -211,15 +227,6 @@
 				710CAACC2A47599000D7BF02 /* Helpers.swift */,
 			);
 			path = Services;
-			sourceTree = "<group>";
-		};
-		71F9B1962A3F0695000CB4EF /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				716759C62A421835009F9305 /* Details */,
-				71228CA82A356BB400405091 /* LaunchScreen.storyboard */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
