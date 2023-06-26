@@ -45,18 +45,18 @@ class TaskListVC: UIViewController {
     tasksList.dataSource = self
     tasksList.delegate = self
 
-    view.addSubview(addButton)
-    NSLayoutConstraint.activate([
-      addButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-      addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-    ])
-
     view.addSubview(tasksList)
     NSLayoutConstraint.activate([
       tasksList.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
       tasksList.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
       tasksList.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
       tasksList.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+    ])
+    
+    view.addSubview(addButton)
+    NSLayoutConstraint.activate([
+      addButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+      addButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
     ])
   }
 }
