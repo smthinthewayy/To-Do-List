@@ -8,13 +8,29 @@
 import UIKit
 
 class TasksList: UITableView {
+  private enum Constants {
+    static let estimatedRowHeight: CGFloat = 56
+    static let cornerRadius: CGFloat = 16
+    static let cellIdentifier: String = "TasksListItemCell"
+  }
 
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
+  init() {
+    super.init(frame: .zero, style: .plain)
+    backgroundColor = Colors.color(for: .backSecondary)
+    layer.cornerRadius = Constants.cornerRadius
+    register(
+      TaskCell.self,
+      forCellReuseIdentifier: Constants.cellIdentifier
+    )
+    rowHeight = UITableView.automaticDimension
+    estimatedRowHeight = Constants.estimatedRowHeight
+    separatorStyle = .none
+    showsVerticalScrollIndicator = false
+    translatesAutoresizingMaskIntoConstraints = false
+  }
 
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
 }

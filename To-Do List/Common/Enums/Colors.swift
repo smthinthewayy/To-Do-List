@@ -27,6 +27,7 @@ enum Colors {
   case supportNavBarBlur
   case supportOverlay
   case supportSeparator
+  case addButtonShadowColor
 
   // MARK: - Colors
 
@@ -70,6 +71,8 @@ enum Colors {
       return "Overlay"
     case .supportSeparator:
       return "Separator"
+    case .addButtonShadowColor:
+      return "AddButtonShadowColor"
     }
   }
 

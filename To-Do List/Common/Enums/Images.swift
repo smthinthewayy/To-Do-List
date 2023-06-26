@@ -12,6 +12,12 @@ import UIKit
 enum Images {
   case lowImportance
   case highImportance
+  case addButton
+  case calendar
+  case chevron
+  case RBhighPriority
+  case RBoff
+  case RBon
 
   var image: UIImage? {
     return UIImage(named: name)
@@ -23,6 +29,18 @@ enum Images {
       return "LowImportance"
     case .highImportance:
       return "HighImportance"
+    case .addButton:
+      return "addButton"
+    case .calendar:
+      return "calendar"
+    case .chevron:
+      return "chevron"
+    case .RBhighPriority:
+      return "RBhighPriority"
+    case .RBoff:
+      return "RBoff"
+    case .RBon:
+      return "RBon"
     }
   }
 

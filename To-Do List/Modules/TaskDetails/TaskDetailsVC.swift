@@ -61,7 +61,7 @@ class TaskDetailsVC: UIViewController {
 
 extension TaskDetailsVC: TaskDetailsViewDelegate {
   @objc func cancelTapped() {
-    print("cancelTapped")
+    dismiss(animated: true)
   }
 
   func fetchTaskDescription(_ textView: UITextView) {
@@ -74,7 +74,7 @@ extension TaskDetailsVC: TaskDetailsViewDelegate {
     DataManager.shared.add(taskDetailsView.item) { error in
       switch error {
       case nil:
-        self.showAlert(title: "Успех", message: "Файл успешно создан")
+        self.dismiss(animated: true)
         self.taskDetailsView.deleteButton.isEnabled = true
         self.saveButton.isEnabled = false
       default:
@@ -96,7 +96,7 @@ extension TaskDetailsVC: TaskDetailsViewDelegate {
 
     do {
       try fileManager.removeItem(at: fileURL)
-      showAlert(title: "Успех", message: "Файл успешно удален")
+      dismiss(animated: true)
       clearView()
     } catch {
       showAlert(title: "Не удалось удалить файл", message: error.localizedDescription)
