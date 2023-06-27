@@ -15,16 +15,16 @@ class TasksList: UITableView {
   }
 
   init() {
-    super.init(frame: .zero, style: .plain)
-    backgroundColor = Colors.color(for: .backSecondary)
-    layer.cornerRadius = Constants.cornerRadius
+    super.init(frame: .zero, style: .insetGrouped)
+    
+    backgroundColor = .clear
     register(
       TaskCell.self,
       forCellReuseIdentifier: Constants.cellIdentifier
     )
     rowHeight = UITableView.automaticDimension
     estimatedRowHeight = Constants.estimatedRowHeight
-    separatorStyle = .none
+//    separatorStyle = .none
     showsVerticalScrollIndicator = false
     translatesAutoresizingMaskIntoConstraints = false
   }
