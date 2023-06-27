@@ -38,7 +38,7 @@ class TaskCell: UITableViewCell {
     return stackView
   }()
 
-  let calendarImageView: UIImageView = {
+  var calendarImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.image = Images.image(for: .calendar)
     imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -90,13 +90,7 @@ class TaskCell: UITableViewCell {
     return imageView
   }()
 
-  private var dividerView: UIView = {
-    let view = UIView()
-    view.heightAnchor.constraint(equalToConstant: 1).isActive = true
-    view.backgroundColor = Colors.color(for: .supportSeparator)
-    view.translatesAutoresizingMaskIntoConstraints = false
-    return view
-  }()
+  lazy var attributeString: NSMutableAttributedString = .init(string: titleLabel.text ?? "")
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -116,13 +110,6 @@ class TaskCell: UITableViewCell {
       statusButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
     ])
 
-//    contentView.addSubview(dividerView)
-//    NSLayoutConstraint.activate([
-//      dividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 52),
-//      dividerView.trailingAnchor.constraint(equalTo: trailingAnchor),
-//      dividerView.bottomAnchor.constraint(equalTo: bottomAnchor),
-//    ])
-
     contentView.addSubview(taskStackView)
     NSLayoutConstraint.activate([
       taskStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
@@ -137,6 +124,7 @@ class TaskCell: UITableViewCell {
 
   func configure(with task: Task) {
     titleLabel.text = task.text
+
     if task.importance == .important {
       statusButton.setImage(Images.image(for: .RBhighPriority), for: .normal)
       statusIcon.image = Images.image(for: .highImportance)
@@ -151,7 +139,6 @@ class TaskCell: UITableViewCell {
     }
 
     if task.isDone {
-//      status.image = Images.image(for: .RBon)
       statusButton.setImage(Images.image(for: .RBon), for: .normal)
       let attributeString = NSMutableAttributedString(string: task.text)
       attributeString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 1, range: NSMakeRange(0, attributeString.length))
@@ -161,7 +148,9 @@ class TaskCell: UITableViewCell {
     }
 
     if let deadline = task.deadline {
+      print("ура дедлайн есть")
       taskStackView.addArrangedSubview(deadlineStackView)
+      calendarImageView.image = Images.image(for: .calendar)
       deadlineStackView.addArrangedSubview(calendarImageView)
       deadlineLabel.text = formatDateWithoutYear(for: deadline)
       deadlineStackView.addArrangedSubview(deadlineLabel)
@@ -169,11 +158,10 @@ class TaskCell: UITableViewCell {
   }
 
   @objc private func statusButtonTapped(_ sender: UIButton) {
-    let attributeString = NSMutableAttributedString(string: titleLabel.text!)
-    attributeString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 1, range: NSMakeRange(0, attributeString.length))
     if sender.currentImage == Images.image(for: .RBoff) || sender.currentImage == Images.image(for: .RBhighPriority) {
       sender.setImage(Images.image(for: .RBon), for: .normal)
       titleLabel.textColor = Colors.color(for: .labelTertiary)
+      attributeString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 1, range: NSMakeRange(0, attributeString.length))
       titleLabel.attributedText = attributeString
     } else {
       sender.setImage(Images.image(for: .RBoff), for: .normal)
@@ -185,6 +173,16 @@ class TaskCell: UITableViewCell {
 
   required init?(coder _: NSCoder) {
     nil
+  }
+
+  override func prepareForReuse() {
+    super.prepareForReuse()
+    statusButton.setImage(Images.image(for: .RBoff), for: .normal)
+    attributeString.removeAttribute(NSAttributedString.Key.strikethroughStyle, range: NSMakeRange(0, attributeString.length))
+    titleLabel.text = nil
+    deadlineLabel.text = nil
+    statusIcon.image = nil
+    calendarImageView.image = nil
   }
 
   override func awakeFromNib() {

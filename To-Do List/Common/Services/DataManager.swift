@@ -12,12 +12,12 @@ final class DataManager {
   private init() {}
 
   let fileCache = FileCache()
-  var tasks: [String: Task] = [:]
+  var tasks: [Task] = []
 
   func getData() -> Task {
     fileCache.loadFromJSON(from: "task") { _ in }
-    tasks = fileCache.items
-    return tasks.first?.value ?? Task(text: "", createdAt: .now, importance: .important, isDone: false)
+    tasks = fileCache.tasks
+    return tasks.first ?? Task(text: "", createdAt: .now, importance: .important, isDone: false)
   }
 
   func delete(_ item: Task, completion: @escaping (Error?) -> Void) {

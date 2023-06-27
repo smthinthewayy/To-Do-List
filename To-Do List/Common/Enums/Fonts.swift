@@ -21,7 +21,7 @@ enum Fonts {
   var font: UIFont? {
     switch self {
     case .largeTitle:
-      return UIFont.systemFont(ofSize: 38, weight: .bold)
+      return UIFont.systemFont(ofSize: 34, weight: .bold)
     case .title:
       return UIFont.systemFont(ofSize: 20, weight: .semibold)
     case .headline:

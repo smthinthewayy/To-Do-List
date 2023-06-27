@@ -7,12 +7,21 @@
 
 import UIKit
 
+// MARK: - TaskDetailsVCDelegate
+
+protocol TaskDetailsVCDelegate: AnyObject {
+  func deleteTask(_ id: String)
+  func saveTask(_ task: Task)
+}
+
 // MARK: - TaskDetailsVC
 
 class TaskDetailsVC: UIViewController {
-  private var taskDetailsView = TaskDetailsView()
+  var taskDetailsView = TaskDetailsView()
 
   private var taskDescription: String = ""
+
+  var selectedTask: Task?
 
   lazy var cancelButton: UIBarButtonItem = {
     let button = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(cancelTapped))
@@ -32,6 +41,10 @@ class TaskDetailsVC: UIViewController {
     return button
   }()
 
+  var taskAdded: ((Task) -> Void)?
+
+  weak var delegate: TaskDetailsVCDelegate?
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setupNavigationBar()
@@ -48,6 +61,8 @@ class TaskDetailsVC: UIViewController {
   private func setupTaskDetailsView() {
     view.addSubview(taskDetailsView)
     taskDetailsView.delegate = self
+    taskDetailsView.task = selectedTask ?? Task(text: "", createdAt: .now, importance: .important, isDone: false)
+    taskDetailsView.refreshView()
     NSLayoutConstraint.activate([
       taskDetailsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
       taskDetailsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -69,18 +84,14 @@ extension TaskDetailsVC: TaskDetailsViewDelegate {
   }
 
   @objc func saveTapped() {
-    taskDetailsView.item.text = taskDescription
-
-    DataManager.shared.add(taskDetailsView.item) { error in
-      switch error {
-      case nil:
-        self.dismiss(animated: true)
-        self.taskDetailsView.deleteButton.isEnabled = true
-        self.saveButton.isEnabled = false
-      default:
-        self.showAlert(title: "Не удалось сохранить файл", message: error?.localizedDescription)
-      }
-    }
+    fetchTaskDescription(taskDetailsView.taskDescriptionTextView)
+    taskDetailsView.task.text = taskDescription
+    
+    
+    delegate?.saveTask(taskDetailsView.task)
+    
+    
+    dismiss(animated: true)
   }
 
   private func showAlert(title: String, message: String?) {
@@ -90,17 +101,20 @@ extension TaskDetailsVC: TaskDetailsViewDelegate {
   }
 
   func deleteButtonTapped() {
-    let fileManager = FileManager.default
-    let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
-    let fileURL = documentsDirectory.appendingPathComponent("task.json")
-
-    do {
-      try fileManager.removeItem(at: fileURL)
-      dismiss(animated: true)
-      clearView()
-    } catch {
-      showAlert(title: "Не удалось удалить файл", message: error.localizedDescription)
-    }
+    delegate?.deleteTask(selectedTask?.id ?? "")
+    dismiss(animated: true)
+    clearView()
+//    let fileManager = FileManager.default
+//    let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+//    let fileURL = documentsDirectory.appendingPathComponent("task.json")
+//
+//    do {
+//      try fileManager.removeItem(at: fileURL)
+//      dismiss(animated: true)
+//      clearView()
+//    } catch {
+//      showAlert(title: "Не удалось удалить файл", message: error.localizedDescription)
+//    }
   }
 
   private func clearView() {
@@ -109,7 +123,7 @@ extension TaskDetailsVC: TaskDetailsViewDelegate {
     taskDetailsView.parametersView.importancePicker.selectedSegmentIndex = 2
     taskDetailsView.parametersView.deadlineSwitch.isOn = false
     taskDetailsView.parametersView.deadlineDateButton.isHidden = true
-    taskDetailsView.deleteButton.isEnabled = false
+//    taskDetailsView.deleteButton.isEnabled = false
     saveButton.isEnabled = false
   }
 
@@ -127,24 +141,24 @@ extension TaskDetailsVC: TaskDetailsViewDelegate {
 extension TaskDetailsVC: ParametersViewDelegate {
   func switchTapped(_ sender: UISwitch) {
     if sender.isOn {
-      taskDetailsView.item.deadline = .now + 24 * 60 * 60
+      taskDetailsView.task.deadline = .now + 24 * 60 * 60
     } else {
-      taskDetailsView.item.deadline = nil
+      taskDetailsView.task.deadline = nil
     }
     saveButton.isEnabled = true
   }
 
   func segmentControlTapped(_ sender: UISegmentedControl) {
     switch sender.selectedSegmentIndex {
-    case 0: taskDetailsView.item.importance = .low
-    case 2: taskDetailsView.item.importance = .important
-    default: taskDetailsView.item.importance = .normal
+    case 0: taskDetailsView.task.importance = .low
+    case 2: taskDetailsView.task.importance = .important
+    default: taskDetailsView.task.importance = .normal
     }
     saveButton.isEnabled = true
   }
 
   func dateSelection(_ date: DateComponents?) {
-    taskDetailsView.item.deadline = date!.date
+    taskDetailsView.task.deadline = date!.date
     saveButton.isEnabled = true
   }
 }

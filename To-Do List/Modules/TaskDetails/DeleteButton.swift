@@ -27,7 +27,7 @@ class DeleteButton: UIButton {
     backgroundColor = Colors.color(for: .backSecondary)
     setTitle("Удалить", for: .normal)
     setTitleColor(Colors.color(for: .red), for: .normal)
-    isEnabled = false
+    isEnabled = true
     setTitleColor(Colors.color(for: .labelTertiary), for: .disabled)
     layer.cornerRadius = Constants.cornerRadius
     addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)

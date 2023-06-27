@@ -74,7 +74,7 @@ class TaskDetailsView: UIView {
 
   let parametersView = ParametersView()
 
-  var item = DataManager.shared.getData()
+  var task = Task(text: "", createdAt: .now, importance: .important, isDone: false)
 
   let taskDescriptionTextView = TaskTextView()
 
@@ -96,13 +96,36 @@ class TaskDetailsView: UIView {
   }
 
   private func initViewIfNeeded() {
-    item = DataManager.shared.getData()
-
-    if !item.text.isEmpty {
-      taskDescriptionTextView.text = item.text
+//    item = DataManager.shared.getData()
+//
+//    if !item.text.isEmpty {
+//      taskDescriptionTextView.text = item.text
+//      taskDescriptionTextView.textColor = Colors.color(for: .labelPrimary)
+//
+//      switch item.importance {
+//      case .important:
+//        parametersView.importancePicker.selectedSegmentIndex = 2
+//      case .low:
+//        parametersView.importancePicker.selectedSegmentIndex = 0
+//      default:
+//        parametersView.importancePicker.selectedSegmentIndex = 1
+//      }
+//
+//      if let deadline = item.deadline {
+//        parametersView.deadlineSwitch.isOn = true
+//        parametersView.deadlineDateButton.setTitle(formatDate(for: deadline), for: .normal)
+//        parametersView.deadlineDateButton.isHidden = false
+//        deleteButton.isEnabled = true
+//      }
+//    }
+  }
+  
+  func refreshView() {
+    if !task.text.isEmpty {
+      taskDescriptionTextView.text = task.text
       taskDescriptionTextView.textColor = Colors.color(for: .labelPrimary)
 
-      switch item.importance {
+      switch task.importance {
       case .important:
         parametersView.importancePicker.selectedSegmentIndex = 2
       case .low:
@@ -111,7 +134,7 @@ class TaskDetailsView: UIView {
         parametersView.importancePicker.selectedSegmentIndex = 1
       }
 
-      if let deadline = item.deadline {
+      if let deadline = task.deadline {
         parametersView.deadlineSwitch.isOn = true
         parametersView.deadlineDateButton.setTitle(formatDate(for: deadline), for: .normal)
         parametersView.deadlineDateButton.isHidden = false
