@@ -3,6 +3,26 @@
     {
       "filename" : "RBhighPriority.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
+      "filename" : "RBhighPriority 1.svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "radioButton.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {

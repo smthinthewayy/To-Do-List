@@ -1,7 +1,27 @@
 {
   "images" : [
     {
-      "filename" : "calendar.svg",
+      "filename" : "Group 4.svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "light"
+        }
+      ],
+      "filename" : "Group 5.svg",
+      "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "Group 3.svg",
       "idiom" : "universal"
     }
   ],
