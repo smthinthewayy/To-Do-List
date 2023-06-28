@@ -128,7 +128,7 @@ extension TaskListVC: UITableViewDataSource {
     else { return UITableViewCell() }
 
     cell.delegate = self
-
+    
     cell.configure(with: tasks[indexPath.row])
 
     return cell
@@ -190,6 +190,60 @@ extension TaskListVC: UITableViewDelegate {
     ])
 
     return headerView
+  }
+
+  func tableView(_: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    guard !tasks.isEmpty else {
+      return nil
+    }
+
+    let action = UIContextualAction(
+      style: .normal,
+      title: nil,
+      handler: { [weak self] _, _, _ in
+        self?.tasks[indexPath.row].isDone.toggle()
+      }
+    )
+
+    action.image = Images.image(for: .circleCheckmark)
+    action.backgroundColor = Colors.color(for: .green)
+
+    return UISwipeActionsConfiguration(actions: [action])
+  }
+
+  func tableView(_: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+    guard !tasks.isEmpty else {
+      return nil
+    }
+
+    let openDetailsAction = UIContextualAction(
+      style: .normal,
+      title: nil,
+      handler: { [weak self] _, _, _ in
+        let selectedTask = self?.tasks[indexPath.row]
+        let taskDetailsVC = TaskDetailsVC()
+        taskDetailsVC.delegate = self
+        taskDetailsVC.selectedTask = selectedTask
+        taskDetailsVC.taskDetailsView.refreshView()
+        let taskDetailsNC = UINavigationController(rootViewController: taskDetailsVC)
+        self?.present(taskDetailsNC, animated: true, completion: nil)
+      }
+    )
+    openDetailsAction.image = Images.image(for: .circleInfo)
+    openDetailsAction.backgroundColor = Colors.color(for: .grayLight)
+
+    let deleteAction = UIContextualAction(
+      style: .normal,
+      title: nil,
+      handler: { [weak self] _, _, _ in
+        self?.deleteTask(self?.tasks[indexPath.row].id ?? "")
+      }
+    )
+
+    deleteAction.image = Images.image(for: .trash)
+    deleteAction.backgroundColor = Colors.color(for: .red)
+
+    return UISwipeActionsConfiguration(actions: [deleteAction, openDetailsAction])
   }
 }
 

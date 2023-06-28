@@ -18,6 +18,9 @@ enum Images {
   case RBhighPriority
   case RBoff
   case RBon
+  case circleCheckmark
+  case circleInfo
+  case trash
 
   var image: UIImage? {
     return UIImage(named: name)
@@ -41,6 +44,12 @@ enum Images {
       return "RBoff"
     case .RBon:
       return "RBon"
+    case .circleCheckmark:
+      return "circleCheckmark"
+    case .circleInfo:
+      return "circleInfo"
+    case .trash:
+      return "trash"
     }
   }
 
