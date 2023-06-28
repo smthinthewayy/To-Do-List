@@ -119,6 +119,26 @@ extension TaskListVC: AddButtonDelegate {
 // MARK: UITableViewDataSource
 
 extension TaskListVC: UITableViewDataSource {
+  func tableView(_: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+    var maskPath = UIBezierPath(
+      roundedRect: cell.bounds,
+      byRoundingCorners: [.topLeft, .topRight],
+      cornerRadii: CGSize(width: 0, height: 0)
+    )
+
+    if indexPath.row == 0 || indexPath.row == tasks.count - 1 {
+      maskPath = UIBezierPath(
+        roundedRect: cell.bounds,
+        byRoundingCorners: [.topLeft, .topRight],
+        cornerRadii: CGSize(width: 16, height: 16)
+      )
+    }
+
+    let shape = CAShapeLayer()
+    shape.path = maskPath.cgPath
+    cell.layer.mask = shape
+  }
+
   func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
     return tasks.count
   }
@@ -128,7 +148,7 @@ extension TaskListVC: UITableViewDataSource {
     else { return UITableViewCell() }
 
     cell.delegate = self
-    
+
     cell.configure(with: tasks[indexPath.row])
 
     return cell
