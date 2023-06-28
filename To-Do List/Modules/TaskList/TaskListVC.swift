@@ -18,11 +18,36 @@ class TaskListVC: UIViewController {
 
   private var fileCache = FileCache()
 
+  private var counterOfCompletedTasks: Int = 0
+
+  private let counterOfCompletedTasksLabel: UILabel = {
+    let label = UILabel()
+    label.text = "Выполнено — 0"
+    label.font = Fonts.font(for: .subhead)
+    label.textColor = Colors.color(for: .labelTertiary)
+    label.translatesAutoresizingMaskIntoConstraints = false
+    return label
+  }()
+
+  private lazy var hideButton: UIButton = {
+    let button = UIButton()
+    button.setTitle("Скрыть", for: .normal)
+    button.setTitleColor(Colors.color(for: .blue), for: .normal)
+    button.titleLabel?.font = Fonts.font(for: .mediumSubhead)
+    button.addTarget(self, action: #selector(hideButtonTapped), for: .touchUpInside)
+    button.translatesAutoresizingMaskIntoConstraints = false
+    return button
+  }()
+
   private var tasks: [Task] = [] {
     didSet {
+      counterOfCompletedTasks = tasks.filter { $0.isDone == true }.count
+      counterOfCompletedTasksLabel.text = "Выполнено — \(counterOfCompletedTasks)"
       tasksList.reloadData()
     }
   }
+
+  private var allTasks: [Task] = []
 
   private enum Constants {
     static let estimatedRowHeight: CGFloat = 56
@@ -61,10 +86,18 @@ class TaskListVC: UIViewController {
 
   @objc private func hideButtonTapped(_ sender: UIButton) {
     if sender.titleLabel?.text == "Скрыть" {
+      allTasks = tasks
+      tasks = tasks.filter { $0.isDone == false }
+      counterOfCompletedTasks = allTasks.filter { $0.isDone == true }.count
+      counterOfCompletedTasksLabel.text = "Выполнено — \(counterOfCompletedTasks)"
       sender.setTitle("Показать", for: .normal)
     } else {
+      tasks = allTasks
       sender.setTitle("Скрыть", for: .normal)
     }
+    UIView.transition(with: tasksList, duration: 0.3, options: .transitionFlipFromRight, animations: {
+      self.tasksList.reloadData()
+    }, completion: nil)
   }
 
   private func getTasks() {
@@ -95,6 +128,7 @@ extension TaskListVC: UITableViewDataSource {
     else { return UITableViewCell() }
 
     cell.delegate = self
+
     cell.configure(with: tasks[indexPath.row])
 
     return cell
@@ -143,23 +177,10 @@ extension TaskListVC: UITableViewDelegate {
       cell.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -16),
     ])
 
-    let label = UILabel()
-    label.text = "Выполнено — 5"
-    label.font = Fonts.font(for: .subhead)
-    label.textColor = Colors.color(for: .labelTertiary)
-    label.translatesAutoresizingMaskIntoConstraints = false
-
-    let hideButton = UIButton()
-    hideButton.setTitle("Скрыть", for: .normal)
-    hideButton.setTitleColor(Colors.color(for: .blue), for: .normal)
-    hideButton.titleLabel?.font = Fonts.font(for: .mediumSubhead)
-    hideButton.addTarget(self, action: #selector(hideButtonTapped), for: .touchUpInside)
-    hideButton.translatesAutoresizingMaskIntoConstraints = false
-
-    cell.addSubview(label)
+    cell.addSubview(counterOfCompletedTasksLabel)
     NSLayoutConstraint.activate([
-      label.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
-      label.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 16),
+      counterOfCompletedTasksLabel.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
+      counterOfCompletedTasksLabel.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 16),
     ])
 
     cell.addSubview(hideButton)

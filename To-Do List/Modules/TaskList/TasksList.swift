@@ -24,7 +24,6 @@ class TasksList: UITableView {
     )
     rowHeight = UITableView.automaticDimension
     estimatedRowHeight = Constants.estimatedRowHeight
-//    separatorStyle = .none
     showsVerticalScrollIndicator = false
     translatesAutoresizingMaskIntoConstraints = false
   }
