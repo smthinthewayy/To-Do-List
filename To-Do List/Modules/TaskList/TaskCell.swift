@@ -7,6 +7,14 @@
 
 import UIKit
 
+// MARK: - TaskCellDelegate
+
+protocol TaskCellDelegate: AnyObject {
+  func taskCellDidToggleStatusButton(_ taskCell: TaskCell)
+}
+
+// MARK: - TaskCell
+
 class TaskCell: UITableViewCell {
   let taskStackView: UIStackView = {
     let stackView = UIStackView()
@@ -28,7 +36,7 @@ class TaskCell: UITableViewCell {
     return stackView
   }()
 
-  let deadlineStackView: UIStackView = {
+  var deadlineStackView: UIStackView = {
     let stackView = UIStackView()
     stackView.axis = .horizontal
     stackView.alignment = .center
@@ -86,11 +94,14 @@ class TaskCell: UITableViewCell {
 
   private let statusIcon: UIImageView = {
     let imageView = UIImageView()
+    imageView.sizeToFit()
     imageView.translatesAutoresizingMaskIntoConstraints = false
     return imageView
   }()
 
   lazy var attributeString: NSMutableAttributedString = .init(string: titleLabel.text ?? "")
+
+  weak var delegate: TaskCellDelegate?
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -125,17 +136,26 @@ class TaskCell: UITableViewCell {
   func configure(with task: Task) {
     titleLabel.text = task.text
 
-    if task.importance == .important {
+    switch task.importance {
+    case .important:
       statusButton.setImage(Images.image(for: .RBhighPriority), for: .normal)
       statusIcon.image = Images.image(for: .highImportance)
       titleStackView.addArrangedSubview(statusIcon)
       titleStackView.addArrangedSubview(titleLabel)
-    } else if task.importance == .low {
+    case .low:
       statusIcon.image = Images.image(for: .lowImportance)
       titleStackView.addArrangedSubview(statusIcon)
       titleStackView.addArrangedSubview(titleLabel)
-    } else {
+    default:
       titleStackView.addArrangedSubview(titleLabel)
+    }
+
+    if let deadline = task.deadline {
+      taskStackView.addArrangedSubview(deadlineStackView)
+      calendarImageView.image = Images.image(for: .calendar)
+      deadlineStackView.addArrangedSubview(calendarImageView)
+      deadlineLabel.text = formatDateWithoutYear(for: deadline)
+      deadlineStackView.addArrangedSubview(deadlineLabel)
     }
 
     if task.isDone {
@@ -146,29 +166,10 @@ class TaskCell: UITableViewCell {
       titleLabel.attributedText = attributeString
       titleStackView.addArrangedSubview(titleLabel)
     }
-
-    if let deadline = task.deadline {
-      print("ура дедлайн есть")
-      taskStackView.addArrangedSubview(deadlineStackView)
-      calendarImageView.image = Images.image(for: .calendar)
-      deadlineStackView.addArrangedSubview(calendarImageView)
-      deadlineLabel.text = formatDateWithoutYear(for: deadline)
-      deadlineStackView.addArrangedSubview(deadlineLabel)
-    }
   }
 
-  @objc private func statusButtonTapped(_ sender: UIButton) {
-    if sender.currentImage == Images.image(for: .RBoff) || sender.currentImage == Images.image(for: .RBhighPriority) {
-      sender.setImage(Images.image(for: .RBon), for: .normal)
-      titleLabel.textColor = Colors.color(for: .labelTertiary)
-      attributeString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 1, range: NSMakeRange(0, attributeString.length))
-      titleLabel.attributedText = attributeString
-    } else {
-      sender.setImage(Images.image(for: .RBoff), for: .normal)
-      titleLabel.textColor = Colors.color(for: .labelPrimary)
-      attributeString.removeAttribute(NSAttributedString.Key.strikethroughStyle, range: NSMakeRange(0, attributeString.length))
-      titleLabel.attributedText = attributeString
-    }
+  @objc private func statusButtonTapped() {
+    delegate?.taskCellDidToggleStatusButton(self)
   }
 
   required init?(coder _: NSCoder) {
@@ -179,6 +180,14 @@ class TaskCell: UITableViewCell {
     super.prepareForReuse()
     statusButton.setImage(Images.image(for: .RBoff), for: .normal)
     attributeString.removeAttribute(NSAttributedString.Key.strikethroughStyle, range: NSMakeRange(0, attributeString.length))
+    titleLabel.textColor = Colors.color(for: .labelPrimary)
+    titleLabel.attributedText = nil
+    deadlineStackView.removeArrangedSubview(deadlineLabel)
+    deadlineStackView.removeArrangedSubview(calendarImageView)
+    titleStackView.removeArrangedSubview(statusIcon)
+    titleStackView.removeArrangedSubview(titleLabel)
+    taskStackView.removeArrangedSubview(deadlineStackView)
+    taskStackView.removeArrangedSubview(taskStackView)
     titleLabel.text = nil
     deadlineLabel.text = nil
     statusIcon.image = nil

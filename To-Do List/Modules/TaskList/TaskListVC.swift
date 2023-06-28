@@ -94,6 +94,7 @@ extension TaskListVC: UITableViewDataSource {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as? TaskCell
     else { return UITableViewCell() }
 
+    cell.delegate = self
     cell.configure(with: tasks[indexPath.row])
 
     return cell
@@ -182,7 +183,19 @@ extension TaskListVC: TaskDetailsVCDelegate {
 
   func saveTask(_ task: Task) {
     let _ = fileCache.add(task)
-    getTasks()
     fileCache.saveToJSON(to: "tasks") { _ in }
+    getTasks()
+  }
+}
+
+// MARK: TaskCellDelegate
+
+extension TaskListVC: TaskCellDelegate {
+  func taskCellDidToggleStatusButton(_ taskCell: TaskCell) {
+    // обработать случай если indexPath окажется больше чем тасок
+    guard let indexPath = tasksList.indexPath(for: taskCell) else { return }
+    var selectedTask = tasks[indexPath.row]
+    selectedTask.isDone.toggle()
+    saveTask(selectedTask)
   }
 }

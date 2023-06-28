@@ -96,7 +96,7 @@ class FileCache {
         throw FileCacheErrors.invalidData
       }
 
-      let deserializedtasks = json.compactMap { Task.parse(json: $0) }
+      let deserializedtasks = json.compactMap { Task.parse(json: $0) }.sorted { $0.createdAt.timeIntervalSince1970 > $1.createdAt.timeIntervalSince1970 }
       tasks = deserializedtasks
 
       DispatchQueue.main.async {
