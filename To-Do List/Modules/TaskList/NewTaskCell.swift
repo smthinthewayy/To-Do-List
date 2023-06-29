@@ -8,19 +8,21 @@
 import UIKit
 
 class NewTaskCell: UITableViewCell {
+  private lazy var label: UILabel = {
+    let label = UILabel()
+    label.text = "Новое"
+    label.textColor = Colors.color(for: .labelTertiary)
+    label.font = Fonts.font(for: .body)
+    label.translatesAutoresizingMaskIntoConstraints = false
+    return label
+  }()
+
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
+    setupLabel()
+  }
 
-//    contentView.translatesAutoresizingMaskIntoConstraints = true
-
-//    contentView.addSubview(view)
-//    NSLayoutConstraint.activate([
-//      view.topAnchor.constraint(equalTo: contentView.topAnchor),
-//      view.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-//      view.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-//      view.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -56),
-//    ])
-
+  private func setupLabel() {
     contentView.addSubview(label)
     NSLayoutConstraint.activate([
       label.topAnchor.constraint(equalTo: contentView.topAnchor),
@@ -34,22 +36,6 @@ class NewTaskCell: UITableViewCell {
   required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
-
-  private let view: UIView = {
-    let view = UIView()
-    view.backgroundColor = .clear
-    view.translatesAutoresizingMaskIntoConstraints = true
-    return view
-  }()
-
-  private lazy var label: UILabel = {
-    let label = UILabel()
-    label.text = "Новое"
-    label.textColor = Colors.color(for: .labelTertiary)
-    label.font = Fonts.font(for: .body)
-    label.translatesAutoresizingMaskIntoConstraints = false
-    return label
-  }()
 
   override func awakeFromNib() {
     super.awakeFromNib()

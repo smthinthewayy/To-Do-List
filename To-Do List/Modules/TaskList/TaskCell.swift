@@ -16,7 +16,7 @@ protocol TaskCellDelegate: AnyObject {
 // MARK: - TaskCell
 
 class TaskCell: UITableViewCell {
-  let taskStackView: UIStackView = {
+  private let taskStackView: UIStackView = {
     let stackView = UIStackView()
     stackView.axis = .vertical
     stackView.alignment = .leading
@@ -26,7 +26,7 @@ class TaskCell: UITableViewCell {
     return stackView
   }()
 
-  let titleStackView: UIStackView = {
+  private let titleStackView: UIStackView = {
     let stackView = UIStackView()
     stackView.axis = .horizontal
     stackView.alignment = .center
@@ -36,7 +36,7 @@ class TaskCell: UITableViewCell {
     return stackView
   }()
 
-  var deadlineStackView: UIStackView = {
+  private var deadlineStackView: UIStackView = {
     let stackView = UIStackView()
     stackView.axis = .horizontal
     stackView.alignment = .center
@@ -46,21 +46,21 @@ class TaskCell: UITableViewCell {
     return stackView
   }()
 
-  var calendarImageView: UIImageView = {
+  private var calendarImageView: UIImageView = {
     let imageView = UIImageView()
     imageView.image = Images.image(for: .calendar)
     imageView.translatesAutoresizingMaskIntoConstraints = false
     return imageView
   }()
 
-  let deadlineLabel: UILabel = {
+  private let deadlineLabel: UILabel = {
     let label = UILabel()
     label.font = Fonts.font(for: .subhead)
     label.textColor = Colors.color(for: .labelTertiary)
     return label
   }()
 
-  let titleLabel: UILabel = {
+  private let titleLabel: UILabel = {
     let label = UILabel()
     label.font = Fonts.font(for: .body)
     label.textColor = Colors.color(for: .labelPrimary)
@@ -107,20 +107,30 @@ class TaskCell: UITableViewCell {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
 
     separatorInset = UIEdgeInsets(top: 0, left: 52, bottom: 0, right: 0)
-
     backgroundColor = Colors.color(for: .backSecondary)
+
+    setupChevron()
+    setupStatusButton()
+    setupTaskStackView()
+  }
+
+  private func setupChevron() {
     contentView.addSubview(chevron)
     NSLayoutConstraint.activate([
       chevron.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
       chevron.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
     ])
+  }
 
+  private func setupStatusButton() {
     contentView.addSubview(statusButton)
     NSLayoutConstraint.activate([
       statusButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
       statusButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
     ])
+  }
 
+  private func setupTaskStackView() {
     contentView.addSubview(taskStackView)
     NSLayoutConstraint.activate([
       taskStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16),
@@ -129,7 +139,6 @@ class TaskCell: UITableViewCell {
       taskStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16),
       taskStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 24),
     ])
-
     taskStackView.addArrangedSubview(titleStackView)
   }
 
