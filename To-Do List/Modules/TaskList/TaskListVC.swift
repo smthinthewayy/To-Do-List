@@ -39,15 +39,21 @@ class TaskListVC: UIViewController {
     return button
   }()
 
-  private var tasks: [Task] = [] {
-    didSet {
-      counterOfCompletedTasks = tasks.filter { $0.isDone == true }.count
-      counterOfCompletedTasksLabel.text = "Выполнено — \(counterOfCompletedTasks)"
-      tasksList.reloadData()
-    }
-  }
+  private var tasks: [Task] = []
 
-  private var allTasks: [Task] = []
+  private var showingTasks: [Task] = []
+
+  private func setupShowingTasks() {
+    getTasks()
+    if hideButton.titleLabel?.text == "Скрыть" {
+      showingTasks = tasks
+    } else {
+      showingTasks = tasks.filter { $0.isDone == false }
+    }
+    counterOfCompletedTasks = tasks.filter { $0.isDone == true }.count
+    counterOfCompletedTasksLabel.text = "Выполнено — \(counterOfCompletedTasks)"
+    tasksList.reloadData()
+  }
 
   private enum Constants {
     static let estimatedRowHeight: CGFloat = 56
@@ -60,6 +66,7 @@ class TaskListVC: UIViewController {
     super.viewDidLoad()
     fileCache.loadFromJSON(from: "tasks") { _ in }
     getTasks()
+    initShowingTasks()
     view.backgroundColor = Colors.color(for: .backPrimary)
     title = "Мои дела"
     navigationController?.navigationBar.prefersLargeTitles = true
@@ -87,13 +94,10 @@ class TaskListVC: UIViewController {
 
   @objc private func hideButtonTapped(_ sender: UIButton) {
     if sender.titleLabel?.text == "Скрыть" {
-      allTasks = tasks
-      tasks = tasks.filter { $0.isDone == false }
-      counterOfCompletedTasks = allTasks.filter { $0.isDone == true }.count
-      counterOfCompletedTasksLabel.text = "Выполнено — \(counterOfCompletedTasks)"
+      showingTasks = tasks.filter { $0.isDone == false }
       sender.setTitle("Показать", for: .normal)
     } else {
-      tasks = allTasks
+      showingTasks = tasks
       sender.setTitle("Скрыть", for: .normal)
     }
     UIView.transition(with: tasksList, duration: 0.3, options: .transitionFlipFromRight, animations: {
@@ -103,6 +107,12 @@ class TaskListVC: UIViewController {
 
   private func getTasks() {
     tasks = fileCache.tasks
+  }
+
+  private func initShowingTasks() {
+    showingTasks = tasks
+    counterOfCompletedTasks = tasks.filter { $0.isDone == true }.count
+    counterOfCompletedTasksLabel.text = "Выполнено — \(counterOfCompletedTasks)"
   }
 }
 
@@ -149,7 +159,7 @@ extension TaskListVC: UITableViewDataSource {
   }
 
   func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-    return tasks.count + 1
+    return showingTasks.count + 1
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -159,11 +169,11 @@ extension TaskListVC: UITableViewDataSource {
     else { return UITableViewCell() }
 
     cell.delegate = self
-    if indexPath.row <= tasks.count - 1 {
-      cell.configure(with: tasks[indexPath.row])
+    if indexPath.row <= showingTasks.count - 1 {
+      cell.configure(with: showingTasks[indexPath.row])
     }
 
-    return indexPath.row == tasks.count ? newCell : cell
+    return indexPath.row == showingTasks.count ? newCell : cell
   }
 }
 
@@ -176,8 +186,8 @@ extension TaskListVC: UITableViewDelegate {
     let taskDetailsVC = TaskDetailsVC()
     taskDetailsVC.delegate = self
 
-    if indexPath.row <= tasks.count - 1 {
-      let selectedTask = tasks[indexPath.row]
+    if indexPath.row <= showingTasks.count - 1 {
+      let selectedTask = showingTasks[indexPath.row]
       taskDetailsVC.selectedTask = selectedTask
       taskDetailsVC.taskDetailsView.refreshView()
     }
@@ -228,7 +238,7 @@ extension TaskListVC: UITableViewDelegate {
   }
 
   func tableView(_: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-    guard !tasks.isEmpty else {
+    guard !showingTasks.isEmpty else {
       return nil
     }
 
@@ -236,7 +246,9 @@ extension TaskListVC: UITableViewDelegate {
       style: .normal,
       title: nil,
       handler: { [weak self] _, _, _ in
-        self?.tasks[indexPath.row].isDone.toggle()
+        var task = self?.showingTasks[indexPath.row]
+        task?.isDone.toggle()
+        self?.saveTask(task!)
       }
     )
 
@@ -247,7 +259,7 @@ extension TaskListVC: UITableViewDelegate {
   }
 
   func tableView(_: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-    guard !tasks.isEmpty else {
+    guard !showingTasks.isEmpty else {
       return nil
     }
 
@@ -255,7 +267,7 @@ extension TaskListVC: UITableViewDelegate {
       style: .normal,
       title: nil,
       handler: { [weak self] _, _, _ in
-        let selectedTask = self?.tasks[indexPath.row]
+        let selectedTask = self?.showingTasks[indexPath.row]
         let taskDetailsVC = TaskDetailsVC()
         taskDetailsVC.delegate = self
         taskDetailsVC.selectedTask = selectedTask
@@ -271,7 +283,7 @@ extension TaskListVC: UITableViewDelegate {
       style: .normal,
       title: nil,
       handler: { [weak self] _, _, _ in
-        self?.deleteTask(self?.tasks[indexPath.row].id ?? "")
+        self?.deleteTask(self?.showingTasks[indexPath.row].id ?? "")
       }
     )
 
@@ -287,14 +299,14 @@ extension TaskListVC: UITableViewDelegate {
 extension TaskListVC: TaskDetailsVCDelegate {
   func deleteTask(_ id: String) {
     let _ = fileCache.delete(id)
-    getTasks()
     fileCache.saveToJSON(to: "tasks") { _ in }
+    setupShowingTasks()
   }
 
   func saveTask(_ task: Task) {
     let _ = fileCache.add(task)
     fileCache.saveToJSON(to: "tasks") { _ in }
-    getTasks()
+    setupShowingTasks()
   }
 }
 
@@ -302,9 +314,8 @@ extension TaskListVC: TaskDetailsVCDelegate {
 
 extension TaskListVC: TaskCellDelegate {
   func taskCellDidToggleStatusButton(_ taskCell: TaskCell) {
-    // обработать случай если indexPath окажется больше чем тасок
     guard let indexPath = tasksList.indexPath(for: taskCell) else { return }
-    var selectedTask = tasks[indexPath.row]
+    var selectedTask = showingTasks[indexPath.row]
     selectedTask.isDone.toggle()
     saveTask(selectedTask)
   }

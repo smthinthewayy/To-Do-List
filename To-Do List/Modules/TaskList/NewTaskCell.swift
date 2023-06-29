@@ -19,6 +19,7 @@ class NewTaskCell: UITableViewCell {
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
+    backgroundColor = Colors.color(for: .backSecondary)
     setupLabel()
   }
 
