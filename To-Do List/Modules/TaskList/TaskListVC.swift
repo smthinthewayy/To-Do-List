@@ -53,6 +53,7 @@ class TaskListVC: UIViewController {
     static let estimatedRowHeight: CGFloat = 56
     static let cornerRadius: CGFloat = 16
     static let cellIdentifier: String = "TasksListItemCell"
+    static let newCellIdentifier: String = "NewTaskCell"
   }
 
   override func viewDidLoad() {
@@ -126,10 +127,18 @@ extension TaskListVC: UITableViewDataSource {
       cornerRadii: CGSize(width: 0, height: 0)
     )
 
-    if indexPath.row == 0 || indexPath.row == tasks.count - 1 {
+    if indexPath.row == 0 {
       maskPath = UIBezierPath(
         roundedRect: cell.bounds,
         byRoundingCorners: [.topLeft, .topRight],
+        cornerRadii: CGSize(width: 16, height: 16)
+      )
+    }
+
+    if indexPath.row == tasks.count {
+      maskPath = UIBezierPath(
+        roundedRect: cell.bounds,
+        byRoundingCorners: [.bottomLeft, .bottomRight],
         cornerRadii: CGSize(width: 16, height: 16)
       )
     }
@@ -140,18 +149,21 @@ extension TaskListVC: UITableViewDataSource {
   }
 
   func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-    return tasks.count
+    return tasks.count + 1
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     guard let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier, for: indexPath) as? TaskCell
     else { return UITableViewCell() }
+    guard let newCell = tableView.dequeueReusableCell(withIdentifier: Constants.newCellIdentifier, for: indexPath) as? NewTaskCell
+    else { return UITableViewCell() }
 
     cell.delegate = self
+    if indexPath.row <= tasks.count - 1 {
+      cell.configure(with: tasks[indexPath.row])
+    }
 
-    cell.configure(with: tasks[indexPath.row])
-
-    return cell
+    return indexPath.row == tasks.count ? newCell : cell
   }
 }
 
@@ -161,11 +173,14 @@ extension TaskListVC: UITableViewDelegate {
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     tableView.deselectRow(at: indexPath, animated: true)
 
-    let selectedTask = tasks[indexPath.row]
     let taskDetailsVC = TaskDetailsVC()
     taskDetailsVC.delegate = self
-    taskDetailsVC.selectedTask = selectedTask
-    taskDetailsVC.taskDetailsView.refreshView()
+
+    if indexPath.row <= tasks.count - 1 {
+      let selectedTask = tasks[indexPath.row]
+      taskDetailsVC.selectedTask = selectedTask
+      taskDetailsVC.taskDetailsView.refreshView()
+    }
 
     let taskDetailsNC = UINavigationController(rootViewController: taskDetailsVC)
     present(taskDetailsNC, animated: true, completion: nil)

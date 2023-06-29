@@ -12,15 +12,20 @@ class TasksList: UITableView {
     static let estimatedRowHeight: CGFloat = 56
     static let cornerRadius: CGFloat = 16
     static let cellIdentifier: String = "TasksListItemCell"
+    static let newCellIdentifier: String = "NewTaskCell"
   }
 
   init() {
     super.init(frame: .zero, style: .insetGrouped)
-    
+
     backgroundColor = .clear
     register(
       TaskCell.self,
       forCellReuseIdentifier: Constants.cellIdentifier
+    )
+    register(
+      NewTaskCell.self,
+      forCellReuseIdentifier: Constants.newCellIdentifier
     )
     rowHeight = UITableView.automaticDimension
     estimatedRowHeight = Constants.estimatedRowHeight
