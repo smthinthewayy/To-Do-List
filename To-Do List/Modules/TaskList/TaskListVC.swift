@@ -52,7 +52,13 @@ class TaskListVC: UIViewController {
     }
     counterOfCompletedTasks = tasks.filter { $0.isDone == true }.count
     counterOfCompletedTasksLabel.text = "Выполнено — \(counterOfCompletedTasks)"
-    tasksList.reloadData()
+    UIView.transition(with: tasksList,
+                      duration: 0.2,
+                      options: .transitionCrossDissolve,
+                      animations: { () in
+                        self.tasksList.reloadData()
+                      },
+                      completion: nil)
   }
 
   private enum Constants {

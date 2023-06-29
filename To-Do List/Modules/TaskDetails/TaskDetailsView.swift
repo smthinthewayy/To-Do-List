@@ -119,7 +119,7 @@ class TaskDetailsView: UIView {
 //      }
 //    }
   }
-  
+
   func refreshView() {
     if !task.text.isEmpty {
       taskDescriptionTextView.text = task.text
@@ -200,8 +200,8 @@ class TaskDetailsView: UIView {
     NSLayoutConstraint.activate([
       deleteButton.topAnchor.constraint(equalTo: parametersView.bottomAnchor, constant: 16),
       deleteButton.leadingAnchor.constraint(equalTo: parametersView.leadingAnchor),
+      deleteButton.trailingAnchor.constraint(equalTo: parametersView.trailingAnchor),
       deleteButton.heightAnchor.constraint(equalToConstant: 56),
-      deleteButton.widthAnchor.constraint(equalToConstant: 343),
     ])
   }
 }
