@@ -20,46 +20,11 @@ class TaskListVC: UIViewController {
 
   private var counterOfCompletedTasks: Int = 0
 
-  private let counterOfCompletedTasksLabel: UILabel = {
-    let label = UILabel()
-    label.text = "Выполнено — 0"
-    label.font = Fonts.font(for: .subhead)
-    label.textColor = Colors.color(for: .labelTertiary)
-    label.translatesAutoresizingMaskIntoConstraints = false
-    return label
-  }()
-
-  private lazy var hideButton: UIButton = {
-    let button = UIButton()
-    button.setTitle("Скрыть", for: .normal)
-    button.setTitleColor(Colors.color(for: .blue), for: .normal)
-    button.titleLabel?.font = Fonts.font(for: .mediumSubhead)
-    button.addTarget(self, action: #selector(hideButtonTapped), for: .touchUpInside)
-    button.translatesAutoresizingMaskIntoConstraints = false
-    return button
-  }()
+  private let tasksListHeaderView = TasksListHeaderView()
 
   private var tasks: [Task] = []
 
   private var showingTasks: [Task] = []
-
-  private func setupShowingTasks() {
-    getTasks()
-    if hideButton.titleLabel?.text == "Скрыть" {
-      showingTasks = tasks
-    } else {
-      showingTasks = tasks.filter { $0.isDone == false }
-    }
-    counterOfCompletedTasks = tasks.filter { $0.isDone == true }.count
-    counterOfCompletedTasksLabel.text = "Выполнено — \(counterOfCompletedTasks)"
-    UIView.transition(with: tasksList,
-                      duration: 0.2,
-                      options: .transitionCrossDissolve,
-                      animations: { () in
-                        self.tasksList.reloadData()
-                      },
-                      completion: nil)
-  }
 
   private enum Constants {
     static let estimatedRowHeight: CGFloat = 56
@@ -73,16 +38,26 @@ class TaskListVC: UIViewController {
     fileCache.loadFromJSON(from: "tasks") { _ in }
     getTasks()
     initShowingTasks()
-    view.backgroundColor = Colors.color(for: .backPrimary)
-    title = "Мои дела"
-    navigationController?.navigationBar.prefersLargeTitles = true
-    navigationController?.navigationBar.layoutMargins = UIEdgeInsets(top: 0, left: 32, bottom: 0, right: 0)
+    setupView()
+    setupDelegates()
+    setupTasksList()
+    setupAddButton()
+  }
 
-    addButton.delegate = self
-    tasksList.dataSource = self
-    tasksList.delegate = self
-    taskDetailsVC.delegate = self
+  override func viewWillTransition(to _: CGSize, with _: UIViewControllerTransitionCoordinator) {
+    tasksList.reloadData()
+  }
 
+  private func setupShowingTasks() {
+    getTasks()
+    showingTasks = hideButtonIsActive() ? tasks : tasks.filter { $0.isDone == false }
+    updateCompletedTasksLabel()
+    UIView.transition(with: tasksList, duration: 0.2, options: .transitionCrossDissolve, animations: {
+      self.tasksList.reloadData()
+    }, completion: nil)
+  }
+
+  private func setupTasksList() {
     view.addSubview(tasksList)
     NSLayoutConstraint.activate([
       tasksList.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -90,25 +65,29 @@ class TaskListVC: UIViewController {
       tasksList.trailingAnchor.constraint(equalTo: view.trailingAnchor),
       tasksList.bottomAnchor.constraint(equalTo: view.bottomAnchor),
     ])
+  }
 
+  private func setupView() {
+    view.backgroundColor = Colors.color(for: .backPrimary)
+    title = "Мои дела"
+    navigationController?.navigationBar.prefersLargeTitles = true
+    navigationController?.navigationBar.layoutMargins = UIEdgeInsets(top: 0, left: 32, bottom: 0, right: 0)
+  }
+
+  private func setupDelegates() {
+    addButton.delegate = self
+    tasksList.dataSource = self
+    tasksList.delegate = self
+    taskDetailsVC.delegate = self
+    tasksListHeaderView.delegate = self
+  }
+
+  private func setupAddButton() {
     view.addSubview(addButton)
     NSLayoutConstraint.activate([
       addButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
       addButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -25),
     ])
-  }
-
-  @objc private func hideButtonTapped(_ sender: UIButton) {
-    if sender.titleLabel?.text == "Скрыть" {
-      showingTasks = tasks.filter { $0.isDone == false }
-      sender.setTitle("Показать", for: .normal)
-    } else {
-      showingTasks = tasks
-      sender.setTitle("Скрыть", for: .normal)
-    }
-    UIView.transition(with: tasksList, duration: 0.3, options: .transitionFlipFromRight, animations: {
-      self.tasksList.reloadData()
-    }, completion: nil)
   }
 
   private func getTasks() {
@@ -117,8 +96,16 @@ class TaskListVC: UIViewController {
 
   private func initShowingTasks() {
     showingTasks = tasks
+    updateCompletedTasksLabel()
+  }
+
+  private func hideButtonIsActive() -> Bool {
+    tasksListHeaderView.hideButton.titleLabel?.text == "Скрыть"
+  }
+
+  private func updateCompletedTasksLabel() {
     counterOfCompletedTasks = tasks.filter { $0.isDone == true }.count
-    counterOfCompletedTasksLabel.text = "Выполнено — \(counterOfCompletedTasks)"
+    tasksListHeaderView.counterOfCompletedTasksLabel.text = "Выполнено — \(counterOfCompletedTasks)"
   }
 }
 
@@ -214,33 +201,8 @@ extension TaskListVC: UITableViewDelegate {
     return 40
   }
 
-  func tableView(_ tableView: UITableView, viewForHeaderInSection _: Int) -> UIView? {
-    let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 40))
-
-    let cell = UIView()
-    cell.translatesAutoresizingMaskIntoConstraints = false
-
-    headerView.addSubview(cell)
-    NSLayoutConstraint.activate([
-      cell.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 8),
-      cell.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
-      cell.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
-      cell.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -16),
-    ])
-
-    cell.addSubview(counterOfCompletedTasksLabel)
-    NSLayoutConstraint.activate([
-      counterOfCompletedTasksLabel.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
-      counterOfCompletedTasksLabel.leadingAnchor.constraint(equalTo: cell.leadingAnchor, constant: 16),
-    ])
-
-    cell.addSubview(hideButton)
-    NSLayoutConstraint.activate([
-      hideButton.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
-      hideButton.trailingAnchor.constraint(equalTo: cell.trailingAnchor, constant: -16),
-    ])
-
-    return headerView
+  func tableView(_: UITableView, viewForHeaderInSection _: Int) -> UIView? {
+    return tasksListHeaderView
   }
 
   func tableView(_: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -324,5 +286,22 @@ extension TaskListVC: TaskCellDelegate {
     var selectedTask = showingTasks[indexPath.row]
     selectedTask.isDone.toggle()
     saveTask(selectedTask)
+  }
+}
+
+// MARK: TasksListHeaderViewDelegate
+
+extension TaskListVC: TasksListHeaderViewDelegate {
+  func hideButtonTapped(_ sender: UIButton) {
+    if hideButtonIsActive() {
+      showingTasks = tasks.filter { $0.isDone == false }
+      sender.setTitle("Показать", for: .normal)
+    } else {
+      showingTasks = tasks
+      sender.setTitle("Скрыть", for: .normal)
+    }
+    UIView.transition(with: tasksList, duration: 0.3, options: .transitionFlipFromRight, animations: {
+      self.tasksList.reloadData()
+    }, completion: nil)
   }
 }

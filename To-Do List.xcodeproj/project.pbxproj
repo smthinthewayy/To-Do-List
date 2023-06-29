@@ -31,6 +31,7 @@
 		71B1DFE62A3DDE690069C2E8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71B1DFE52A3DDE690069C2E8 /* Colors.swift */; };
 		71D4BBC02A41DFF7001E373D /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D4BBBF2A41DFF7001E373D /* Fonts.swift */; };
 		71E763EC2A45E0EB0086E853 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E763EB2A45E0EB0086E853 /* DataManager.swift */; };
+		71ED5BF52A4DF0CC00F809B1 /* TasksListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71ED5BF42A4DF0CC00F809B1 /* TasksListHeaderView.swift */; };
 		71F9B1912A3EFDA8000CB4EF /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F9B1902A3EFDA8000CB4EF /* Images.swift */; };
 		71F9B1952A3F0690000CB4EF /* TaskDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F9B1942A3F0690000CB4EF /* TaskDetailsView.swift */; };
 /* End PBXBuildFile section */
@@ -74,6 +75,7 @@
 		71B1DFE52A3DDE690069C2E8 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		71D4BBBF2A41DFF7001E373D /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
 		71E763EB2A45E0EB0086E853 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		71ED5BF42A4DF0CC00F809B1 /* TasksListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksListHeaderView.swift; sourceTree = "<group>"; };
 		71F9B1902A3EFDA8000CB4EF /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		71F9B1942A3F0690000CB4EF /* TaskDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsView.swift; sourceTree = "<group>"; };
 		73E30754D0D54DCDE86BC2CE /* Pods_To_Do_List.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_To_Do_List.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -197,6 +199,7 @@
 				71873AAE2A498D5B0087DB06 /* TaskCell.swift */,
 				71873AB02A498E3C0087DB06 /* DividerView.swift */,
 				7169A9C82A4D6C9F00EA0DBF /* NewTaskCell.swift */,
+				71ED5BF42A4DF0CC00F809B1 /* TasksListHeaderView.swift */,
 			);
 			path = TaskList;
 			sourceTree = "<group>";
@@ -404,6 +407,7 @@
 				7170CC762A35900F00323CCA /* FileCache.swift in Sources */,
 				711584BF2A42405700BE6913 /* DeleteButton.swift in Sources */,
 				71F9B1952A3F0690000CB4EF /* TaskDetailsView.swift in Sources */,
+				71ED5BF52A4DF0CC00F809B1 /* TasksListHeaderView.swift in Sources */,
 				71AC37F02A49888B00EBD4C6 /* TasksList.swift in Sources */,
 				71D4BBC02A41DFF7001E373D /* Fonts.swift in Sources */,
 				71E763EC2A45E0EB0086E853 /* DataManager.swift in Sources */,
