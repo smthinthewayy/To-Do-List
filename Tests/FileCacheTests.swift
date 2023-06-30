@@ -23,7 +23,7 @@ final class FileCacheTests: XCTestCase {
 
   func testAdd() {
     // Given
-    let item = TodoItem(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
+    let item = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
 
     // When
     let oldItem = fileCache.add(item)
@@ -36,7 +36,7 @@ final class FileCacheTests: XCTestCase {
 
   func testDelete() {
     // Given
-    let item = TodoItem(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
+    let item = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
     let _ = fileCache.add(item)
 
     // When
@@ -50,7 +50,7 @@ final class FileCacheTests: XCTestCase {
 
   func testSaveAndLoadFromJSON() {
     // Given
-    let item = TodoItem(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
+    let item = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
     let _ = fileCache.add(item)
     let filename = "test"
 
@@ -76,7 +76,7 @@ final class FileCacheTests: XCTestCase {
 
   func testSaveToJSONWithNonExistingDirectory() {
     // Given
-    let item = TodoItem(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
+    let item = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
     let _ = fileCache.add(item)
     let filename = "nonExistingDirectory/test"
 
@@ -106,11 +106,11 @@ final class FileCacheTests: XCTestCase {
 
   func testSaveAndLoadFromJSONWithMultipleItems() {
     // Given
-    let firstItem = TodoItem(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
+    let firstItem = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
     let _ = fileCache.add(firstItem)
-    let secondItem = TodoItem(id: "2", text: "cat", createdAt: Date(), importance: Importance.low, isDone: false)
+    let secondItem = Task(id: "2", text: "cat", createdAt: Date(), importance: Importance.low, isDone: false)
     let _ = fileCache.add(secondItem)
-    let thirdItem = TodoItem(id: "3", text: "watch film", createdAt: Date(), importance: Importance.low, isDone: false)
+    let thirdItem = Task(id: "3", text: "watch film", createdAt: Date(), importance: Importance.low, isDone: false)
     let _ = fileCache.add(thirdItem)
     let filename = "test"
 
@@ -137,7 +137,7 @@ final class FileCacheTests: XCTestCase {
 
   func testSaveAndLoadFromCSV() {
     // Given
-    let item = TodoItem(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
+    let item = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
     let _ = fileCache.add(item)
     let filename = "test"
 
@@ -163,7 +163,7 @@ final class FileCacheTests: XCTestCase {
 
   func testSaveToCSVWithNonExistingDirectory() {
     // Given
-    let item = TodoItem(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
+    let item = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
     let _ = fileCache.add(item)
     let filename = "nonExistingDirectory/test"
 
@@ -193,11 +193,11 @@ final class FileCacheTests: XCTestCase {
 
   func testSaveAndLoadFromCSVWithMultipleItems() {
     // Given
-    let firstItem = TodoItem(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
+    let firstItem = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
     let _ = fileCache.add(firstItem)
-    let secondItem = TodoItem(id: "2", text: "cat", createdAt: Date(), importance: Importance.low, isDone: false)
+    let secondItem = Task(id: "2", text: "cat", createdAt: Date(), importance: Importance.low, isDone: false)
     let _ = fileCache.add(secondItem)
-    let thirdItem = TodoItem(id: "3", text: "watch film", createdAt: Date(), importance: Importance.low, isDone: false)
+    let thirdItem = Task(id: "3", text: "watch film", createdAt: Date(), importance: Importance.low, isDone: false)
     let _ = fileCache.add(thirdItem)
     let filename = "test"
 
