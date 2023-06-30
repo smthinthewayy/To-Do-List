@@ -151,12 +151,8 @@ class ParametersView: UIStackView {
     super.init(frame: .zero)
     setupView()
     setupFirstCell()
-//    setupImportanceLabel()
-//    setupImportancePicker()
     setupDividerView()
     setupSecondCell()
-//    setupDeadlineStackView()
-//    setupDeadlineSwitch()
     setupHiddenDividerView()
     setupCalendarView()
   }

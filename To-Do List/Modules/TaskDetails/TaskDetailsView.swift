@@ -161,8 +161,8 @@ class TaskDetailsView: UIView {
     addSubview(scrollView)
     NSLayoutConstraint.activate([
       scrollView.topAnchor.constraint(equalTo: topAnchor),
-      scrollView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.scrollViewLeadingPadding),
-      scrollView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Constants.scrollViewTrailingPadding),
+      scrollView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
+      scrollView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
       scrollView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: Constants.scrollViewBottomPadding),
     ])
   }
@@ -171,7 +171,8 @@ class TaskDetailsView: UIView {
     scrollView.addSubview(stackView)
     NSLayoutConstraint.activate([
       stackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: Constants.stackViewTopPading),
-      stackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+      stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
+      stackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16),
       scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: stackView.widthAnchor),
       scrollView.contentLayoutGuide.heightAnchor.constraint(
         equalTo: stackView.heightAnchor,
@@ -191,7 +192,7 @@ class TaskDetailsView: UIView {
     stackView.addArrangedSubview(parametersView)
     NSLayoutConstraint.activate([
       parametersView.heightAnchor.constraint(greaterThanOrEqualToConstant: 112.5),
-      parametersView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+      parametersView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16),
     ])
   }
 

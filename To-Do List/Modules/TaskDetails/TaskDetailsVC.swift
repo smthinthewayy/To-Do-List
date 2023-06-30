@@ -49,6 +49,23 @@ class TaskDetailsVC: UIViewController {
     super.viewDidLoad()
     setupNavigationBar()
     setupTaskDetailsView()
+    hideAllExceptTextViewIfNeeded()
+  }
+
+  override func viewWillTransition(to _: CGSize, with _: UIViewControllerTransitionCoordinator) {
+    hideAllExceptTextViewIfNeeded()
+  }
+
+  func hideAllExceptTextViewIfNeeded() {
+//    UIView.transition(with: taskDetailsView, duration: 0.2, options: .transitionCrossDissolve, animations: { [self] in
+    if UIDevice.current.orientation.isLandscape {
+      taskDetailsView.parametersView.isHidden = true
+      taskDetailsView.deleteButton.isHidden = true
+    } else {
+      taskDetailsView.parametersView.isHidden = false
+      taskDetailsView.deleteButton.isHidden = false
+    }
+//    }, completion: nil)
   }
 
   private func setupNavigationBar() {
@@ -86,11 +103,7 @@ extension TaskDetailsVC: TaskDetailsViewDelegate {
   @objc func saveTapped() {
     fetchTaskDescription(taskDetailsView.taskDescriptionTextView)
     taskDetailsView.task.text = taskDescription
-    
-    
     delegate?.saveTask(taskDetailsView.task)
-    
-    
     dismiss(animated: true)
   }
 
@@ -104,17 +117,6 @@ extension TaskDetailsVC: TaskDetailsViewDelegate {
     delegate?.deleteTask(selectedTask?.id ?? "")
     dismiss(animated: true)
     clearView()
-//    let fileManager = FileManager.default
-//    let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
-//    let fileURL = documentsDirectory.appendingPathComponent("task.json")
-//
-//    do {
-//      try fileManager.removeItem(at: fileURL)
-//      dismiss(animated: true)
-//      clearView()
-//    } catch {
-//      showAlert(title: "Не удалось удалить файл", message: error.localizedDescription)
-//    }
   }
 
   private func clearView() {
@@ -123,7 +125,6 @@ extension TaskDetailsVC: TaskDetailsViewDelegate {
     taskDetailsView.parametersView.importancePicker.selectedSegmentIndex = 2
     taskDetailsView.parametersView.deadlineSwitch.isOn = false
     taskDetailsView.parametersView.deadlineDateButton.isHidden = true
-//    taskDetailsView.deleteButton.isEnabled = false
     saveButton.isEnabled = false
   }
 
