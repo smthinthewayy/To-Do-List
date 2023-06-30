@@ -57,15 +57,18 @@ class TaskDetailsVC: UIViewController {
   }
 
   func hideAllExceptTextViewIfNeeded() {
-//    UIView.transition(with: taskDetailsView, duration: 0.2, options: .transitionCrossDissolve, animations: { [self] in
-    if UIDevice.current.orientation.isLandscape {
-      taskDetailsView.parametersView.isHidden = true
-      taskDetailsView.deleteButton.isHidden = true
-    } else {
-      taskDetailsView.parametersView.isHidden = false
-      taskDetailsView.deleteButton.isHidden = false
-    }
-//    }, completion: nil)
+    UIView.transition(with: taskDetailsView, duration: 0.2, options: .transitionCrossDissolve, animations: { [self] in
+      if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene {
+        let interfaceOrientation = windowScene.interfaceOrientation
+        if interfaceOrientation.isLandscape {
+          taskDetailsView.parametersView.isHidden = true
+          taskDetailsView.deleteButton.isHidden = true
+        } else {
+          taskDetailsView.parametersView.isHidden = false
+          taskDetailsView.deleteButton.isHidden = false
+        }
+      }
+    }, completion: nil)
   }
 
   private func setupNavigationBar() {
