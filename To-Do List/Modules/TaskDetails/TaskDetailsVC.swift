@@ -87,7 +87,7 @@ class TaskDetailsVC: UIViewController {
       taskDetailsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
       taskDetailsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
       taskDetailsView.topAnchor.constraint(equalTo: view.topAnchor),
-      taskDetailsView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+      taskDetailsView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
     ])
   }
 }

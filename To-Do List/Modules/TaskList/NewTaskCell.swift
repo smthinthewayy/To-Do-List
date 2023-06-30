@@ -29,7 +29,7 @@ class NewTaskCell: UITableViewCell {
       label.topAnchor.constraint(equalTo: contentView.topAnchor),
       label.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 52),
       label.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
-      label.heightAnchor.constraint(greaterThanOrEqualToConstant: 56),
+      label.heightAnchor.constraint(greaterThanOrEqualToConstant: 56)
     ])
   }
 

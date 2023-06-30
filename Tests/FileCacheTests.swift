@@ -37,7 +37,7 @@ final class FileCacheTests: XCTestCase {
   func testDelete() {
     // Given
     let item = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
-    let _ = fileCache.add(item)
+    _ = fileCache.add(item)
 
     // When
     let deletedItem = fileCache.delete("1")
@@ -51,7 +51,7 @@ final class FileCacheTests: XCTestCase {
   func testSaveAndLoadFromJSON() {
     // Given
     let item = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
-    let _ = fileCache.add(item)
+    _ = fileCache.add(item)
     let filename = "test"
 
     // When
@@ -77,7 +77,7 @@ final class FileCacheTests: XCTestCase {
   func testSaveToJSONWithNonExistingDirectory() {
     // Given
     let item = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
-    let _ = fileCache.add(item)
+    _ = fileCache.add(item)
     let filename = "nonExistingDirectory/test"
 
     // When
@@ -107,11 +107,11 @@ final class FileCacheTests: XCTestCase {
   func testSaveAndLoadFromJSONWithMultipleItems() {
     // Given
     let firstItem = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
-    let _ = fileCache.add(firstItem)
+    _ = fileCache.add(firstItem)
     let secondItem = Task(id: "2", text: "cat", createdAt: Date(), importance: Importance.low, isDone: false)
-    let _ = fileCache.add(secondItem)
+    _ = fileCache.add(secondItem)
     let thirdItem = Task(id: "3", text: "watch film", createdAt: Date(), importance: Importance.low, isDone: false)
-    let _ = fileCache.add(thirdItem)
+    _ = fileCache.add(thirdItem)
     let filename = "test"
 
     // When
@@ -138,7 +138,7 @@ final class FileCacheTests: XCTestCase {
   func testSaveAndLoadFromCSV() {
     // Given
     let item = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
-    let _ = fileCache.add(item)
+    _ = fileCache.add(item)
     let filename = "test"
 
     // When
@@ -164,7 +164,7 @@ final class FileCacheTests: XCTestCase {
   func testSaveToCSVWithNonExistingDirectory() {
     // Given
     let item = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
-    let _ = fileCache.add(item)
+    _ = fileCache.add(item)
     let filename = "nonExistingDirectory/test"
 
     // When
@@ -194,11 +194,11 @@ final class FileCacheTests: XCTestCase {
   func testSaveAndLoadFromCSVWithMultipleItems() {
     // Given
     let firstItem = Task(id: "1", text: "smth", createdAt: Date(), importance: Importance.important, isDone: false)
-    let _ = fileCache.add(firstItem)
+    _ = fileCache.add(firstItem)
     let secondItem = Task(id: "2", text: "cat", createdAt: Date(), importance: Importance.low, isDone: false)
-    let _ = fileCache.add(secondItem)
+    _ = fileCache.add(secondItem)
     let thirdItem = Task(id: "3", text: "watch film", createdAt: Date(), importance: Importance.low, isDone: false)
-    let _ = fileCache.add(thirdItem)
+    _ = fileCache.add(thirdItem)
     let filename = "test"
 
     // When
