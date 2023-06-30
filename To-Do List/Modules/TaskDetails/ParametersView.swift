@@ -128,8 +128,10 @@ class ParametersView: UIStackView {
   }()
 
   lazy var importancePicker: UISegmentedControl = {
-    let segmentedControl = UISegmentedControl(items: [Images.image(for: .lowImportance).withRenderingMode(.alwaysOriginal), "нет",
-                                                      Images.image(for: .highImportance).withRenderingMode(.alwaysOriginal)])
+    let segmentedControl =
+      UISegmentedControl(items: [Images.image(for: .lowImportance).withRenderingMode(.alwaysOriginal), "нет",
+                                 Images.image(for: .highImportance)
+                                   .withRenderingMode(.alwaysOriginal)])
     segmentedControl.selectedSegmentIndex = 2
     segmentedControl.backgroundColor = Colors.color(for: .supportOverlay)
     segmentedControl.selectedSegmentTintColor = Colors.color(for: .backElevated)
@@ -193,7 +195,10 @@ class ParametersView: UIStackView {
       importancePicker.widthAnchor.constraint(equalToConstant: Constants.importancePickerWidth),
       importancePicker.heightAnchor.constraint(equalToConstant: Constants.importancePickerHeight),
       importancePicker.topAnchor.constraint(equalTo: topAnchor, constant: Constants.importancePickerTopPadding),
-      importancePicker.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Constants.importancePickerRightPadding),
+      importancePicker.trailingAnchor.constraint(
+        equalTo: trailingAnchor,
+        constant: Constants.importancePickerRightPadding
+      ),
     ])
   }
 
@@ -243,10 +248,6 @@ class ParametersView: UIStackView {
 
   private func setupHiddenDividerView() {
     addArrangedSubview(hiddenDividerView)
-//    NSLayoutConstraint.activate([
-//      hiddenDividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.dividerViewLeftPadding),
-//      hiddenDividerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: Constants.dividerViewRightPadding),
-//    ])
   }
 
   private func setupCalendarView() {

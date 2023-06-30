@@ -43,13 +43,13 @@ class TasksListHeaderView: UIView {
     addSubview(counterOfCompletedTasksLabel)
     NSLayoutConstraint.activate([
       counterOfCompletedTasksLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
-      counterOfCompletedTasksLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+      counterOfCompletedTasksLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16)
     ])
 
     addSubview(hideButton)
     NSLayoutConstraint.activate([
       hideButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-      hideButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+      hideButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16)
     ])
   }
 

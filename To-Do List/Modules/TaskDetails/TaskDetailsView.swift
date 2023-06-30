@@ -170,7 +170,10 @@ class TaskDetailsView: UIView {
   private func setupStackView() {
     scrollView.addSubview(stackView)
     NSLayoutConstraint.activate([
-      stackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor, constant: Constants.stackViewTopPading),
+      stackView.topAnchor.constraint(
+        equalTo: scrollView.contentLayoutGuide.topAnchor,
+        constant: Constants.stackViewTopPading
+      ),
       stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 16),
       stackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: -16),
       scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: stackView.widthAnchor),

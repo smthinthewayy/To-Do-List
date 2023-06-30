@@ -118,8 +118,11 @@ extension Task {
     let changedAtTimestamp = json[Keys.changedAt.rawValue] as? Int
 
     let createdAt = Date(timeIntervalSince1970: TimeInterval(createdAtTimestamp!))
-    let deadline: Date? = (deadlineTimestamp != nil) ? Date(timeIntervalSince1970: TimeInterval(deadlineTimestamp!)) : nil
-    let changedAt: Date? = (changedAtTimestamp != nil) ? Date(timeIntervalSince1970: TimeInterval(changedAtTimestamp!)) : nil
+    let deadline: Date? = (deadlineTimestamp != nil) ? Date(timeIntervalSince1970: TimeInterval(deadlineTimestamp!)) :
+      nil
+    let changedAt: Date? = (changedAtTimestamp != nil) ?
+      Date(timeIntervalSince1970: TimeInterval(changedAtTimestamp!)) :
+      nil
 
     return Task(
       id: id,
@@ -194,7 +197,8 @@ extension Task {
 
     var importance = Importance.normal
     let importanceRawValue = items[5] == "" ? "normal" : String(items[5])
-    if importanceRawValue == Importance.low.rawValue || importanceRawValue == Importance.normal.rawValue || importanceRawValue == Importance
+    if importanceRawValue == Importance.low.rawValue || importanceRawValue == Importance.normal
+      .rawValue || importanceRawValue == Importance
       .important.rawValue
     {
       importance = Importance(rawValue: importanceRawValue)!
@@ -207,8 +211,11 @@ extension Task {
     let changedAtTimestamp = items[4] == "" ? nil : Int(items[4])
 
     let createdAt = Date(timeIntervalSince1970: TimeInterval(createdAtTimestamp!))
-    let deadline: Date? = (deadlineTimestamp != nil) ? Date(timeIntervalSince1970: TimeInterval(deadlineTimestamp!)) : nil
-    let changedAt: Date? = (changedAtTimestamp != nil) ? Date(timeIntervalSince1970: TimeInterval(changedAtTimestamp!)) : nil
+    let deadline: Date? = (deadlineTimestamp != nil) ? Date(timeIntervalSince1970: TimeInterval(deadlineTimestamp!)) :
+      nil
+    let changedAt: Date? = (changedAtTimestamp != nil) ?
+      Date(timeIntervalSince1970: TimeInterval(changedAtTimestamp!)) :
+      nil
 
     return Task(
       id: id,

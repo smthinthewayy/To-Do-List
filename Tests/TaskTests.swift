@@ -76,7 +76,14 @@ final class TaskTests: XCTestCase {
     let importance = Importance.important
     let isDone = false
 
-    let item = Task(text: text, createdAt: createdAt, deadline: deadline, changedAt: changedAt, importance: importance, isDone: isDone)
+    let item = Task(
+      text: text,
+      createdAt: createdAt,
+      deadline: deadline,
+      changedAt: changedAt,
+      importance: importance,
+      isDone: isDone
+    )
 
     // When
     let parsedItem = Task.parse(json: item.json)
@@ -132,7 +139,14 @@ final class TaskTests: XCTestCase {
     let importance = Importance.normal
     let isDone = false
 
-    let item = Task(id: id, text: text, createdAt: createdAt, changedAt: changedAt, importance: importance, isDone: isDone)
+    let item = Task(
+      id: id,
+      text: text,
+      createdAt: createdAt,
+      changedAt: changedAt,
+      importance: importance,
+      isDone: isDone
+    )
 
     // When
     let parsedItem = Task.parse(json: item.json)
@@ -277,7 +291,14 @@ final class TaskTests: XCTestCase {
     let importance = Importance.important
     let isDone = false
 
-    let item = Task(text: text, createdAt: createdAt, deadline: deadline, changedAt: changedAt, importance: importance, isDone: isDone)
+    let item = Task(
+      text: text,
+      createdAt: createdAt,
+      deadline: deadline,
+      changedAt: changedAt,
+      importance: importance,
+      isDone: isDone
+    )
 
     // When
     let parsedItem = Task.parse(csv: item.csv)
@@ -333,7 +354,14 @@ final class TaskTests: XCTestCase {
     let importance = Importance.normal
     let isDone = false
 
-    let item = Task(id: id, text: text, createdAt: createdAt, changedAt: changedAt, importance: importance, isDone: isDone)
+    let item = Task(
+      id: id,
+      text: text,
+      createdAt: createdAt,
+      changedAt: changedAt,
+      importance: importance,
+      isDone: isDone
+    )
 
     // When
     let parsedItem = Task.parse(csv: item.csv)
