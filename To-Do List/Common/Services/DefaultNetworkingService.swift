@@ -7,6 +7,7 @@
 
 import DTLogger
 import Foundation
+import UIKit
 
 // MARK: - NetworkingService
 
@@ -16,7 +17,7 @@ protocol NetworkingService {
     method: String,
     headers: [String: String]?,
     parameters: [String: Any]?,
-    bearerToken: String?,
+    bearerToken: String,
     task: NetworkTask?,
     tasksList: [NetworkTask]?,
     completion: @escaping (Result<T, Error>) -> Void
@@ -26,15 +27,15 @@ protocol NetworkingService {
 // MARK: - NetworkTask
 
 struct NetworkTask: Codable {
-  let id: String
-  let text: String
-  let importance: String
-  let deadline: Int64?
-  let done: Bool
-  let color: String?
-  let createdAt: Int64
-  let changedAt: Int64
-  let lastUpdatedBy: String
+  var id: String
+  var text: String
+  var importance: String
+  var deadline: Int64?
+  var done: Bool
+  var color: String?
+  var createdAt: Int64
+  var changedAt: Int64
+  var lastUpdatedBy: String
 }
 
 // MARK: - ListResponse
@@ -53,12 +54,20 @@ struct ElementResponse: Codable {
   let revision: Int32
 }
 
+// MARK: - Tasks
+
+struct Tasks {
+  var tasks: [Task] = []
+  var isDirty: Bool = false
+}
+
 // MARK: - DefaultNetworkingService
 
 final class DefaultNetworkingService: NetworkingService {
-  private let baseURL: URL
-  private let bearerToken: String
+  let baseURL: URL
+  let bearerToken: String
   var revision: Int32?
+  let serialQueue = DispatchQueue(label: "com.To-Do_list.serialQueue", qos: .userInteractive)
 
   init(baseURL: URL, bearerToken: String) {
     self.baseURL = baseURL
@@ -76,6 +85,8 @@ final class DefaultNetworkingService: NetworkingService {
           completion(.failure(error))
         }
       }
+    } else {
+      completion(.success(revision!))
     }
   }
 
@@ -84,7 +95,7 @@ final class DefaultNetworkingService: NetworkingService {
     method: String,
     headers: [String: String]?,
     parameters: [String: Any]?,
-    bearerToken: String?,
+    bearerToken: String,
     task: NetworkTask? = nil,
     tasksList: [NetworkTask]? = nil,
     completion: @escaping (Result<T, Error>) -> Void
@@ -149,7 +160,7 @@ final class DefaultNetworkingService: NetworkingService {
     method: String,
     headers: [String: String]?,
     parameters: [String: Any]?,
-    bearerToken: String?,
+    bearerToken: String,
     task: NetworkTask? = nil,
     tasksList: [NetworkTask]? = nil
   ) -> URLRequest {
@@ -171,9 +182,7 @@ final class DefaultNetworkingService: NetworkingService {
       }
     }
 
-    if let token = bearerToken {
-      request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-    }
+    request.setValue("Bearer \(bearerToken)", forHTTPHeaderField: "Authorization")
 
     if method == "POST" || method == "PUT" {
       if let task = task {
@@ -203,143 +212,214 @@ final class DefaultNetworkingService: NetworkingService {
   }
 
   func getTasksList(completion: @escaping (Result<ListResponse, Error>) -> Void) {
-    let url = URL(string: "\(baseURL)/list")!
-    let method = "GET"
-    let parameters: [String: Any]? = nil
-    let headers: [String: String]? = nil
-    request(
-      url: url,
-      method: method,
-      headers: headers,
-      parameters: parameters,
-      bearerToken: bearerToken,
-      completion: completion
-    )
+    serialQueue.async { [self] in
+      let url = URL(string: "\(baseURL)/list")!
+      let method = "GET"
+      let parameters: [String: Any]? = nil
+      let headers: [String: String]? = nil
+      request(
+        url: url,
+        method: method,
+        headers: headers,
+        parameters: parameters,
+        bearerToken: bearerToken,
+        completion: completion
+      )
+    }
   }
 
   func addTaskToList(task: NetworkTask, completion: @escaping (Result<ElementResponse, Error>) -> Void) {
-    getRevision { [self] result in
-      switch result {
-      case .success:
-        guard let revision = self.revision else {
-          SystemLogger.error("Ошибка при попытке получить ревизию данных")
-          return
+    serialQueue.async { [self] in
+      getRevision { [self] result in
+        switch result {
+        case .success:
+          guard let revision = self.revision else {
+            SystemLogger.error("Ошибка при попытке получить ревизию данных")
+            return
+          }
+          SystemLogger.info("Ревизия данных успешно получена, revision = \(revision)")
+          let url = URL(string: "\(baseURL)/list")!
+          let method = "POST"
+          let parameters: [String: Any]? = nil
+          let headers = ["X-Last-Known-Revision": "\(revision)"]
+          request(
+            url: url,
+            method: method,
+            headers: headers,
+            parameters: parameters,
+            bearerToken: bearerToken,
+            task: task,
+            completion: completion
+          )
+        case let .failure(error):
+          print(error)
         }
-        SystemLogger.info("Ревизия данных успешно получена, revision = \(revision)")
-        let url = URL(string: "\(baseURL)/list")!
-        let method = "POST"
-        let parameters: [String: Any]? = nil
-        let headers = ["X-Last-Known-Revision": "\(revision)"]
-        request(
-          url: url,
-          method: "POST",
-          headers: headers,
-          parameters: parameters,
-          bearerToken: bearerToken,
-          task: task,
-          completion: completion
-        )
-      case let .failure(error):
-        print(error)
       }
     }
   }
 
   func getTaskFromList(for id: String, completion: @escaping (Result<ElementResponse, Error>) -> Void) {
-    let url = URL(string: "\(baseURL)/list/\(id)")!
-    let method = "GET"
-    let parameters: [String: Any]? = nil
-    let headers: [String: String]? = nil
-    request(
-      url: url,
-      method: method,
-      headers: headers,
-      parameters: parameters,
-      bearerToken: bearerToken,
-      completion: completion
-    )
+    serialQueue.async { [self] in
+      let url = URL(string: "\(baseURL)/list/\(id)")!
+      let method = "GET"
+      let parameters: [String: Any]? = nil
+      let headers: [String: String]? = nil
+      request(
+        url: url,
+        method: method,
+        headers: headers,
+        parameters: parameters,
+        bearerToken: bearerToken,
+        completion: completion
+      )
+    }
   }
 
   func deleteTaskFromList(for id: String, completion: @escaping (Result<ElementResponse, Error>) -> Void) {
-    getRevision { [self] result in
-      switch result {
-      case .success:
-        guard let revision = self.revision else {
-          SystemLogger.error("Ошибка при попытке получить ревизию данных")
-          return
+    serialQueue.async { [self] in
+      getRevision { [self] result in
+        switch result {
+        case .success:
+          guard let revision = self.revision else {
+            SystemLogger.error("Ошибка при попытке получить ревизию данных")
+            return
+          }
+          SystemLogger.info("Ревизия данных успешно получена, revision = \(revision)")
+          let url = URL(string: "\(baseURL)/list/\(id)")!
+          let method = "DELETE"
+          let parameters: [String: Any]? = nil
+          let headers = ["X-Last-Known-Revision": "\(revision)"]
+          request(
+            url: url,
+            method: method,
+            headers: headers,
+            parameters: parameters,
+            bearerToken: bearerToken,
+            completion: completion
+          )
+        case let .failure(error):
+          print(error)
         }
-        SystemLogger.info("Ревизия данных успешно получена, revision = \(revision)")
-        let url = URL(string: "\(baseURL)/list/\(id)")!
-        let method = "DELETE"
-        let parameters: [String: Any]? = nil
-        let headers = ["X-Last-Known-Revision": "\(revision)"]
-        request(
-          url: url,
-          method: method,
-          headers: headers,
-          parameters: parameters,
-          bearerToken: bearerToken,
-          completion: completion
-        )
-      case let .failure(error):
-        print(error)
       }
     }
   }
 
   func editTask(task: NetworkTask, completion: @escaping (Result<ElementResponse, Error>) -> Void) {
-    getRevision { [self] result in
-      switch result {
-      case .success:
-        guard let revision = self.revision else {
-          SystemLogger.error("Ошибка при попытке получить ревизию данных")
-          return
+    serialQueue.async { [self] in
+      getRevision { [self] result in
+        switch result {
+        case .success:
+          guard let revision = self.revision else {
+            SystemLogger.error("Ошибка при попытке получить ревизию данных")
+            return
+          }
+          SystemLogger.info("Ревизия данных успешно получена, revision = \(revision)")
+          let url = URL(string: "\(baseURL)/list/\(task.id)")!
+          let method = "PUT"
+          let parameters: [String: Any]? = nil
+          let headers = ["X-Last-Known-Revision": "\(revision)"]
+          request(
+            url: url,
+            method: method,
+            headers: headers,
+            parameters: parameters,
+            bearerToken: bearerToken,
+            task: task,
+            completion: completion
+          )
+        case let .failure(error):
+          print(error)
         }
-        SystemLogger.info("Ревизия данных успешно получена, revision = \(revision)")
-        let url = URL(string: "\(baseURL)/list/\(task.id)")!
-        let method = "PUT"
-        let parameters: [String: Any]? = nil
-        let headers = ["X-Last-Known-Revision": "\(revision)"]
-        request(
-          url: url,
-          method: method,
-          headers: headers,
-          parameters: parameters,
-          bearerToken: bearerToken,
-          task: task,
-          completion: completion
-        )
-      case let .failure(error):
-        print(error)
       }
     }
   }
 
   func updateList(_ tasksList: [NetworkTask], completion: @escaping (Result<ListResponse, Error>) -> Void) {
-    getRevision { [self] result in
-      switch result {
-      case .success:
-        guard let revision = self.revision else {
-          SystemLogger.error("Ошибка при попытке получить ревизию данных")
-          return
+    serialQueue.async { [self] in
+      getRevision { [self] result in
+        switch result {
+        case .success:
+          guard let revision = self.revision else {
+            SystemLogger.error("Ошибка при попытке получить ревизию данных")
+            return
+          }
+          SystemLogger.info("Ревизия данных успешно получена, revision = \(revision)")
+          let url = URL(string: "\(baseURL)/list")!
+          let method = "PATCH"
+          let parameters: [String: Any]? = nil
+          let headers = ["X-Last-Known-Revision": "\(revision)"]
+          request(
+            url: url,
+            method: method,
+            headers: headers,
+            parameters: parameters,
+            bearerToken: bearerToken,
+            tasksList: tasksList,
+            completion: completion
+          )
+        case let .failure(error):
+          print(error)
         }
-        SystemLogger.info("Ревизия данных успешно получена, revision = \(revision)")
-        let url = URL(string: "\(baseURL)/list")!
-        let method = "PATCH"
-        let parameters: [String: Any]? = nil
-        let headers = ["X-Last-Known-Revision": "\(revision)"]
-        request(
-          url: url,
-          method: method,
-          headers: headers,
-          parameters: parameters,
-          bearerToken: bearerToken,
-          tasksList: tasksList,
-          completion: completion
-        )
-      case let .failure(error):
-        print(error)
       }
     }
+  }
+
+  func convertToTask(from networkTask: NetworkTask) -> Task {
+    var task = Task(
+      id: networkTask.id,
+      text: networkTask.text,
+      createdAt: Date(timeIntervalSince1970: TimeInterval(networkTask.createdAt)),
+      changedAt: Date(timeIntervalSince1970: TimeInterval(networkTask.changedAt)),
+      importance: .normal,
+      isDone: networkTask.done
+    )
+
+    switch networkTask.importance {
+    case "low":
+      task.importance = .low
+    case "important":
+      task.importance = .important
+    default:
+      task.importance = .normal
+    }
+
+    if let deadline = networkTask.deadline {
+      task.deadline = Date(timeIntervalSince1970: TimeInterval(deadline))
+    }
+
+    return task
+  }
+
+  func convertToNetworkTask(from task: Task) -> NetworkTask {
+    var networkTask = NetworkTask(
+      id: task.id,
+      text: task.text,
+      importance: "basic",
+      deadline: nil,
+      done: task.isDone,
+      color: nil,
+      createdAt: Int64(task.createdAt.timeIntervalSince1970),
+      changedAt: 0,
+      lastUpdatedBy: UIDevice.current.name
+    )
+
+    if let deadline = task.deadline {
+      networkTask.deadline = Int64(deadline.timeIntervalSince1970)
+    }
+
+    if let changedAt = task.changedAt {
+      networkTask.changedAt = Int64(changedAt.timeIntervalSince1970)
+    }
+
+    switch task.importance {
+    case .low:
+      networkTask.importance = "low"
+    case .important:
+      networkTask.importance = "important"
+    default:
+      networkTask.importance = "basic"
+    }
+
+    return networkTask
   }
 }

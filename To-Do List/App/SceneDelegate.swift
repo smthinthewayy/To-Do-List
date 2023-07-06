@@ -17,13 +17,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   ) {
     guard let windowScene = (scene as? UIWindowScene) else { return }
 
-    let ns = DefaultNetworkingService(
-      baseURL: URL(string: "https://beta.mrdekk.ru/todobackend")!,
-      bearerToken: "intend"
-    )
-
-    ns.getTasksList { _ in }
-
     let window = UIWindow(windowScene: windowScene)
     let taskListVC = TaskListVC()
     let navigationController = UINavigationController(rootViewController: taskListVC)

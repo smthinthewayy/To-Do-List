@@ -10,7 +10,7 @@ import Foundation
 // MARK: - FileCache
 
 class FileCache {
-  private(set) var tasks: [Task] = []
+  var tasks: [Task] = []
 
   func add(_ newTask: Task) -> Task? {
     if let index = tasks.firstIndex(where: { $0.id == newTask.id }) {
