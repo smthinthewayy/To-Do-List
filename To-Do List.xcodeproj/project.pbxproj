@@ -187,7 +187,7 @@
 			children = (
 				71D4BBC42A41E158001E373D /* Services */,
 				71D4BBBE2A41DCCB001E373D /* Enums */,
-				71FF6A632A574AF3003240AB /* URLSession.swift */,
+				71FF6A652A574D25003240AB /* Extensions */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -227,6 +227,14 @@
 				710CAACC2A47599000D7BF02 /* Helpers.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		71FF6A652A574D25003240AB /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				71FF6A632A574AF3003240AB /* URLSession.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
