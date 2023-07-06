@@ -10,7 +10,7 @@ import UIKit
 extension URLSession {
   func dataTask(for request: URLRequest) async throws -> (Data, URLResponse) {
     return try await withCheckedThrowingContinuation { continuation in
-      let task = URLSession.shared.dataTask(with: request) { data, response, error in
+      let task = self.dataTask(with: request) { data, response, error in
         if let error = error {
           continuation.resume(throwing: error)
         } else if let data = data, let response = response {
@@ -21,7 +21,11 @@ extension URLSession {
         }
       }
 
-      task.resume()
+      if task.progress.isCancelled {
+        task.cancel()
+      } else {
+        task.resume()
+      }
     }
   }
 }

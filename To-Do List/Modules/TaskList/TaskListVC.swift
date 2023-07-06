@@ -59,6 +59,7 @@ class TaskListVC: UIViewController {
 
   private func loadTasksFromServer() {
     let setup: () -> Void = { [weak self] in
+      self?.initShowingTasks()
       self?.setupView()
       self?.setupDelegates()
       self?.setupTasksList()
@@ -69,7 +70,6 @@ class TaskListVC: UIViewController {
       switch result {
       case let .success(response):
         self.dns.revision = response.revision
-        print(response.list)
         self.tasks.tasks = response.list.map { self.dns.convertToTask(from: $0) }
         SystemLogger.info("Запуск приложения: данные с сервера успешно получены, отображаем их на экране")
         RunLoop.main.perform { setup() }
@@ -88,6 +88,7 @@ class TaskListVC: UIViewController {
         case let .success(response):
 //          self.dns.revision = response.revision
           self.fileCache.tasks = response.list.map { self.dns.convertToTask(from: $0) }
+          self.tasks.tasks = self.fileCache.tasks
           self.tasks.isDirty = false
           SystemLogger.info("Сихронизация данных прошла успешно, isDirty = \(self.tasks.isDirty)")
         case let .failure(error):
@@ -97,10 +98,12 @@ class TaskListVC: UIViewController {
         }
       }
     }
+    setupShowingTasks()
   }
 
   private func setupShowingTasks() {
     tasks.tasks = fileCache.tasks
+    tasks.tasks.sort { $0.createdAt.timeIntervalSince1970 < $1.createdAt.timeIntervalSince1970 }
     showingTasks = hideButtonIsActive() ? tasks.tasks : tasks.tasks.filter { $0.isDone == false }
     updateCompletedTasksLabel()
     UIView.transition(with: tasksList, duration: 0.2, options: .transitionCrossDissolve, animations: {
@@ -191,11 +194,19 @@ extension TaskListVC: UITableViewDataSource {
     }
 
     if indexPath.row == tasks.tasks.count {
-      maskPath = UIBezierPath(
-        roundedRect: cell.bounds,
-        byRoundingCorners: [.bottomLeft, .bottomRight],
-        cornerRadii: CGSize(width: 16, height: 16)
-      )
+      if !tasks.tasks.isEmpty {
+        maskPath = UIBezierPath(
+          roundedRect: cell.bounds,
+          byRoundingCorners: [.bottomLeft, .bottomRight],
+          cornerRadii: CGSize(width: 16, height: 16)
+        )
+      } else {
+        maskPath = UIBezierPath(
+          roundedRect: cell.bounds,
+          byRoundingCorners: [.bottomLeft, .bottomRight, .topLeft, .topRight],
+          cornerRadii: CGSize(width: 16, height: 16)
+        )
+      }
     }
 
     let shape = CAShapeLayer()
@@ -272,6 +283,10 @@ extension TaskListVC: UITableViewDelegate {
       return nil
     }
 
+    guard indexPath.row <= tasks.tasks.count - 1 else {
+      return nil
+    }
+
     let action = UIContextualAction(
       style: .normal,
       title: nil,
@@ -292,6 +307,10 @@ extension TaskListVC: UITableViewDelegate {
                  trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
   {
     guard !showingTasks.isEmpty else {
+      return nil
+    }
+
+    guard indexPath.row <= tasks.tasks.count - 1 else {
       return nil
     }
 
@@ -353,7 +372,7 @@ extension TaskListVC: TaskDetailsVCDelegate {
     }
 
     synchronize()
-    setupShowingTasks()
+//    setupShowingTasks()
   }
 
   func saveTask(_ task: Task, _ flag: Bool) {
@@ -395,7 +414,7 @@ extension TaskListVC: TaskDetailsVCDelegate {
     }
 
     synchronize()
-    setupShowingTasks()
+//    setupShowingTasks()
   }
 }
 
