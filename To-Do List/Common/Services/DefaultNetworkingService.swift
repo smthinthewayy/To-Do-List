@@ -18,6 +18,7 @@ protocol NetworkingService {
     headers: [String: String]?,
     parameters: [String: Any]?,
     bearerToken: String,
+    timeoutInterval: TimeInterval,
     task: NetworkTask?,
     tasksList: [NetworkTask]?,
     completion: @escaping (Result<T, Error>) -> Void
@@ -75,7 +76,9 @@ final class DefaultNetworkingService: NetworkingService {
   }
 
   func getRevision(completion: @escaping (Result<Int32, Error>) -> Void) {
-    if revision == nil {
+    if let revision = self.revision {
+      completion(.success(revision))
+    } else {
       getTasksList { result in
         switch result {
         case let .success(response):
@@ -85,8 +88,6 @@ final class DefaultNetworkingService: NetworkingService {
           completion(.failure(error))
         }
       }
-    } else {
-      completion(.success(revision!))
     }
   }
 
@@ -96,6 +97,7 @@ final class DefaultNetworkingService: NetworkingService {
     headers: [String: String]?,
     parameters: [String: Any]?,
     bearerToken: String,
+    timeoutInterval: TimeInterval = 60,
     task: NetworkTask? = nil,
     tasksList: [NetworkTask]? = nil,
     completion: @escaping (Result<T, Error>) -> Void
@@ -110,7 +112,11 @@ final class DefaultNetworkingService: NetworkingService {
       tasksList: tasksList
     )
 
-    let task = URLSession.shared.dataTask(with: request) { data, response, error in
+    let config = URLSessionConfiguration.default
+    config.timeoutIntervalForRequest = timeoutInterval
+    let session = URLSession(configuration: config)
+
+    let task = session.dataTask(with: request) { data, response, error in
       if let error = error {
         SystemLogger
           .error(
@@ -144,6 +150,9 @@ final class DefaultNetworkingService: NetworkingService {
         do {
           let parsedData = try decoder.decode(T.self, from: data)
           SystemLogger.info("Данные были успешно преобразованы в указанный тип ﻿\(T.self)")
+          if let currentRevision = self.revision {
+            self.revision = currentRevision + 1
+          }
           completion(.success(parsedData))
         } catch {
           SystemLogger.error("Ошибка при попытке декодировать ﻿data в указанный тип ﻿\(T.self)")
@@ -223,6 +232,7 @@ final class DefaultNetworkingService: NetworkingService {
         headers: headers,
         parameters: parameters,
         bearerToken: bearerToken,
+        timeoutInterval: TimeInterval(5),
         completion: completion
       )
     }
@@ -270,6 +280,7 @@ final class DefaultNetworkingService: NetworkingService {
         headers: headers,
         parameters: parameters,
         bearerToken: bearerToken,
+        timeoutInterval: TimeInterval(5),
         completion: completion
       )
     }

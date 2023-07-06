@@ -17,9 +17,9 @@ protocol TaskDetailsVCDelegate: AnyObject {
 // MARK: - TaskDetailsVC
 
 class TaskDetailsVC: UIViewController {
-  var taskDetailsView = TaskDetailsView()
-
   private var taskDescription: String = ""
+  
+  var taskDetailsView = TaskDetailsView()
 
   var selectedTask: Task?
 
