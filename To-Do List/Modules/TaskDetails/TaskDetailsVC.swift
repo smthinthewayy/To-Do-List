@@ -43,8 +43,6 @@ class TaskDetailsVC: UIViewController {
     return button
   }()
 
-  var taskAdded: ((Task) -> Void)?
-
   weak var delegate: TaskDetailsVCDelegate?
 
   override func viewDidLoad() {
@@ -111,12 +109,6 @@ extension TaskDetailsVC: TaskDetailsViewDelegate {
     taskDetailsView.task.text = taskDescription
     delegate?.saveTask(taskDetailsView.task, isNewTask)
     dismiss(animated: true)
-  }
-
-  private func showAlert(title: String, message: String?) {
-    let alert = UIAlertController(title: title, message: message ?? "unknown error", preferredStyle: .alert)
-    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-    present(alert, animated: true, completion: nil)
   }
 
   func deleteButtonTapped() {
