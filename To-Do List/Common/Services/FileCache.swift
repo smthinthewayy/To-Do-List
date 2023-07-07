@@ -5,9 +5,6 @@
 //  Created by Danila Belyi on 11.06.2023.
 //
 
-import CocoaLumberjack
-import CocoaLumberjackSwift
-import CocoaLumberjackSwiftSupport
 import Foundation
 
 // MARK: - FileCache
@@ -47,7 +44,6 @@ class FileCache {
         let serializedtasks = self.tasks.map { $0.json }
         let data = try JSONSerialization.data(withJSONObject: serializedtasks)
         try data.write(to: path)
-        DDLogDebug("the file was saved successfully")
 
         DispatchQueue.main.async {
           completion(nil)
@@ -74,7 +70,6 @@ class FileCache {
 
         let data = serializedtasks.joined(separator: "\n").data(using: .utf8)!
         try data.write(to: path, options: .atomic)
-        DDLogDebug("the file was saved successfully")
 
         DispatchQueue.main.async {
           completion(nil)
@@ -104,7 +99,6 @@ class FileCache {
       let deserializedtasks = json.compactMap { Task.parse(json: $0) }
         .sorted { $0.createdAt.timeIntervalSince1970 > $1.createdAt.timeIntervalSince1970 }
       tasks = deserializedtasks
-      DDLogDebug("the file has been uploaded successfully")
 
       DispatchQueue.main.async {
         completion(nil)
@@ -133,7 +127,6 @@ class FileCache {
       }
 
       tasks = deserializedtasks
-      DDLogDebug("the file has been uploaded successfully")
 
       DispatchQueue.main.async {
         completion(nil)
