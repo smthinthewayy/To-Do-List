@@ -32,7 +32,6 @@
 		71BDF2152A5315190082D175 /* DTLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 71BDF2142A5315190082D175 /* DTLogger */; };
 		71D4BBC02A41DFF7001E373D /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D4BBBF2A41DFF7001E373D /* Fonts.swift */; };
 		71ED5BF52A4DF0CC00F809B1 /* TasksListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71ED5BF42A4DF0CC00F809B1 /* TasksListHeaderView.swift */; };
-		71F16C902A557FFE00FB2D9B /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F16C8F2A557FFE00FB2D9B /* URLSession.swift */; };
 		71F9B1912A3EFDA8000CB4EF /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F9B1902A3EFDA8000CB4EF /* Images.swift */; };
 		71F9B1952A3F0690000CB4EF /* TaskDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F9B1942A3F0690000CB4EF /* TaskDetailsView.swift */; };
 /* End PBXBuildFile section */
@@ -75,7 +74,6 @@
 		71B1DFE52A3DDE690069C2E8 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		71D4BBBF2A41DFF7001E373D /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
 		71ED5BF42A4DF0CC00F809B1 /* TasksListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksListHeaderView.swift; sourceTree = "<group>"; };
-		71F16C8F2A557FFE00FB2D9B /* URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
 		71F9B1902A3EFDA8000CB4EF /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		71F9B1942A3F0690000CB4EF /* TaskDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -187,7 +185,6 @@
 		716EB9322A49658700C5F7C7 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				71F16C8E2A557FE900FB2D9B /* Extensions */,
 				71D4BBC42A41E158001E373D /* Services */,
 				71D4BBBE2A41DCCB001E373D /* Enums */,
 			);
@@ -229,14 +226,6 @@
 				7131154D2A519FEB008C18D2 /* DefaultNetworkingService.swift */,
 			);
 			path = Services;
-			sourceTree = "<group>";
-		};
-		71F16C8E2A557FE900FB2D9B /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				71F16C8F2A557FFE00FB2D9B /* URLSession.swift */,
-			);
-			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -354,7 +343,6 @@
 				716759C82A421878009F9305 /* TaskTextView.swift in Sources */,
 				71B1DFE42A3DC0AB0069C2E8 /* TaskDetailsVC.swift in Sources */,
 				71228CCE2A356C1700405091 /* Task.swift in Sources */,
-				71F16C902A557FFE00FB2D9B /* URLSession.swift in Sources */,
 				711584BD2A4236AD00BE6913 /* ParametersView.swift in Sources */,
 				7170CC762A35900F00323CCA /* FileCache.swift in Sources */,
 				711584BF2A42405700BE6913 /* DeleteButton.swift in Sources */,

@@ -86,9 +86,8 @@ class TaskListVC: UIViewController {
       dns.updateList(tasks.tasks.map { self.dns.convertToNetworkTask(from: $0) }) { result in
         switch result {
         case let .success(response):
-//          self.dns.revision = response.revision
+          self.dns.revision = response.revision
           self.fileCache.tasks = response.list.map { self.dns.convertToTask(from: $0) }
-          self.tasks.tasks = self.fileCache.tasks
           self.tasks.isDirty = false
           SystemLogger.info("Сихронизация данных прошла успешно, isDirty = \(self.tasks.isDirty)")
         case let .failure(error):
