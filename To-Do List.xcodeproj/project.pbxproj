@@ -34,6 +34,7 @@
 		71ED5BF52A4DF0CC00F809B1 /* TasksListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71ED5BF42A4DF0CC00F809B1 /* TasksListHeaderView.swift */; };
 		71F9B1912A3EFDA8000CB4EF /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F9B1902A3EFDA8000CB4EF /* Images.swift */; };
 		71F9B1952A3F0690000CB4EF /* TaskDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F9B1942A3F0690000CB4EF /* TaskDetailsView.swift */; };
+		71FF6A642A574AF3003240AB /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71FF6A632A574AF3003240AB /* URLSession.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,6 +77,7 @@
 		71ED5BF42A4DF0CC00F809B1 /* TasksListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksListHeaderView.swift; sourceTree = "<group>"; };
 		71F9B1902A3EFDA8000CB4EF /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		71F9B1942A3F0690000CB4EF /* TaskDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsView.swift; sourceTree = "<group>"; };
+		71FF6A632A574AF3003240AB /* URLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSession.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,6 +189,7 @@
 			children = (
 				71D4BBC42A41E158001E373D /* Services */,
 				71D4BBBE2A41DCCB001E373D /* Enums */,
+				71FF6A652A574D25003240AB /* Extensions */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -226,6 +229,14 @@
 				7131154D2A519FEB008C18D2 /* DefaultNetworkingService.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		71FF6A652A574D25003240AB /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				71FF6A632A574AF3003240AB /* URLSession.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -336,6 +347,7 @@
 			files = (
 				71F9B1912A3EFDA8000CB4EF /* Images.swift in Sources */,
 				710CAACD2A47599000D7BF02 /* Helpers.swift in Sources */,
+				71FF6A642A574AF3003240AB /* URLSession.swift in Sources */,
 				71228C9E2A356BB300405091 /* AppDelegate.swift in Sources */,
 				71B1DFE62A3DDE690069C2E8 /* Colors.swift in Sources */,
 				71873AB12A498E3C0087DB06 /* DividerView.swift in Sources */,
