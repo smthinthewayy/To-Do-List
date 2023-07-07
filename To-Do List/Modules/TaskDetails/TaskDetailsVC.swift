@@ -11,17 +11,19 @@ import UIKit
 
 protocol TaskDetailsVCDelegate: AnyObject {
   func deleteTask(_ id: String)
-  func saveTask(_ task: Task)
+  func saveTask(_ task: Task, _ flag: Bool)
 }
 
 // MARK: - TaskDetailsVC
 
 class TaskDetailsVC: UIViewController {
+  private var taskDescription: String = ""
+  
   var taskDetailsView = TaskDetailsView()
 
-  private var taskDescription: String = ""
-
   var selectedTask: Task?
+
+  var isNewTask: Bool = false
 
   lazy var cancelButton: UIBarButtonItem = {
     let button = UIBarButtonItem(title: "Отменить", style: .plain, target: self, action: #selector(cancelTapped))
@@ -40,8 +42,6 @@ class TaskDetailsVC: UIViewController {
     button.isEnabled = false
     return button
   }()
-
-  var taskAdded: ((Task) -> Void)?
 
   weak var delegate: TaskDetailsVCDelegate?
 
@@ -80,6 +80,7 @@ class TaskDetailsVC: UIViewController {
 
   private func setupTaskDetailsView() {
     view.addSubview(taskDetailsView)
+    taskDetailsView.deleteButton.isEnabled = !isNewTask
     taskDetailsView.delegate = self
     taskDetailsView.task = selectedTask ?? Task(text: "", createdAt: .now, importance: .important, isDone: false)
     taskDetailsView.refreshView()
@@ -87,7 +88,7 @@ class TaskDetailsVC: UIViewController {
       taskDetailsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
       taskDetailsView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
       taskDetailsView.topAnchor.constraint(equalTo: view.topAnchor),
-      taskDetailsView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+      taskDetailsView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
     ])
   }
 }
@@ -106,14 +107,8 @@ extension TaskDetailsVC: TaskDetailsViewDelegate {
   @objc func saveTapped() {
     fetchTaskDescription(taskDetailsView.taskDescriptionTextView)
     taskDetailsView.task.text = taskDescription
-    delegate?.saveTask(taskDetailsView.task)
+    delegate?.saveTask(taskDetailsView.task, isNewTask)
     dismiss(animated: true)
-  }
-
-  private func showAlert(title: String, message: String?) {
-    let alert = UIAlertController(title: title, message: message ?? "unknown error", preferredStyle: .alert)
-    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-    present(alert, animated: true, completion: nil)
   }
 
   func deleteButtonTapped() {

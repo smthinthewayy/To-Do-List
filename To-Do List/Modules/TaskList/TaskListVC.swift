@@ -5,6 +5,7 @@
 //  Created by Danila Belyi on 26.06.2023.
 //
 
+import DTLogger
 import UIKit
 
 // MARK: - TaskListVC
@@ -22,7 +23,12 @@ class TaskListVC: UIViewController {
 
   private let tasksListHeaderView = TasksListHeaderView()
 
-  private var tasks: [Task] = []
+  private let dns = DefaultNetworkingService(
+    baseURL: URL(string: "https://beta.mrdekk.ru/todobackend")!,
+    bearerToken: "intend"
+  )
+
+  private var tasks = Tasks()
 
   private var showingTasks: [Task] = []
 
@@ -35,22 +41,69 @@ class TaskListVC: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    fileCache.loadFromJSON(from: "tasks") { _ in }
-    getTasks()
-    initShowingTasks()
-    setupView()
-    setupDelegates()
-    setupTasksList()
-    setupAddButton()
+    loadTasksFromCache()
+    loadTasksFromServer()
+    synchronize()
   }
 
-  override func viewWillTransition(to _: CGSize, with _: UIViewControllerTransitionCoordinator) {
-    tasksList.reloadData()
+  private func loadTasksFromCache() {
+    fileCache.loadFromJSON(from: "tasks") { result in
+      switch result {
+      case nil:
+        SystemLogger.info("Запуск приложения: данные из кэша успешно получены")
+      default:
+        SystemLogger.info("Запуск приложения: ошибка получения локальных данных из кэша")
+      }
+    }
+  }
+
+  private func loadTasksFromServer() {
+    let setup: () -> Void = { [weak self] in
+      self?.initShowingTasks()
+      self?.setupView()
+      self?.setupDelegates()
+      self?.setupTasksList()
+      self?.setupAddButton()
+    }
+
+    dns.getTasksList { result in
+      switch result {
+      case let .success(response):
+        self.dns.revision = response.revision
+        self.tasks.tasks = response.list.map { self.dns.convertToTask(from: $0) }
+        SystemLogger.info("Запуск приложения: данные с сервера успешно получены, отображаем их на экране")
+        RunLoop.main.perform { setup() }
+      case let .failure(error):
+        self.tasks.tasks = self.fileCache.tasks
+        SystemLogger.error("Запуск приложения: не удалось получить данные с сервера, отображаем данные из кэша. Ошибка: \(error)")
+        RunLoop.main.perform { setup() }
+      }
+    }
+  }
+
+  private func synchronize() {
+    if tasks.isDirty {
+      dns.updateList(tasks.tasks.map { self.dns.convertToNetworkTask(from: $0) }) { result in
+        switch result {
+        case let .success(response):
+          self.dns.revision = response.revision
+          self.fileCache.tasks = response.list.map { self.dns.convertToTask(from: $0) }
+          self.tasks.isDirty = false
+          SystemLogger.info("Сихронизация данных прошла успешно, isDirty = \(self.tasks.isDirty)")
+        case let .failure(error):
+          self.tasks.isDirty = true
+          SystemLogger
+            .error("Ошибка при попытке синхронизировать данные, isDirty = \(self.tasks.isDirty). Ошибка: \(error)")
+        }
+      }
+    }
+    setupShowingTasks()
   }
 
   private func setupShowingTasks() {
-    getTasks()
-    showingTasks = hideButtonIsActive() ? tasks : tasks.filter { $0.isDone == false }
+    tasks.tasks = fileCache.tasks
+    tasks.tasks.sort { $0.createdAt.timeIntervalSince1970 < $1.createdAt.timeIntervalSince1970 }
+    showingTasks = hideButtonIsActive() ? tasks.tasks : tasks.tasks.filter { $0.isDone == false }
     updateCompletedTasksLabel()
     UIView.transition(with: tasksList, duration: 0.2, options: .transitionCrossDissolve, animations: {
       self.tasksList.reloadData()
@@ -90,12 +143,8 @@ class TaskListVC: UIViewController {
     ])
   }
 
-  private func getTasks() {
-    tasks = fileCache.tasks
-  }
-
   private func initShowingTasks() {
-    showingTasks = tasks
+    showingTasks = tasks.tasks
     updateCompletedTasksLabel()
   }
 
@@ -104,8 +153,12 @@ class TaskListVC: UIViewController {
   }
 
   private func updateCompletedTasksLabel() {
-    counterOfCompletedTasks = tasks.filter { $0.isDone == true }.count
+    counterOfCompletedTasks = tasks.tasks.filter { $0.isDone == true }.count
     tasksListHeaderView.counterOfCompletedTasksLabel.text = "Выполнено — \(counterOfCompletedTasks)"
+  }
+
+  override func viewWillTransition(to _: CGSize, with _: UIViewControllerTransitionCoordinator) {
+    tasksList.reloadData()
   }
 }
 
@@ -115,6 +168,7 @@ extension TaskListVC: AddButtonDelegate {
   func addButtonTapped() {
     let taskDetailsVC = TaskDetailsVC()
     taskDetailsVC.delegate = self
+    taskDetailsVC.isNewTask = true
     let taskDetailsNC = UINavigationController(rootViewController: taskDetailsVC)
     present(taskDetailsNC, animated: true, completion: nil)
   }
@@ -138,12 +192,20 @@ extension TaskListVC: UITableViewDataSource {
       )
     }
 
-    if indexPath.row == tasks.count {
-      maskPath = UIBezierPath(
-        roundedRect: cell.bounds,
-        byRoundingCorners: [.bottomLeft, .bottomRight],
-        cornerRadii: CGSize(width: 16, height: 16)
-      )
+    if indexPath.row == tasks.tasks.count {
+      if !tasks.tasks.isEmpty {
+        maskPath = UIBezierPath(
+          roundedRect: cell.bounds,
+          byRoundingCorners: [.bottomLeft, .bottomRight],
+          cornerRadii: CGSize(width: 16, height: 16)
+        )
+      } else {
+        maskPath = UIBezierPath(
+          roundedRect: cell.bounds,
+          byRoundingCorners: [.bottomLeft, .bottomRight, .topLeft, .topRight],
+          cornerRadii: CGSize(width: 16, height: 16)
+        )
+      }
     }
 
     let shape = CAShapeLayer()
@@ -184,10 +246,12 @@ extension TaskListVC: UITableViewDelegate {
 
     let taskDetailsVC = TaskDetailsVC()
     taskDetailsVC.delegate = self
+    taskDetailsVC.isNewTask = true
 
     if indexPath.row <= showingTasks.count - 1 {
       let selectedTask = showingTasks[indexPath.row]
       taskDetailsVC.selectedTask = selectedTask
+      taskDetailsVC.isNewTask = false
       taskDetailsVC.taskDetailsView.refreshView()
     }
 
@@ -196,7 +260,7 @@ extension TaskListVC: UITableViewDelegate {
   }
 
   func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
-    return UITableView.automaticDimension
+    UITableView.automaticDimension
   }
 
   func tableView(_: UITableView, estimatedHeightForRowAt _: IndexPath) -> CGFloat {
@@ -204,11 +268,11 @@ extension TaskListVC: UITableViewDelegate {
   }
 
   func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
-    return 40
+    40
   }
 
   func tableView(_: UITableView, viewForHeaderInSection _: Int) -> UIView? {
-    return tasksListHeaderView
+    tasksListHeaderView
   }
 
   func tableView(_: UITableView,
@@ -218,13 +282,17 @@ extension TaskListVC: UITableViewDelegate {
       return nil
     }
 
+    guard indexPath.row <= tasks.tasks.count - 1 else {
+      return nil
+    }
+
     let action = UIContextualAction(
       style: .normal,
       title: nil,
       handler: { [weak self] _, _, _ in
         var task = self?.showingTasks[indexPath.row]
         task?.isDone.toggle()
-        self?.saveTask(task!)
+        self?.saveTask(task!, false)
       }
     )
 
@@ -238,6 +306,10 @@ extension TaskListVC: UITableViewDelegate {
                  trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
   {
     guard !showingTasks.isEmpty else {
+      return nil
+    }
+
+    guard indexPath.row <= tasks.tasks.count - 1 else {
       return nil
     }
 
@@ -277,14 +349,71 @@ extension TaskListVC: UITableViewDelegate {
 extension TaskListVC: TaskDetailsVCDelegate {
   func deleteTask(_ id: String) {
     _ = fileCache.delete(id)
-    fileCache.saveToJSON(to: "tasks") { _ in }
-    setupShowingTasks()
+
+    fileCache.saveToJSON(to: "tasks") { result in
+      switch result {
+      case nil:
+        SystemLogger.info("Данные успешно сохранены в кэш")
+      default:
+        SystemLogger.error("Ошибка при попытке сохранить изменения в кэш")
+      }
+    }
+
+    dns.deleteTaskFromList(for: id) { result in
+      switch result {
+      case .failure:
+        self.tasks.isDirty = true
+        SystemLogger.error("Ошибка при отправке DELETE запроса на удаление задачи на сервер, isDirty = \(self.tasks.isDirty)")
+      case .success:
+//        self.dns.revision = response.revision
+        SystemLogger.info("Отправка DELETE запроса на удаление задачи на сервер прошла успешно, isDirty = \(self.tasks.isDirty)")
+      }
+    }
+
+    synchronize()
+//    setupShowingTasks()
   }
 
-  func saveTask(_ task: Task) {
+  func saveTask(_ task: Task, _ flag: Bool) {
     _ = fileCache.add(task)
-    fileCache.saveToJSON(to: "tasks") { _ in }
-    setupShowingTasks()
+
+    fileCache.saveToJSON(to: "tasks") { result in
+      switch result {
+      case nil:
+        SystemLogger.info("Данные успешно сохранены в кэш")
+      default:
+        SystemLogger.error("Ошибка при попытке сохранить изменения в кэш")
+      }
+    }
+
+    if flag {
+      dns.addTaskToList(task: dns.convertToNetworkTask(from: task)) { result in
+        switch result {
+        case .failure:
+          self.tasks.isDirty = true
+          SystemLogger.error("Ошибка при отправке POST запроса на добавление новой задачи на сервер, isDirty = \(self.tasks.isDirty)")
+        case .success:
+//          self.dns.revision = response.revision
+          SystemLogger.info("Отправка POST запроса на добавление новой задачи на сервер прошла успешно, isDirty = \(self.tasks.isDirty)")
+        }
+      }
+    } else {
+      dns.editTask(task: dns.convertToNetworkTask(from: task)) { result in
+        switch result {
+        case .failure:
+          self.tasks.isDirty = true
+          SystemLogger
+            .error("Ошибка при отправке PUT запроса на изменение задачи на сервер, isDirty = \(self.tasks.isDirty)")
+        case .success:
+//          self.dns.revision = response.revision
+          SystemLogger
+            .info("Отправка PUT запроса на изменение задачи на сервер прошла успешно, isDirty = \(self.tasks.isDirty)")
+        }
+      }
+    }
+
+    synchronize()
+//    setupShowingTasks()
   }
 }
 
@@ -295,7 +424,7 @@ extension TaskListVC: TaskCellDelegate {
     guard let indexPath = tasksList.indexPath(for: taskCell) else { return }
     var selectedTask = showingTasks[indexPath.row]
     selectedTask.isDone.toggle()
-    saveTask(selectedTask)
+    saveTask(selectedTask, false)
   }
 }
 
@@ -304,10 +433,10 @@ extension TaskListVC: TaskCellDelegate {
 extension TaskListVC: TasksListHeaderViewDelegate {
   func hideButtonTapped(_ sender: UIButton) {
     if hideButtonIsActive() {
-      showingTasks = tasks.filter { $0.isDone == false }
+      showingTasks = tasks.tasks.filter { $0.isDone == false }
       sender.setTitle("Показать", for: .normal)
     } else {
-      showingTasks = tasks
+      showingTasks = tasks.tasks
       sender.setTitle("Скрыть", for: .normal)
     }
     UIView.transition(with: tasksList, duration: 0.3, options: .transitionFlipFromRight, animations: {

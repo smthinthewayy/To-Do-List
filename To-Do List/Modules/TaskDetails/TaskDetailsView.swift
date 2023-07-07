@@ -85,7 +85,6 @@ class TaskDetailsView: UIView {
   init() {
     super.init(frame: .zero)
     setupObservers()
-    initViewIfNeeded()
     setupView()
     setupTapGesture()
   }
@@ -93,31 +92,6 @@ class TaskDetailsView: UIView {
   @available(*, unavailable)
   required init?(coder _: NSCoder) {
     fatalError("init(coder:) has not been implemented")
-  }
-
-  private func initViewIfNeeded() {
-//    item = DataManager.shared.getData()
-//
-//    if !item.text.isEmpty {
-//      taskDescriptionTextView.text = item.text
-//      taskDescriptionTextView.textColor = Colors.color(for: .labelPrimary)
-//
-//      switch item.importance {
-//      case .important:
-//        parametersView.importancePicker.selectedSegmentIndex = 2
-//      case .low:
-//        parametersView.importancePicker.selectedSegmentIndex = 0
-//      default:
-//        parametersView.importancePicker.selectedSegmentIndex = 1
-//      }
-//
-//      if let deadline = item.deadline {
-//        parametersView.deadlineSwitch.isOn = true
-//        parametersView.deadlineDateButton.setTitle(formatDate(for: deadline), for: .normal)
-//        parametersView.deadlineDateButton.isHidden = false
-//        deleteButton.isEnabled = true
-//      }
-//    }
   }
 
   func refreshView() {

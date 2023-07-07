@@ -13,7 +13,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     _: UIApplication,
     didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?
   )
-    -> Bool {
+    -> Bool
+  {
     return true
   }
 
@@ -24,7 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     configurationForConnecting connectingSceneSession: UISceneSession,
     options _: UIScene.ConnectionOptions
   )
-    -> UISceneConfiguration {
+    -> UISceneConfiguration
+  {
     return UISceneConfiguration(
       name: "Default Configuration",
       sessionRole: connectingSceneSession.role

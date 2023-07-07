@@ -15,6 +15,7 @@
 		71228CA72A356BB400405091 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71228CA62A356BB400405091 /* Assets.xcassets */; };
 		71228CAA2A356BB400405091 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71228CA82A356BB400405091 /* LaunchScreen.storyboard */; };
 		71228CCE2A356C1700405091 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71228CCD2A356C1700405091 /* Task.swift */; };
+		7131154E2A519FEB008C18D2 /* DefaultNetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7131154D2A519FEB008C18D2 /* DefaultNetworkingService.swift */; };
 		716759C82A421878009F9305 /* TaskTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716759C72A421878009F9305 /* TaskTextView.swift */; };
 		716759C92A421878009F9305 /* TaskTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716759C72A421878009F9305 /* TaskTextView.swift */; };
 		7169A9C92A4D6C9F00EA0DBF /* NewTaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7169A9C82A4D6C9F00EA0DBF /* NewTaskCell.swift */; };
@@ -28,8 +29,8 @@
 		71AC37F02A49888B00EBD4C6 /* TasksList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AC37EF2A49888B00EBD4C6 /* TasksList.swift */; };
 		71B1DFE42A3DC0AB0069C2E8 /* TaskDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71B1DFE32A3DC0AB0069C2E8 /* TaskDetailsVC.swift */; };
 		71B1DFE62A3DDE690069C2E8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71B1DFE52A3DDE690069C2E8 /* Colors.swift */; };
+		71BDF2152A5315190082D175 /* DTLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 71BDF2142A5315190082D175 /* DTLogger */; };
 		71D4BBC02A41DFF7001E373D /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D4BBBF2A41DFF7001E373D /* Fonts.swift */; };
-		71E763EC2A45E0EB0086E853 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71E763EB2A45E0EB0086E853 /* DataManager.swift */; };
 		71ED5BF52A4DF0CC00F809B1 /* TasksListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71ED5BF42A4DF0CC00F809B1 /* TasksListHeaderView.swift */; };
 		71F9B1912A3EFDA8000CB4EF /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F9B1902A3EFDA8000CB4EF /* Images.swift */; };
 		71F9B1952A3F0690000CB4EF /* TaskDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F9B1942A3F0690000CB4EF /* TaskDetailsView.swift */; };
@@ -57,6 +58,7 @@
 		71228CA92A356BB400405091 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		71228CAB2A356BB400405091 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		71228CCD2A356C1700405091 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
+		7131154D2A519FEB008C18D2 /* DefaultNetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNetworkingService.swift; sourceTree = "<group>"; };
 		716759C72A421878009F9305 /* TaskTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskTextView.swift; sourceTree = "<group>"; };
 		7169A9C82A4D6C9F00EA0DBF /* NewTaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTaskCell.swift; sourceTree = "<group>"; };
 		716B18032A3AD91A0028C660 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,7 +74,6 @@
 		71B1DFE32A3DC0AB0069C2E8 /* TaskDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsVC.swift; sourceTree = "<group>"; };
 		71B1DFE52A3DDE690069C2E8 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		71D4BBBF2A41DFF7001E373D /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
-		71E763EB2A45E0EB0086E853 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		71ED5BF42A4DF0CC00F809B1 /* TasksListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksListHeaderView.swift; sourceTree = "<group>"; };
 		71F9B1902A3EFDA8000CB4EF /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		71F9B1942A3F0690000CB4EF /* TaskDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsView.swift; sourceTree = "<group>"; };
@@ -84,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71BDF2152A5315190082D175 /* DTLogger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,8 +225,8 @@
 			isa = PBXGroup;
 			children = (
 				7170CC752A35900F00323CCA /* FileCache.swift */,
-				71E763EB2A45E0EB0086E853 /* DataManager.swift */,
 				710CAACC2A47599000D7BF02 /* Helpers.swift */,
+				7131154D2A519FEB008C18D2 /* DefaultNetworkingService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -254,6 +256,7 @@
 			);
 			name = "To-Do List";
 			packageProductDependencies = (
+				71BDF2142A5315190082D175 /* DTLogger */,
 			);
 			productName = "To-Do List";
 			productReference = 71228C9A2A356BB300405091 /* To-Do List.app */;
@@ -306,6 +309,7 @@
 			);
 			mainGroup = 71228C912A356BB300405091;
 			packageReferences = (
+				71BDF2132A5315190082D175 /* XCRemoteSwiftPackageReference "DTLogger" */,
 			);
 			productRefGroup = 71228C9B2A356BB300405091 /* Products */;
 			projectDirPath = "";
@@ -355,10 +359,10 @@
 				7170CC762A35900F00323CCA /* FileCache.swift in Sources */,
 				711584BF2A42405700BE6913 /* DeleteButton.swift in Sources */,
 				71F9B1952A3F0690000CB4EF /* TaskDetailsView.swift in Sources */,
+				7131154E2A519FEB008C18D2 /* DefaultNetworkingService.swift in Sources */,
 				71ED5BF52A4DF0CC00F809B1 /* TasksListHeaderView.swift in Sources */,
 				71AC37F02A49888B00EBD4C6 /* TasksList.swift in Sources */,
 				71D4BBC02A41DFF7001E373D /* Fonts.swift in Sources */,
-				71E763EC2A45E0EB0086E853 /* DataManager.swift in Sources */,
 				71228CA02A356BB300405091 /* SceneDelegate.swift in Sources */,
 				7169A9C92A4D6C9F00EA0DBF /* NewTaskCell.swift in Sources */,
 				71873AAF2A498D5B0087DB06 /* TaskCell.swift in Sources */,
@@ -522,6 +526,7 @@
 				DEVELOPMENT_TEAM = 67H5XCS6ZN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "To-Do List/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ToDoList;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -554,6 +559,7 @@
 				DEVELOPMENT_TEAM = 67H5XCS6ZN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "To-Do List/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ToDoList;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -643,6 +649,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		71BDF2132A5315190082D175 /* XCRemoteSwiftPackageReference "DTLogger" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ZyFun/DTLogger.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		71BDF2142A5315190082D175 /* DTLogger */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 71BDF2132A5315190082D175 /* XCRemoteSwiftPackageReference "DTLogger" */;
+			productName = DTLogger;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 71228C922A356BB300405091 /* Project object */;
 }
