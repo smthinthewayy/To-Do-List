@@ -17,7 +17,9 @@ class TaskListVC: UIViewController {
 
   private let taskDetailsVC = TaskDetailsVC()
 
-  private var fileCache = FileCache()
+  private var database = Database()
+
+//  private var fileCache = FileCache()
 
   private var counterOfCompletedTasks: Int = 0
 
@@ -47,12 +49,12 @@ class TaskListVC: UIViewController {
   }
 
   private func loadTasksFromCache() {
-    fileCache.loadFromJSON(from: "tasks") { result in
+    database.loadFromSQLite { result in
       switch result {
       case nil:
-        SystemLogger.info("Запуск приложения: данные из кэша успешно получены")
+        SystemLogger.info("Запуск приложения: данные из базы данных успешно получены")
       default:
-        SystemLogger.info("Запуск приложения: ошибка получения локальных данных из кэша")
+        SystemLogger.info("Запуск приложения: ошибка получения локальных данных из базы данных")
       }
     }
   }
@@ -74,7 +76,7 @@ class TaskListVC: UIViewController {
         SystemLogger.info("Запуск приложения: данные с сервера успешно получены, отображаем их на экране")
         RunLoop.main.perform { setup() }
       case let .failure(error):
-        self.tasks.tasks = self.fileCache.tasks
+        self.tasks.tasks = self.database.tasks
         SystemLogger.error("Запуск приложения: не удалось получить данные с сервера, отображаем данные из кэша. Ошибка: \(error)")
         RunLoop.main.perform { setup() }
       }
@@ -87,7 +89,7 @@ class TaskListVC: UIViewController {
         switch result {
         case let .success(response):
           self.dns.revision = response.revision
-          self.fileCache.tasks = response.list.map { self.dns.convertToTask(from: $0) }
+          self.database.tasks = response.list.map { self.dns.convertToTask(from: $0) }
           self.tasks.isDirty = false
           SystemLogger.info("Сихронизация данных прошла успешно, isDirty = \(self.tasks.isDirty)")
         case let .failure(error):
@@ -101,7 +103,7 @@ class TaskListVC: UIViewController {
   }
 
   private func setupShowingTasks() {
-    tasks.tasks = fileCache.tasks
+    tasks.tasks = database.tasks
     tasks.tasks.sort { $0.createdAt.timeIntervalSince1970 < $1.createdAt.timeIntervalSince1970 }
     showingTasks = hideButtonIsActive() ? tasks.tasks : tasks.tasks.filter { $0.isDone == false }
     updateCompletedTasksLabel()
@@ -348,16 +350,7 @@ extension TaskListVC: UITableViewDelegate {
 
 extension TaskListVC: TaskDetailsVCDelegate {
   func deleteTask(_ id: String) {
-    _ = fileCache.delete(id)
-
-    fileCache.saveToJSON(to: "tasks") { result in
-      switch result {
-      case nil:
-        SystemLogger.info("Данные успешно сохранены в кэш")
-      default:
-        SystemLogger.error("Ошибка при попытке сохранить изменения в кэш")
-      }
-    }
+    database.deleteTask(id: id)
 
     dns.deleteTaskFromList(for: id) { result in
       switch result {
@@ -375,16 +368,7 @@ extension TaskListVC: TaskDetailsVCDelegate {
   }
 
   func saveTask(_ task: Task, _ flag: Bool) {
-    _ = fileCache.add(task)
-
-    fileCache.saveToJSON(to: "tasks") { result in
-      switch result {
-      case nil:
-        SystemLogger.info("Данные успешно сохранены в кэш")
-      default:
-        SystemLogger.error("Ошибка при попытке сохранить изменения в кэш")
-      }
-    }
+    database.insertOrUpdateTask(task: task)
 
     if flag {
       dns.addTaskToList(task: dns.convertToNetworkTask(from: task)) { result in

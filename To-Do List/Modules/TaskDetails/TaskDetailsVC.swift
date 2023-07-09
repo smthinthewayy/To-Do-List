@@ -18,7 +18,7 @@ protocol TaskDetailsVCDelegate: AnyObject {
 
 class TaskDetailsVC: UIViewController {
   private var taskDescription: String = ""
-  
+
   var taskDetailsView = TaskDetailsView()
 
   var selectedTask: Task?
@@ -144,7 +144,9 @@ extension TaskDetailsVC: ParametersViewDelegate {
     } else {
       taskDetailsView.task.deadline = nil
     }
-    saveButton.isEnabled = true
+    if !isNewTask {
+      saveButton.isEnabled = true
+    }
   }
 
   func segmentControlTapped(_ sender: UISegmentedControl) {
@@ -153,11 +155,15 @@ extension TaskDetailsVC: ParametersViewDelegate {
     case 2: taskDetailsView.task.importance = .important
     default: taskDetailsView.task.importance = .normal
     }
-    saveButton.isEnabled = true
+    if !isNewTask {
+      saveButton.isEnabled = true
+    }
   }
 
   func dateSelection(_ date: DateComponents?) {
     taskDetailsView.task.deadline = date!.date
-    saveButton.isEnabled = true
+    if !isNewTask {
+      saveButton.isEnabled = true
+    }
   }
 }
