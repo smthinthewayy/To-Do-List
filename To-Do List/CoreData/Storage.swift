@@ -144,9 +144,9 @@ class Storage {
     let createdAt = taskEntity
       .createdAt ?? Date()
     let deadline = taskEntity
-      .deadline ?? Date()
+      .deadline ?? nil
     let changedAt = taskEntity
-      .changedAt ?? Date()
+      .changedAt ?? nil
     let importanceRawValue = taskEntity
       .importance ?? ""
     let importance = Importance(rawValue: importanceRawValue) ?? .normal
