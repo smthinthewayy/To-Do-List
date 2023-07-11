@@ -19,6 +19,8 @@ class TaskListVC: UIViewController {
 
   private var database = Database()
 
+  private var storage = Storage()
+
 //  private var fileCache = FileCache()
 
   private var counterOfCompletedTasks: Int = 0
@@ -43,18 +45,73 @@ class TaskListVC: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    loadTasksFromCache()
+
+//    var task = Task(id: "84D88D3F-5C20-4BF7-869F-8002332B8779", text: "test1", createdAt: .now, importance: .important, isDone: false)
+//    let task2 = Task(text: "test2", createdAt: .now, importance: .important, isDone: false)
+//    let task3 = Task(text: "test3", createdAt: .now, importance: .important, isDone: false)
+//
+//    Storage.shared.addTask(task1, context: Storage.shared.writeContext) {
+//      do {
+//        try Storage.shared.writeContext.save()
+//      } catch {
+//        print("блинб")
+//      }
+//    }
+//    Storage.shared.addTask(task2, context: Storage.shared.writeContext)
+//    Storage.shared.addTask(task3, context: Storage.shared.writeContext)
+
+//    do {
+//      try Storage.shared.writeContext.save()
+//    } catch {
+//      print("блинб")
+//    }
+//
+//    print(task.id)
+
+//    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+
+//    }
+
+//    Storage.shared.addTask(task, context: Storage.shared.writeContext)
+//
+//    task.text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+//
+//    Storage.shared.addTask(task, context: Storage.shared.writeContext)
+//
+//    Storage.shared.fetchAllTasks { array in
+//      print(array.map { Storage.shared.convertTaskEntityToTask($0) })
+//    }
+
+    loadTasksFromCoreData()
+//    loadTasksFromSQLite()
     loadTasksFromServer()
     synchronize()
   }
 
-  private func loadTasksFromCache() {
+  @objc private func settingsButtonTapped() {
+    let settingsVC = SettingsVC()
+    let settingsNC = UINavigationController(rootViewController: settingsVC)
+    present(settingsNC, animated: true, completion: nil)
+  }
+
+  private func loadTasksFromCoreData() {
+    Storage.shared.fetchAllTasks { result in
+      switch result {
+      case nil:
+        SystemLogger.info("Запуск приложения: данные из CoreData успешно получены")
+      default:
+        SystemLogger.error("Запуск приложения: ошибка получения данных из CoreData")
+      }
+    }
+  }
+
+  private func loadTasksFromSQLite() {
     database.loadFromSQLite { result in
       switch result {
       case nil:
         SystemLogger.info("Запуск приложения: данные из базы данных успешно получены")
       default:
-        SystemLogger.info("Запуск приложения: ошибка получения локальных данных из базы данных")
+        SystemLogger.error("Запуск приложения: ошибка получения локальных данных из базы данных")
       }
     }
   }
@@ -103,7 +160,9 @@ class TaskListVC: UIViewController {
   }
 
   private func setupShowingTasks() {
-    tasks.tasks = database.tasks
+//    tasks.tasks = database.tasks
+    tasks.tasks = Storage.shared.tasks
+
     tasks.tasks.sort { $0.createdAt.timeIntervalSince1970 < $1.createdAt.timeIntervalSince1970 }
     showingTasks = hideButtonIsActive() ? tasks.tasks : tasks.tasks.filter { $0.isDone == false }
     updateCompletedTasksLabel()
@@ -350,7 +409,8 @@ extension TaskListVC: UITableViewDelegate {
 
 extension TaskListVC: TaskDetailsVCDelegate {
   func deleteTask(_ id: String) {
-    database.deleteTask(id: id)
+//    database.deleteTask(id: id)
+    Storage.shared.deleteTask(withID: id, context: Storage.shared.writeContext)
 
     dns.deleteTaskFromList(for: id) { result in
       switch result {
@@ -358,17 +418,16 @@ extension TaskListVC: TaskDetailsVCDelegate {
         self.tasks.isDirty = true
         SystemLogger.error("Ошибка при отправке DELETE запроса на удаление задачи на сервер, isDirty = \(self.tasks.isDirty)")
       case .success:
-//        self.dns.revision = response.revision
         SystemLogger.info("Отправка DELETE запроса на удаление задачи на сервер прошла успешно, isDirty = \(self.tasks.isDirty)")
       }
     }
 
     synchronize()
-//    setupShowingTasks()
   }
 
   func saveTask(_ task: Task, _ flag: Bool) {
-    database.insertOrUpdateTask(task: task)
+//    database.insertOrUpdateTask(task: task)
+    Storage.shared.addTask(task, context: Storage.shared.writeContext)
 
     if flag {
       dns.addTaskToList(task: dns.convertToNetworkTask(from: task)) { result in
@@ -377,7 +436,6 @@ extension TaskListVC: TaskDetailsVCDelegate {
           self.tasks.isDirty = true
           SystemLogger.error("Ошибка при отправке POST запроса на добавление новой задачи на сервер, isDirty = \(self.tasks.isDirty)")
         case .success:
-//          self.dns.revision = response.revision
           SystemLogger.info("Отправка POST запроса на добавление новой задачи на сервер прошла успешно, isDirty = \(self.tasks.isDirty)")
         }
       }
@@ -389,7 +447,6 @@ extension TaskListVC: TaskDetailsVCDelegate {
           SystemLogger
             .error("Ошибка при отправке PUT запроса на изменение задачи на сервер, isDirty = \(self.tasks.isDirty)")
         case .success:
-//          self.dns.revision = response.revision
           SystemLogger
             .info("Отправка PUT запроса на изменение задачи на сервер прошла успешно, isDirty = \(self.tasks.isDirty)")
         }
@@ -397,7 +454,6 @@ extension TaskListVC: TaskDetailsVCDelegate {
     }
 
     synchronize()
-//    setupShowingTasks()
   }
 }
 
