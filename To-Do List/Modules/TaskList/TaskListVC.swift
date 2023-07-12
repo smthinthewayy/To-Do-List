@@ -19,7 +19,7 @@ class TaskListVC: UIViewController {
 
   private var database = Database()
 
-  private var storage = Storage()
+  private var storage = CoreData()
 
 //  private var fileCache = FileCache()
 
@@ -38,6 +38,7 @@ class TaskListVC: UIViewController {
 
   private enum Constants {
     static let estimatedRowHeight: CGFloat = 56
+    static let heightForHeaderInSection: CGFloat = 40
     static let cornerRadius: CGFloat = 16
     static let cellIdentifier: String = "TasksListItemCell"
     static let newCellIdentifier: String = "NewTaskCell"
@@ -46,56 +47,14 @@ class TaskListVC: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-//    var task = Task(id: "84D88D3F-5C20-4BF7-869F-8002332B8779", text: "test1", createdAt: .now, importance: .important, isDone: false)
-//    let task2 = Task(text: "test2", createdAt: .now, importance: .important, isDone: false)
-//    let task3 = Task(text: "test3", createdAt: .now, importance: .important, isDone: false)
-//
-//    Storage.shared.addTask(task1, context: Storage.shared.writeContext) {
-//      do {
-//        try Storage.shared.writeContext.save()
-//      } catch {
-//        print("блинб")
-//      }
-//    }
-//    Storage.shared.addTask(task2, context: Storage.shared.writeContext)
-//    Storage.shared.addTask(task3, context: Storage.shared.writeContext)
-
-//    do {
-//      try Storage.shared.writeContext.save()
-//    } catch {
-//      print("блинб")
-//    }
-//
-//    print(task.id)
-
-//    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-
-//    }
-
-//    Storage.shared.addTask(task, context: Storage.shared.writeContext)
-//
-//    task.text = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-//
-//    Storage.shared.addTask(task, context: Storage.shared.writeContext)
-//
-//    Storage.shared.fetchAllTasks { array in
-//      print(array.map { Storage.shared.convertTaskEntityToTask($0) })
-//    }
-
     loadTasksFromCoreData()
 //    loadTasksFromSQLite()
     loadTasksFromServer()
     synchronize()
   }
 
-  @objc private func settingsButtonTapped() {
-    let settingsVC = SettingsVC()
-    let settingsNC = UINavigationController(rootViewController: settingsVC)
-    present(settingsNC, animated: true, completion: nil)
-  }
-
   private func loadTasksFromCoreData() {
-    Storage.shared.fetchAllTasks { result in
+    CoreData.shared.fetchAllTasks { result in
       switch result {
       case nil:
         SystemLogger.info("Запуск приложения: данные из CoreData успешно получены")
@@ -161,7 +120,7 @@ class TaskListVC: UIViewController {
 
   private func setupShowingTasks() {
 //    tasks.tasks = database.tasks
-    tasks.tasks = Storage.shared.tasks
+    tasks.tasks = CoreData.shared.tasks
 
     tasks.tasks.sort { $0.createdAt.timeIntervalSince1970 < $1.createdAt.timeIntervalSince1970 }
     showingTasks = hideButtonIsActive() ? tasks.tasks : tasks.tasks.filter { $0.isDone == false }
@@ -325,11 +284,11 @@ extension TaskListVC: UITableViewDelegate {
   }
 
   func tableView(_: UITableView, estimatedHeightForRowAt _: IndexPath) -> CGFloat {
-    56
+    Constants.estimatedRowHeight
   }
 
   func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
-    40
+    Constants.heightForHeaderInSection
   }
 
   func tableView(_: UITableView, viewForHeaderInSection _: Int) -> UIView? {
@@ -339,13 +298,9 @@ extension TaskListVC: UITableViewDelegate {
   func tableView(_: UITableView,
                  leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
   {
-    guard !showingTasks.isEmpty else {
-      return nil
-    }
+    guard !showingTasks.isEmpty else { return nil }
 
-    guard indexPath.row <= tasks.tasks.count - 1 else {
-      return nil
-    }
+    guard indexPath.row <= tasks.tasks.count - 1 else { return nil }
 
     let action = UIContextualAction(
       style: .normal,
@@ -410,7 +365,7 @@ extension TaskListVC: UITableViewDelegate {
 extension TaskListVC: TaskDetailsVCDelegate {
   func deleteTask(_ id: String) {
 //    database.deleteTask(id: id)
-    Storage.shared.deleteTask(withID: id, context: Storage.shared.writeContext)
+    CoreData.shared.deleteTask(withID: id, context: CoreData.shared.writeContext)
 
     dns.deleteTaskFromList(for: id) { result in
       switch result {
@@ -427,7 +382,7 @@ extension TaskListVC: TaskDetailsVCDelegate {
 
   func saveTask(_ task: Task, _ flag: Bool) {
 //    database.insertOrUpdateTask(task: task)
-    Storage.shared.addTask(task, context: Storage.shared.writeContext)
+    CoreData.shared.addTask(task, context: CoreData.shared.writeContext)
 
     if flag {
       dns.addTaskToList(task: dns.convertToNetworkTask(from: task)) { result in

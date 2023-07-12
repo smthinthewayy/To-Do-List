@@ -132,7 +132,7 @@ class ParametersView: UIStackView {
       UISegmentedControl(items: [Images.image(for: .lowImportance).withRenderingMode(.alwaysOriginal), "нет",
                                  Images.image(for: .highImportance)
                                    .withRenderingMode(.alwaysOriginal)])
-    segmentedControl.selectedSegmentIndex = 2
+    segmentedControl.selectedSegmentIndex = 1
     segmentedControl.backgroundColor = Colors.color(for: .supportOverlay)
     segmentedControl.selectedSegmentTintColor = Colors.color(for: .backElevated)
     segmentedControl.addTarget(self, action: #selector(segmentControlTapped), for: .valueChanged)

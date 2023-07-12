@@ -9,8 +9,8 @@ import CoreData
 import DTLogger
 import Foundation
 
-class Storage {
-  static let shared = Storage()
+class CoreData {
+  static let shared = CoreData()
 
   var tasks: [Task] = []
 
@@ -36,20 +36,6 @@ class Storage {
     return context
   }()
 
-//  func fetchTask(withID id: String) -> TaskEntity? {
-//    let request: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
-//    request.predicate = NSPredicate(format: "id == %@", id)
-//
-//    do {
-//      let tasks = try readContext.fetch(request)
-//      SystemLogger.info("Объект Task получен из CoreData под ID: \(tasks.first?.id ?? "")")
-//      return tasks.first
-//    } catch {
-//      SystemLogger.error("Не удалось получить объект Task из CoreData. \(error)")
-//      return nil
-//    }
-//  }
-
   func fetchAllTasks(completion: @escaping (Error?) -> Void) {
     let request: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
 
@@ -59,7 +45,7 @@ class Storage {
       tasks = taskEntities.map { convertTaskEntityToTask($0) }
       completion(nil)
     } catch {
-      SystemLogger.error("Не удалось получить объекты Task из CoreData. \(error)")
+      SystemLogger.error("Не удалось получить объекты TaskEntity из CoreData. \(error)")
       completion(error)
     }
   }
@@ -91,8 +77,6 @@ class Storage {
     taskEntity.changedAt = task.changedAt
     taskEntity.importance = task.importance.rawValue
     taskEntity.isDone = task.isDone
-
-    SystemLogger.info("Идет сохранение объекта Task в CoreData")
 
     do {
       try context.save()

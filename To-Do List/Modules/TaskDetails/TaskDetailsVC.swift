@@ -82,7 +82,7 @@ class TaskDetailsVC: UIViewController {
     view.addSubview(taskDetailsView)
     taskDetailsView.deleteButton.isEnabled = !isNewTask
     taskDetailsView.delegate = self
-    taskDetailsView.task = selectedTask ?? Task(text: "", createdAt: .now, importance: .important, isDone: false)
+    taskDetailsView.task = selectedTask ?? Task(text: "", createdAt: .now, importance: .normal, isDone: false)
     taskDetailsView.refreshView()
     NSLayoutConstraint.activate([
       taskDetailsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -120,7 +120,7 @@ extension TaskDetailsVC: TaskDetailsViewDelegate {
   private func clearView() {
     taskDetailsView.taskDescriptionTextView.text = "Что надо сделать?"
     taskDetailsView.taskDescriptionTextView.textColor = Colors.color(for: .labelTertiary)
-    taskDetailsView.parametersView.importancePicker.selectedSegmentIndex = 2
+    taskDetailsView.parametersView.importancePicker.selectedSegmentIndex = 1
     taskDetailsView.parametersView.deadlineSwitch.isOn = false
     taskDetailsView.parametersView.deadlineDateButton.isHidden = true
     saveButton.isEnabled = false
