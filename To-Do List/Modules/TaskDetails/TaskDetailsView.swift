@@ -74,7 +74,7 @@ class TaskDetailsView: UIView {
 
   let parametersView = ParametersView()
 
-  var task = Task(text: "", createdAt: .now, importance: .important, isDone: false)
+  var task = Task(text: "", createdAt: .now, importance: .normal, isDone: false)
 
   let taskDescriptionTextView = TaskTextView()
 

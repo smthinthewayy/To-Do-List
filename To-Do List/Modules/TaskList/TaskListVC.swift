@@ -17,7 +17,9 @@ class TaskListVC: UIViewController {
 
   private let taskDetailsVC = TaskDetailsVC()
 
-  private var fileCache = FileCache()
+  private var database = Database()
+
+  private var storage = CoreData()
 
   private var counterOfCompletedTasks: Int = 0
 
@@ -34,6 +36,7 @@ class TaskListVC: UIViewController {
 
   private enum Constants {
     static let estimatedRowHeight: CGFloat = 56
+    static let heightForHeaderInSection: CGFloat = 40
     static let cornerRadius: CGFloat = 16
     static let cellIdentifier: String = "TasksListItemCell"
     static let newCellIdentifier: String = "NewTaskCell"
@@ -41,18 +44,31 @@ class TaskListVC: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    loadTasksFromCache()
+
+//    loadTasksFromCoreData()
+    loadTasksFromSQLite()
     loadTasksFromServer()
     synchronize()
   }
 
-  private func loadTasksFromCache() {
-    fileCache.loadFromJSON(from: "tasks") { result in
+  private func loadTasksFromCoreData() {
+    CoreData.shared.fetchAllTasks { result in
       switch result {
       case nil:
-        SystemLogger.info("Запуск приложения: данные из кэша успешно получены")
+        SystemLogger.info("Запуск приложения: данные из CoreData успешно получены")
       default:
-        SystemLogger.info("Запуск приложения: ошибка получения локальных данных из кэша")
+        SystemLogger.error("Запуск приложения: ошибка получения данных из CoreData")
+      }
+    }
+  }
+
+  private func loadTasksFromSQLite() {
+    database.loadFromSQLite { result in
+      switch result {
+      case nil:
+        SystemLogger.info("Запуск приложения: данные из базы данных успешно получены")
+      default:
+        SystemLogger.error("Запуск приложения: ошибка получения локальных данных из базы данных")
       }
     }
   }
@@ -74,7 +90,7 @@ class TaskListVC: UIViewController {
         SystemLogger.info("Запуск приложения: данные с сервера успешно получены, отображаем их на экране")
         RunLoop.main.perform { setup() }
       case let .failure(error):
-        self.tasks.tasks = self.fileCache.tasks
+        self.tasks.tasks = self.database.tasks
         SystemLogger.error("Запуск приложения: не удалось получить данные с сервера, отображаем данные из кэша. Ошибка: \(error)")
         RunLoop.main.perform { setup() }
       }
@@ -87,7 +103,7 @@ class TaskListVC: UIViewController {
         switch result {
         case let .success(response):
           self.dns.revision = response.revision
-          self.fileCache.tasks = response.list.map { self.dns.convertToTask(from: $0) }
+          self.database.tasks = response.list.map { self.dns.convertToTask(from: $0) }
           self.tasks.isDirty = false
           SystemLogger.info("Сихронизация данных прошла успешно, isDirty = \(self.tasks.isDirty)")
         case let .failure(error):
@@ -101,7 +117,9 @@ class TaskListVC: UIViewController {
   }
 
   private func setupShowingTasks() {
-    tasks.tasks = fileCache.tasks
+    tasks.tasks = database.tasks
+//    tasks.tasks = CoreData.shared.tasks
+
     tasks.tasks.sort { $0.createdAt.timeIntervalSince1970 < $1.createdAt.timeIntervalSince1970 }
     showingTasks = hideButtonIsActive() ? tasks.tasks : tasks.tasks.filter { $0.isDone == false }
     updateCompletedTasksLabel()
@@ -264,11 +282,11 @@ extension TaskListVC: UITableViewDelegate {
   }
 
   func tableView(_: UITableView, estimatedHeightForRowAt _: IndexPath) -> CGFloat {
-    56
+    Constants.estimatedRowHeight
   }
 
   func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
-    40
+    Constants.heightForHeaderInSection
   }
 
   func tableView(_: UITableView, viewForHeaderInSection _: Int) -> UIView? {
@@ -278,13 +296,9 @@ extension TaskListVC: UITableViewDelegate {
   func tableView(_: UITableView,
                  leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration?
   {
-    guard !showingTasks.isEmpty else {
-      return nil
-    }
+    guard !showingTasks.isEmpty else { return nil }
 
-    guard indexPath.row <= tasks.tasks.count - 1 else {
-      return nil
-    }
+    guard indexPath.row <= tasks.tasks.count - 1 else { return nil }
 
     let action = UIContextualAction(
       style: .normal,
@@ -348,16 +362,8 @@ extension TaskListVC: UITableViewDelegate {
 
 extension TaskListVC: TaskDetailsVCDelegate {
   func deleteTask(_ id: String) {
-    _ = fileCache.delete(id)
-
-    fileCache.saveToJSON(to: "tasks") { result in
-      switch result {
-      case nil:
-        SystemLogger.info("Данные успешно сохранены в кэш")
-      default:
-        SystemLogger.error("Ошибка при попытке сохранить изменения в кэш")
-      }
-    }
+    database.deleteTask(id: id)
+//    CoreData.shared.deleteTask(withID: id, context: CoreData.shared.writeContext)
 
     dns.deleteTaskFromList(for: id) { result in
       switch result {
@@ -365,26 +371,16 @@ extension TaskListVC: TaskDetailsVCDelegate {
         self.tasks.isDirty = true
         SystemLogger.error("Ошибка при отправке DELETE запроса на удаление задачи на сервер, isDirty = \(self.tasks.isDirty)")
       case .success:
-//        self.dns.revision = response.revision
         SystemLogger.info("Отправка DELETE запроса на удаление задачи на сервер прошла успешно, isDirty = \(self.tasks.isDirty)")
       }
     }
 
     synchronize()
-//    setupShowingTasks()
   }
 
   func saveTask(_ task: Task, _ flag: Bool) {
-    _ = fileCache.add(task)
-
-    fileCache.saveToJSON(to: "tasks") { result in
-      switch result {
-      case nil:
-        SystemLogger.info("Данные успешно сохранены в кэш")
-      default:
-        SystemLogger.error("Ошибка при попытке сохранить изменения в кэш")
-      }
-    }
+    database.insertOrUpdateTask(task: task)
+//    CoreData.shared.addTask(task, context: CoreData.shared.writeContext)
 
     if flag {
       dns.addTaskToList(task: dns.convertToNetworkTask(from: task)) { result in
@@ -393,7 +389,6 @@ extension TaskListVC: TaskDetailsVCDelegate {
           self.tasks.isDirty = true
           SystemLogger.error("Ошибка при отправке POST запроса на добавление новой задачи на сервер, isDirty = \(self.tasks.isDirty)")
         case .success:
-//          self.dns.revision = response.revision
           SystemLogger.info("Отправка POST запроса на добавление новой задачи на сервер прошла успешно, isDirty = \(self.tasks.isDirty)")
         }
       }
@@ -405,7 +400,6 @@ extension TaskListVC: TaskDetailsVCDelegate {
           SystemLogger
             .error("Ошибка при отправке PUT запроса на изменение задачи на сервер, isDirty = \(self.tasks.isDirty)")
         case .success:
-//          self.dns.revision = response.revision
           SystemLogger
             .info("Отправка PUT запроса на изменение задачи на сервер прошла успешно, isDirty = \(self.tasks.isDirty)")
         }
@@ -413,7 +407,6 @@ extension TaskListVC: TaskDetailsVCDelegate {
     }
 
     synchronize()
-//    setupShowingTasks()
   }
 }
 

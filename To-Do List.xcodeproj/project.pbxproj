@@ -23,12 +23,17 @@
 		716B180E2A3B032E0028C660 /* FileCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716B180D2A3B032E0028C660 /* FileCacheTests.swift */; };
 		716EB9352A49695B00C5F7C7 /* TaskListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716EB9342A49695B00C5F7C7 /* TaskListVC.swift */; };
 		7170CC762A35900F00323CCA /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7170CC752A35900F00323CCA /* FileCache.swift */; };
+		717C13512A5AE90F00103DD5 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 717C13502A5AE90F00103DD5 /* StorageManager.swift */; };
 		71873AAF2A498D5B0087DB06 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71873AAE2A498D5B0087DB06 /* TaskCell.swift */; };
 		71873AB12A498E3C0087DB06 /* DividerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71873AB02A498E3C0087DB06 /* DividerView.swift */; };
 		71AC37EE2A4982AC00EBD4C6 /* AddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AC37ED2A4982AC00EBD4C6 /* AddButton.swift */; };
 		71AC37F02A49888B00EBD4C6 /* TasksList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AC37EF2A49888B00EBD4C6 /* TasksList.swift */; };
+		71AD67352A599C28003EF5BB /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 71AD67342A599C28003EF5BB /* SQLite */; };
+		71AD67382A599C8C003EF5BB /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71AD67372A599C8C003EF5BB /* Database.swift */; };
 		71B1DFE42A3DC0AB0069C2E8 /* TaskDetailsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71B1DFE32A3DC0AB0069C2E8 /* TaskDetailsVC.swift */; };
 		71B1DFE62A3DDE690069C2E8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71B1DFE52A3DDE690069C2E8 /* Colors.swift */; };
+		71BA75DC2A5D3A5B00570F88 /* Task.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 71BA75DA2A5D3A5B00570F88 /* Task.xcdatamodeld */; };
+		71BA75DF2A5D3C2E00570F88 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BA75DE2A5D3C2E00570F88 /* CoreData.swift */; };
 		71BDF2152A5315190082D175 /* DTLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 71BDF2142A5315190082D175 /* DTLogger */; };
 		71D4BBC02A41DFF7001E373D /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D4BBBF2A41DFF7001E373D /* Fonts.swift */; };
 		71ED5BF52A4DF0CC00F809B1 /* TasksListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71ED5BF42A4DF0CC00F809B1 /* TasksListHeaderView.swift */; };
@@ -67,12 +72,16 @@
 		716B180D2A3B032E0028C660 /* FileCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCacheTests.swift; sourceTree = "<group>"; };
 		716EB9342A49695B00C5F7C7 /* TaskListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskListVC.swift; sourceTree = "<group>"; };
 		7170CC752A35900F00323CCA /* FileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
+		717C13502A5AE90F00103DD5 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		71873AAE2A498D5B0087DB06 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		71873AB02A498E3C0087DB06 /* DividerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DividerView.swift; sourceTree = "<group>"; };
 		71AC37ED2A4982AC00EBD4C6 /* AddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddButton.swift; sourceTree = "<group>"; };
 		71AC37EF2A49888B00EBD4C6 /* TasksList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksList.swift; sourceTree = "<group>"; };
+		71AD67372A599C8C003EF5BB /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		71B1DFE32A3DC0AB0069C2E8 /* TaskDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsVC.swift; sourceTree = "<group>"; };
 		71B1DFE52A3DDE690069C2E8 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		71BA75DB2A5D3A5B00570F88 /* Task.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Task.xcdatamodel; sourceTree = "<group>"; };
+		71BA75DE2A5D3C2E00570F88 /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		71D4BBBF2A41DFF7001E373D /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
 		71ED5BF42A4DF0CC00F809B1 /* TasksListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksListHeaderView.swift; sourceTree = "<group>"; };
 		71F9B1902A3EFDA8000CB4EF /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
@@ -85,6 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				71AD67352A599C28003EF5BB /* SQLite in Frameworks */,
 				71BDF2152A5315190082D175 /* DTLogger in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -130,12 +140,15 @@
 		71228C9C2A356BB300405091 /* To-Do List */ = {
 			isa = PBXGroup;
 			children = (
+				71BA75DD2A5D3C1D00570F88 /* CoreData */,
+				71AD67362A599C6F003EF5BB /* SQLite */,
 				7112B1792A41EEFB00D1452C /* App */,
 				716EB92F2A49653D00C5F7C7 /* Modules */,
 				7199D3342A3B4184000469CD /* Models */,
 				716EB9322A49658700C5F7C7 /* Common */,
 				716EB9332A49682B00C5F7C7 /* Resources */,
 				71228CAB2A356BB400405091 /* Info.plist */,
+				717C13502A5AE90F00103DD5 /* StorageManager.swift */,
 			);
 			path = "To-Do List";
 			sourceTree = "<group>";
@@ -211,6 +224,23 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		71AD67362A599C6F003EF5BB /* SQLite */ = {
+			isa = PBXGroup;
+			children = (
+				71AD67372A599C8C003EF5BB /* Database.swift */,
+			);
+			path = SQLite;
+			sourceTree = "<group>";
+		};
+		71BA75DD2A5D3C1D00570F88 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				71BA75DA2A5D3A5B00570F88 /* Task.xcdatamodeld */,
+				71BA75DE2A5D3C2E00570F88 /* CoreData.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		71D4BBBE2A41DCCB001E373D /* Enums */ = {
 			isa = PBXGroup;
 			children = (
@@ -257,6 +287,7 @@
 			name = "To-Do List";
 			packageProductDependencies = (
 				71BDF2142A5315190082D175 /* DTLogger */,
+				71AD67342A599C28003EF5BB /* SQLite */,
 			);
 			productName = "To-Do List";
 			productReference = 71228C9A2A356BB300405091 /* To-Do List.app */;
@@ -310,6 +341,7 @@
 			mainGroup = 71228C912A356BB300405091;
 			packageReferences = (
 				71BDF2132A5315190082D175 /* XCRemoteSwiftPackageReference "DTLogger" */,
+				71AD67332A599C28003EF5BB /* XCRemoteSwiftPackageReference "SQLite.swift" */,
 			);
 			productRefGroup = 71228C9B2A356BB300405091 /* Products */;
 			projectDirPath = "";
@@ -349,6 +381,7 @@
 				710CAACD2A47599000D7BF02 /* Helpers.swift in Sources */,
 				71FF6A642A574AF3003240AB /* URLSession.swift in Sources */,
 				71228C9E2A356BB300405091 /* AppDelegate.swift in Sources */,
+				71BA75DC2A5D3A5B00570F88 /* Task.xcdatamodeld in Sources */,
 				71B1DFE62A3DDE690069C2E8 /* Colors.swift in Sources */,
 				71873AB12A498E3C0087DB06 /* DividerView.swift in Sources */,
 				716EB9352A49695B00C5F7C7 /* TaskListVC.swift in Sources */,
@@ -358,6 +391,7 @@
 				711584BD2A4236AD00BE6913 /* ParametersView.swift in Sources */,
 				7170CC762A35900F00323CCA /* FileCache.swift in Sources */,
 				711584BF2A42405700BE6913 /* DeleteButton.swift in Sources */,
+				71AD67382A599C8C003EF5BB /* Database.swift in Sources */,
 				71F9B1952A3F0690000CB4EF /* TaskDetailsView.swift in Sources */,
 				7131154E2A519FEB008C18D2 /* DefaultNetworkingService.swift in Sources */,
 				71ED5BF52A4DF0CC00F809B1 /* TasksListHeaderView.swift in Sources */,
@@ -367,6 +401,8 @@
 				7169A9C92A4D6C9F00EA0DBF /* NewTaskCell.swift in Sources */,
 				71873AAF2A498D5B0087DB06 /* TaskCell.swift in Sources */,
 				71AC37EE2A4982AC00EBD4C6 /* AddButton.swift in Sources */,
+				717C13512A5AE90F00103DD5 /* StorageManager.swift in Sources */,
+				71BA75DF2A5D3C2E00570F88 /* CoreData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -651,6 +687,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		71AD67332A599C28003EF5BB /* XCRemoteSwiftPackageReference "SQLite.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.1;
+			};
+		};
 		71BDF2132A5315190082D175 /* XCRemoteSwiftPackageReference "DTLogger" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ZyFun/DTLogger.git";
@@ -662,12 +706,30 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		71AD67342A599C28003EF5BB /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 71AD67332A599C28003EF5BB /* XCRemoteSwiftPackageReference "SQLite.swift" */;
+			productName = SQLite;
+		};
 		71BDF2142A5315190082D175 /* DTLogger */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 71BDF2132A5315190082D175 /* XCRemoteSwiftPackageReference "DTLogger" */;
 			productName = DTLogger;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		71BA75DA2A5D3A5B00570F88 /* Task.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				71BA75DB2A5D3A5B00570F88 /* Task.xcdatamodel */,
+			);
+			currentVersion = 71BA75DB2A5D3A5B00570F88 /* Task.xcdatamodel */;
+			path = Task.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 71228C922A356BB300405091 /* Project object */;
 }

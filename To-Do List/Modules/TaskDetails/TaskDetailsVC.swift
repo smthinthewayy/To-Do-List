@@ -18,7 +18,7 @@ protocol TaskDetailsVCDelegate: AnyObject {
 
 class TaskDetailsVC: UIViewController {
   private var taskDescription: String = ""
-  
+
   var taskDetailsView = TaskDetailsView()
 
   var selectedTask: Task?
@@ -82,7 +82,7 @@ class TaskDetailsVC: UIViewController {
     view.addSubview(taskDetailsView)
     taskDetailsView.deleteButton.isEnabled = !isNewTask
     taskDetailsView.delegate = self
-    taskDetailsView.task = selectedTask ?? Task(text: "", createdAt: .now, importance: .important, isDone: false)
+    taskDetailsView.task = selectedTask ?? Task(text: "", createdAt: .now, importance: .normal, isDone: false)
     taskDetailsView.refreshView()
     NSLayoutConstraint.activate([
       taskDetailsView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -120,7 +120,7 @@ extension TaskDetailsVC: TaskDetailsViewDelegate {
   private func clearView() {
     taskDetailsView.taskDescriptionTextView.text = "Что надо сделать?"
     taskDetailsView.taskDescriptionTextView.textColor = Colors.color(for: .labelTertiary)
-    taskDetailsView.parametersView.importancePicker.selectedSegmentIndex = 2
+    taskDetailsView.parametersView.importancePicker.selectedSegmentIndex = 1
     taskDetailsView.parametersView.deadlineSwitch.isOn = false
     taskDetailsView.parametersView.deadlineDateButton.isHidden = true
     saveButton.isEnabled = false
@@ -144,7 +144,9 @@ extension TaskDetailsVC: ParametersViewDelegate {
     } else {
       taskDetailsView.task.deadline = nil
     }
-    saveButton.isEnabled = true
+    if !isNewTask {
+      saveButton.isEnabled = true
+    }
   }
 
   func segmentControlTapped(_ sender: UISegmentedControl) {
@@ -153,11 +155,15 @@ extension TaskDetailsVC: ParametersViewDelegate {
     case 2: taskDetailsView.task.importance = .important
     default: taskDetailsView.task.importance = .normal
     }
-    saveButton.isEnabled = true
+    if !isNewTask {
+      saveButton.isEnabled = true
+    }
   }
 
   func dateSelection(_ date: DateComponents?) {
     taskDetailsView.task.deadline = date!.date
-    saveButton.isEnabled = true
+    if !isNewTask {
+      saveButton.isEnabled = true
+    }
   }
 }
