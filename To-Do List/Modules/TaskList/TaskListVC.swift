@@ -21,8 +21,6 @@ class TaskListVC: UIViewController {
 
   private var storage = CoreData()
 
-//  private var fileCache = FileCache()
-
   private var counterOfCompletedTasks: Int = 0
 
   private let tasksListHeaderView = TasksListHeaderView()
@@ -47,8 +45,8 @@ class TaskListVC: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    loadTasksFromCoreData()
-//    loadTasksFromSQLite()
+//    loadTasksFromCoreData()
+    loadTasksFromSQLite()
     loadTasksFromServer()
     synchronize()
   }
@@ -119,8 +117,8 @@ class TaskListVC: UIViewController {
   }
 
   private func setupShowingTasks() {
-//    tasks.tasks = database.tasks
-    tasks.tasks = CoreData.shared.tasks
+    tasks.tasks = database.tasks
+//    tasks.tasks = CoreData.shared.tasks
 
     tasks.tasks.sort { $0.createdAt.timeIntervalSince1970 < $1.createdAt.timeIntervalSince1970 }
     showingTasks = hideButtonIsActive() ? tasks.tasks : tasks.tasks.filter { $0.isDone == false }
@@ -364,8 +362,8 @@ extension TaskListVC: UITableViewDelegate {
 
 extension TaskListVC: TaskDetailsVCDelegate {
   func deleteTask(_ id: String) {
-//    database.deleteTask(id: id)
-    CoreData.shared.deleteTask(withID: id, context: CoreData.shared.writeContext)
+    database.deleteTask(id: id)
+//    CoreData.shared.deleteTask(withID: id, context: CoreData.shared.writeContext)
 
     dns.deleteTaskFromList(for: id) { result in
       switch result {
@@ -381,8 +379,8 @@ extension TaskListVC: TaskDetailsVCDelegate {
   }
 
   func saveTask(_ task: Task, _ flag: Bool) {
-//    database.insertOrUpdateTask(task: task)
-    CoreData.shared.addTask(task, context: CoreData.shared.writeContext)
+    database.insertOrUpdateTask(task: task)
+//    CoreData.shared.addTask(task, context: CoreData.shared.writeContext)
 
     if flag {
       dns.addTaskToList(task: dns.convertToNetworkTask(from: task)) { result in

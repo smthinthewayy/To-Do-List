@@ -139,7 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				71BA75DD2A5D3C1D00570F88 /* CoreData */,
-				71AD67362A599C6F003EF5BB /* Database */,
+				71AD67362A599C6F003EF5BB /* SQLite */,
 				7112B1792A41EEFB00D1452C /* App */,
 				716EB92F2A49653D00C5F7C7 /* Modules */,
 				7199D3342A3B4184000469CD /* Models */,
@@ -221,12 +221,12 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		71AD67362A599C6F003EF5BB /* Database */ = {
+		71AD67362A599C6F003EF5BB /* SQLite */ = {
 			isa = PBXGroup;
 			children = (
 				71AD67372A599C8C003EF5BB /* Database.swift */,
 			);
-			path = Database;
+			path = SQLite;
 			sourceTree = "<group>";
 		};
 		71BA75DD2A5D3C1D00570F88 /* CoreData */ = {
