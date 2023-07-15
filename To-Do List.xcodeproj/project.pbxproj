@@ -36,6 +36,13 @@
 		71BA75DF2A5D3C2E00570F88 /* CoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71BA75DE2A5D3C2E00570F88 /* CoreData.swift */; };
 		71BDF2152A5315190082D175 /* DTLogger in Frameworks */ = {isa = PBXBuildFile; productRef = 71BDF2142A5315190082D175 /* DTLogger */; };
 		71D4BBC02A41DFF7001E373D /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71D4BBBF2A41DFF7001E373D /* Fonts.swift */; };
+		71DC49602A627EDA006119F6 /* To_Do_List_SUIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71DC495F2A627EDA006119F6 /* To_Do_List_SUIApp.swift */; };
+		71DC49622A627EDA006119F6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71DC49612A627EDA006119F6 /* ContentView.swift */; };
+		71DC49642A627EDA006119F6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71DC49632A627EDA006119F6 /* Assets.xcassets */; };
+		71DC49672A627EDA006119F6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 71DC49662A627EDA006119F6 /* Preview Assets.xcassets */; };
+		71DC496C2A62800D006119F6 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71DC49612A627EDA006119F6 /* ContentView.swift */; };
+		71DC496F2A6287DA006119F6 /* TaskCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71DC496E2A6287DA006119F6 /* TaskCellView.swift */; };
+		71DC49702A628863006119F6 /* TaskCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71DC496E2A6287DA006119F6 /* TaskCellView.swift */; };
 		71ED5BF52A4DF0CC00F809B1 /* TasksListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71ED5BF42A4DF0CC00F809B1 /* TasksListHeaderView.swift */; };
 		71F9B1912A3EFDA8000CB4EF /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F9B1902A3EFDA8000CB4EF /* Images.swift */; };
 		71F9B1952A3F0690000CB4EF /* TaskDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F9B1942A3F0690000CB4EF /* TaskDetailsView.swift */; };
@@ -82,6 +89,12 @@
 		71BA75DB2A5D3A5B00570F88 /* Task.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Task.xcdatamodel; sourceTree = "<group>"; };
 		71BA75DE2A5D3C2E00570F88 /* CoreData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreData.swift; sourceTree = "<group>"; };
 		71D4BBBF2A41DFF7001E373D /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
+		71DC495D2A627EDA006119F6 /* To-Do List SUI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "To-Do List SUI.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		71DC495F2A627EDA006119F6 /* To_Do_List_SUIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = To_Do_List_SUIApp.swift; sourceTree = "<group>"; };
+		71DC49612A627EDA006119F6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		71DC49632A627EDA006119F6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		71DC49662A627EDA006119F6 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		71DC496E2A6287DA006119F6 /* TaskCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCellView.swift; sourceTree = "<group>"; };
 		71ED5BF42A4DF0CC00F809B1 /* TasksListHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TasksListHeaderView.swift; sourceTree = "<group>"; };
 		71F9B1902A3EFDA8000CB4EF /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		71F9B1942A3F0690000CB4EF /* TaskDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailsView.swift; sourceTree = "<group>"; };
@@ -98,6 +111,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		716B18002A3AD91A0028C660 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		71DC495A2A627EDA006119F6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,6 +142,7 @@
 				716B180C2A3ADAAC0028C660 /* Tests.xctestplan */,
 				71228C9C2A356BB300405091 /* To-Do List */,
 				716B18042A3AD91A0028C660 /* Tests */,
+				71DC495E2A627EDA006119F6 /* To-Do List SUI */,
 				71228C9B2A356BB300405091 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -131,6 +152,7 @@
 			children = (
 				71228C9A2A356BB300405091 /* To-Do List.app */,
 				716B18032A3AD91A0028C660 /* Tests.xctest */,
+				71DC495D2A627EDA006119F6 /* To-Do List SUI.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -258,6 +280,26 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		71DC495E2A627EDA006119F6 /* To-Do List SUI */ = {
+			isa = PBXGroup;
+			children = (
+				71DC495F2A627EDA006119F6 /* To_Do_List_SUIApp.swift */,
+				71DC49612A627EDA006119F6 /* ContentView.swift */,
+				71DC49632A627EDA006119F6 /* Assets.xcassets */,
+				71DC49652A627EDA006119F6 /* Preview Content */,
+				71DC496E2A6287DA006119F6 /* TaskCellView.swift */,
+			);
+			path = "To-Do List SUI";
+			sourceTree = "<group>";
+		};
+		71DC49652A627EDA006119F6 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				71DC49662A627EDA006119F6 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -300,6 +342,23 @@
 			productReference = 716B18032A3AD91A0028C660 /* Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		71DC495C2A627EDA006119F6 /* To-Do List SUI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 71DC496A2A627EDA006119F6 /* Build configuration list for PBXNativeTarget "To-Do List SUI" */;
+			buildPhases = (
+				71DC49592A627EDA006119F6 /* Sources */,
+				71DC495A2A627EDA006119F6 /* Frameworks */,
+				71DC495B2A627EDA006119F6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "To-Do List SUI";
+			productName = "To-Do List SUI";
+			productReference = 71DC495D2A627EDA006119F6 /* To-Do List SUI.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -316,6 +375,9 @@
 					716B18022A3AD91A0028C660 = {
 						CreatedOnToolsVersion = 14.3.1;
 						TestTargetID = 71228C992A356BB300405091;
+					};
+					71DC495C2A627EDA006119F6 = {
+						CreatedOnToolsVersion = 14.3.1;
 					};
 				};
 			};
@@ -338,6 +400,7 @@
 			targets = (
 				71228C992A356BB300405091 /* To-Do List */,
 				716B18022A3AD91A0028C660 /* Tests */,
+				71DC495C2A627EDA006119F6 /* To-Do List SUI */,
 			);
 		};
 /* End PBXProject section */
@@ -359,6 +422,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		71DC495B2A627EDA006119F6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				71DC49672A627EDA006119F6 /* Preview Assets.xcassets in Resources */,
+				71DC49642A627EDA006119F6 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -373,9 +445,11 @@
 				71B1DFE62A3DDE690069C2E8 /* Colors.swift in Sources */,
 				71873AB12A498E3C0087DB06 /* DividerView.swift in Sources */,
 				716EB9352A49695B00C5F7C7 /* TaskListVC.swift in Sources */,
+				71DC49702A628863006119F6 /* TaskCellView.swift in Sources */,
 				716759C82A421878009F9305 /* TaskTextView.swift in Sources */,
 				71B1DFE42A3DC0AB0069C2E8 /* TaskDetailsVC.swift in Sources */,
 				71228CCE2A356C1700405091 /* Task.swift in Sources */,
+				71DC496C2A62800D006119F6 /* ContentView.swift in Sources */,
 				711584BD2A4236AD00BE6913 /* ParametersView.swift in Sources */,
 				7170CC762A35900F00323CCA /* FileCache.swift in Sources */,
 				711584BF2A42405700BE6913 /* DeleteButton.swift in Sources */,
@@ -401,6 +475,16 @@
 				716759C92A421878009F9305 /* TaskTextView.swift in Sources */,
 				716B180E2A3B032E0028C660 /* FileCacheTests.swift in Sources */,
 				716B18062A3AD91A0028C660 /* TaskTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		71DC49592A627EDA006119F6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				71DC49622A627EDA006119F6 /* ContentView.swift in Sources */,
+				71DC496F2A6287DA006119F6 /* TaskCellView.swift in Sources */,
+				71DC49602A627EDA006119F6 /* To_Do_List_SUIApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -642,6 +726,64 @@
 			};
 			name = Release;
 		};
+		71DC49682A627EDA006119F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"To-Do List SUI/Preview Content\"";
+				DEVELOPMENT_TEAM = 67H5XCS6ZN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.danilabelyi.To-Do-List-SUI";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		71DC49692A627EDA006119F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"To-Do List SUI/Preview Content\"";
+				DEVELOPMENT_TEAM = 67H5XCS6ZN;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.danilabelyi.To-Do-List-SUI";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -668,6 +810,15 @@
 			buildConfigurations = (
 				716B180A2A3AD91A0028C660 /* Debug */,
 				716B180B2A3AD91A0028C660 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		71DC496A2A627EDA006119F6 /* Build configuration list for PBXNativeTarget "To-Do List SUI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				71DC49682A627EDA006119F6 /* Debug */,
+				71DC49692A627EDA006119F6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
