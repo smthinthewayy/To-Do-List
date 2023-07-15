@@ -14,7 +14,7 @@ struct TaskCellView: View {
 
   var body: some View {
     VStack {
-      HStack {
+      HStack(spacing: 12) {
         Image(uiImage: Images
           .image(for: task.importance == .important && task.isDone == false ? .RBhighPriority : (task.isDone ? .RBon : .RBoff)))
           .resizable()
@@ -45,7 +45,7 @@ struct TaskCellView: View {
       }
     }
     .frame(minHeight: 24)
-    .background(Color(uiColor: Colors.color(for: .backSecondary)))
+//    .background(Color(uiColor: Colors.color(for: .backSecondary)))
   }
 }
 
@@ -56,8 +56,8 @@ struct TaskCellView_Previews: PreviewProvider {
     TaskCellView(task: Task(
       text: "Покормить кота",
       createdAt: .now,
-//      deadline: .now + 24 * 60 * 60,
-      importance: .normal,
+      deadline: .now + 24 * 60 * 60,
+      importance: .important,
       isDone: false
     ))
     .previewLayout(.sizeThatFits)

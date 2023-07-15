@@ -18,6 +18,7 @@ public func formatDate(for date: Date?) -> String {
 public func formatDateWithoutYear(for date: Date?) -> String {
   guard let date = date else { return "invalid date" }
   let dateFormatter = DateFormatter()
+  dateFormatter.locale = Locale(identifier: "ru_RU")
   dateFormatter.dateFormat = "d MMMM"
   let dateString = dateFormatter.string(from: date)
   return dateString
