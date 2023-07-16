@@ -24,7 +24,7 @@ struct TaskListView: View {
 //      isDone: false
 //    )),
 //  ]
-  
+
   let data = [
     TaskCellView(task: Task(text: "Купить что-то", createdAt: .now, importance: .normal, isDone: true)),
     TaskCellView(task: Task(text: "Купить что-то", createdAt: .now, importance: .normal, isDone: true)),
@@ -33,11 +33,18 @@ struct TaskListView: View {
     TaskCellView(task: Task(text: "Купить что-то", createdAt: .now, importance: .important, isDone: false)),
     TaskCellView(task: Task(text: "Купить что-то", createdAt: .now, importance: .normal, isDone: true)),
     TaskCellView(task: Task(text: "сделать зарядку", createdAt: .now, importance: .normal, isDone: false)),
-    TaskCellView(task: Task(text: "Купить что-то, где-то, зачем-то, но зачем не очень понятно, но точно чтобы пока не понял", createdAt: .now, importance: .normal, isDone: false)),
+    TaskCellView(task: Task(
+      text: "Купить что-то, где-то, зачем-то, но зачем не очень понятно, но точно чтобы пока не понял",
+      createdAt: .now,
+      importance: .normal,
+      isDone: false
+    )),
 //    TaskCellView(task: Task(text: "Купить что-то, где-то, зачем-то, но зачем?", createdAt: .now, importance: .normal, isDone: false)),
 //    TaskCellView(task: Task(text: "Купить сыр", createdAt: .now, importance: .normal, isDone: false)),
-
   ]
+
+  @State private var showTaskDetails = false
+  @State private var selectedItem: Task?
 
   var body: some View {
     NavigationStack {
@@ -49,9 +56,7 @@ struct TaskListView: View {
               .foregroundColor(Color(uiColor: Colors.color(for: .labelTertiary)))
               .textCase(nil)
             Spacer()
-            Button {
-              print("sfsdf")
-            } label: {
+            Button {} label: {
               Text("Показать")
                 .font(Font(Fonts.font(for: .headline)))
                 .foregroundColor(Color(Colors.color(for: .blue)))
@@ -84,11 +89,13 @@ struct TaskListView: View {
               .padding(.bottom, 16)
               .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
             }
-            
-            NewTaskCellView()
-              .padding(.top, 16)
-              .padding(.bottom, 16)
-              .listRowInsets(EdgeInsets(top: 0, leading: 52, bottom: 0, trailing: 0))
+
+            NavigationLink(destination: TaskDetails(task: Task(text: "", createdAt: .now, importance: .normal, isDone: false))) {
+              NewTaskCellView()
+            }
+            .padding(.top, 16)
+            .padding(.bottom, 16)
+            .listRowInsets(EdgeInsets(top: 0, leading: 52, bottom: 0, trailing: 0))
           }
         }
         .navigationTitle("Мои дела")
