@@ -13,6 +13,7 @@ struct TaskDetails: View {
   @State private var editedText: String
   @State private var selectedSegment = 1
   @State private var isToggled = false
+  @State private var date = Date()
   let task: Task
 
   init(task: Task) {
@@ -23,7 +24,10 @@ struct TaskDetails: View {
   var body: some View {
     VStack(spacing: 16) {
       TextEditor(text: $editedText)
-        .background(Color(UIColor.systemBackground))
+        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+        .scrollContentBackground(.hidden)
+        .background(Color(Colors.color(for: .backSecondary)))
+        .tint(Color(Colors.color(for: .red)))
         .cornerRadius(16)
         .foregroundColor(task
           .text == "" ? Color(uiColor: Colors.color(for: .labelTertiary)) : Color(uiColor: Colors.color(for: .labelPrimary)))
@@ -52,68 +56,67 @@ struct TaskDetails: View {
           .pickerStyle(.segmented)
           .frame(width: 150)
         }
-//        .background(.gray)
         .padding(.top, 10)
-//        .frame(height: 56)
 
         Divider()
           .padding(.leading, 16)
           .padding(.trailing, 16)
 
         HStack {
-          Text("Сделать до")
-            .padding(.leading, 16)
-            .font(Font(Fonts.font(for: .body)))
+          VStack(alignment: .leading) {
+            Text("Сделать до")
+              .padding(.leading, 16)
+              .font(Font(Fonts.font(for: .body)))
+
+            if isToggled {
+              if let deadline = task.deadline {
+                Text("\(formatDate(for: task.deadline))")
+                  .padding(.leading, 16)
+                  .foregroundColor(Color(uiColor: Colors.color(for: .blue)))
+                  .font(Font(Fonts.font(for: .footnote)))
+              } else {
+                Text("\(formatDate(for: .now + 24 * 60 * 60))")
+                  .padding(.leading, 16)
+                  .foregroundColor(Color(uiColor: Colors.color(for: .blue)))
+                  .font(Font(Fonts.font(for: .footnote)))
+              }
+            }
+          }
 
           Spacer()
 
           Toggle("", isOn: $isToggled)
             .padding(.trailing, 18)
         }
-        .padding(.top, 4)
+        .frame(height: 40)
+        .padding(.top, 2)
+        .onAppear {
+          if task.deadline != nil {
+            isToggled = true
+          } else {
+            isToggled = false
+          }
+        }
+
+        Divider()
+          .padding(.leading, 16)
+          .padding(.trailing, 16)
+
+        DatePicker(
+          "Start Date",
+          selection: $date,
+          displayedComponents: [.date]
+        )
+        .datePickerStyle(.graphical)
+        .padding(.leading, 8)
+        .padding(.trailing, 8)
       }
       .scrollDisabled(true)
       .background(Color(Colors.color(for: .backSecondary)))
       .cornerRadius(16)
       .padding(.leading, 16)
       .padding(.trailing, 16)
-      .frame(height: 113)
-
-//      List {
-//        HStack {
-//          Text("Важность")
-//            .font(Font(Fonts.font(for: .body)))
-//
-//          Spacer()
-//
-//          Picker("", selection: $selectedSegment) {
-//            Image(uiImage: Images.image(for: .lowImportance))
-//              .renderingMode(.original)
-//              .tag(0)
-//            Text("нет")
-//              .tag(1)
-//              .font(Font(Fonts.font(for: .mediumSubhead)))
-//            Image(uiImage: Images.image(for: .highImportance))
-//              .renderingMode(.original)
-//              .tag(2)
-//          }
-//          .pickerStyle(.segmented)
-//          .frame(width: 150)
-//        }
-//        .frame(height: 24)
-//
-//        HStack {
-//          Text("Сделать до")
-//            .font(Font(Fonts.font(for: .body)))
-//        }
-//        .frame(height: 24)
-//      }
-//      .scrollContentBackground(.hidden)
-//      .background(Color(Colors.color(for: .backPrimary)))
-//      .background(Color(Colors.color(for: .gray)))
-
-//      .scrollDisabled(true)
-//      .frame(height: 123)
+      .frame(height: 435)
 
       Button(action: {}) {
         Text("Удалить")
@@ -137,7 +140,7 @@ struct TaskDetails_Previews: PreviewProvider {
     TaskDetails(task: Task(
       text: "Покормить кота",
       createdAt: .now,
-//      deadline: .now + 24 * 60 * 60,
+      deadline: .now + 24 * 60 * 60 * 10,
       importance: .normal,
       isDone: false
     ))
