@@ -66,6 +66,7 @@ struct TaskListView: View {
           .padding(.bottom, 12)) {
             ForEach(data, id: \.task.id) { item in
               item
+                .contentShape(Rectangle())
                 .listRowBackground(Color(uiColor: Colors.color(for: .backSecondary)))
                 .swipeActions(edge: .leading) {
                   Button(action: {}) {
@@ -91,14 +92,14 @@ struct TaskListView: View {
                 }
                 .listRowSeparator(.hidden)
             }
-            NewTaskCellView()
-              .padding(.top, 16)
-              .padding(.bottom, 16)
-              .listRowInsets(EdgeInsets(top: 0, leading: 52, bottom: 0, trailing: 0))
-              .onTapGesture {
-                selectedItem = Task(text: "", createdAt: .now, importance: .normal, isDone: false)
-                showTaskDetails = true
-              }
+
+            Button("Новое") {
+              selectedItem = Task(text: "", createdAt: .now, importance: .normal, isDone: false)
+              showTaskDetails = true
+            }
+            .foregroundColor(Color(uiColor: Colors.color(for: .labelTertiary)))
+            .padding(.vertical, 12)
+            .padding(.leading, 36)
           }
         }
         .sheet(isPresented: $showTaskDetails) {
