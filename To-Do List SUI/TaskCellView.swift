@@ -42,7 +42,10 @@ struct TaskCellView: View {
         }
         Spacer()
         Image(uiImage: Images.image(for: .chevron))
+          .padding(.trailing, 16)
       }
+      Divider()
+        .padding(.leading, 36)
     }
     .frame(minHeight: 24)
 //    .background(Color(uiColor: Colors.color(for: .backSecondary)))

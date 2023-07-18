@@ -13,123 +13,151 @@ struct TaskDetails: View {
   @State private var editedText: String
   @State private var selectedSegment = 1
   @State private var isToggled = false
-  @State private var date = Date()
+  @State private var showedDate = .now + 24 * 60 * 60
+  @State private var showCalendar = false
+  @Environment(\.dismiss) private var dismiss
   let task: Task
 
   init(task: Task) {
     self.task = task
     _editedText = State(initialValue: task.text == "" ? "Что надо сделать?" : task.text)
+    if let deadline = task.deadline {
+      showedDate = deadline
+    }
   }
 
   var body: some View {
-    VStack(spacing: 16) {
-      TextEditor(text: $editedText)
-        .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
-        .scrollContentBackground(.hidden)
-        .background(Color(Colors.color(for: .backSecondary)))
-        .tint(Color(Colors.color(for: .red)))
-        .cornerRadius(16)
-        .foregroundColor(task
-          .text == "" ? Color(uiColor: Colors.color(for: .labelTertiary)) : Color(uiColor: Colors.color(for: .labelPrimary)))
-        .font(Font(Fonts.font(for: .body)))
-        .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-        .frame(height: 120)
-
+    NavigationStack {
       ScrollView {
-        HStack {
-          Text("Важность")
-            .padding(.leading, 16)
+        VStack(spacing: 16) {
+          TextEditor(text: $editedText)
+            .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
+            .scrollContentBackground(.hidden)
+            .background(Color(Colors.color(for: .backSecondary)))
+            .tint(Color(Colors.color(for: .red)))
+            .cornerRadius(16)
+            .foregroundColor(task
+              .text == "" ? Color(uiColor: Colors.color(for: .labelTertiary)) : Color(uiColor: Colors.color(for: .labelPrimary)))
             .font(Font(Fonts.font(for: .body)))
+            .frame(height: 120)
 
-          Spacer()
+          VStack {
+            HStack {
+              Text("Важность")
+                .font(Font(Fonts.font(for: .body)))
+                .foregroundColor(Color(Colors.color(for: .labelPrimary)))
 
-          Picker("", selection: $selectedSegment) {
-            Image(uiImage: Images.image(for: .lowImportance).withRenderingMode(.alwaysOriginal))
-              .tag(0)
-            Text("нет")
-              .tag(1)
-              .font(Font(Fonts.font(for: .mediumSubhead)))
-            Image(uiImage: Images.image(for: .highImportance).withRenderingMode(.alwaysOriginal))
-              .tag(2)
-          }
-          .padding(.trailing, 16)
-          .pickerStyle(.segmented)
-          .frame(width: 150)
-        }
-        .padding(.top, 10)
+              Spacer()
 
-        Divider()
-          .padding(.leading, 16)
-          .padding(.trailing, 16)
+              Picker("", selection: $selectedSegment) {
+                Image(uiImage: Images.image(for: .lowImportance))
+                  .tag(0)
+                Text("нет")
+                  .tag(1)
+                  .font(Font(Fonts.font(for: .mediumSubhead)))
+                Image(uiImage: Images.image(for: .highImportance))
+                  .tag(2)
+              }
+              .pickerStyle(.segmented)
+              .frame(width: 150)
+            }
 
-        HStack {
-          VStack(alignment: .leading) {
-            Text("Сделать до")
-              .padding(.leading, 16)
-              .font(Font(Fonts.font(for: .body)))
+            Divider()
 
-            if isToggled {
-              if let deadline = task.deadline {
-                Text("\(formatDate(for: task.deadline))")
-                  .padding(.leading, 16)
-                  .foregroundColor(Color(uiColor: Colors.color(for: .blue)))
-                  .font(Font(Fonts.font(for: .footnote)))
+            HStack {
+              VStack(alignment: .leading) {
+                Text("Сделать до")
+                  .font(Font(Fonts.font(for: .body)))
+                  .foregroundColor(Color(Colors.color(for: .labelPrimary)))
+
+                if isToggled {
+                  Button {
+                    withAnimation {
+                      showCalendar = true
+                    }
+                  } label: {
+                    Text("\(formatDate(for: showedDate))")
+                      .foregroundColor(Color(uiColor: Colors.color(for: .blue)))
+                      .font(Font(Fonts.font(for: .footnote)))
+                  }
+                }
+              }
+
+              Spacer()
+
+              Toggle("", isOn: $isToggled)
+                .padding(.trailing, 2)
+                .onChange(of: isToggled) { _ in
+                  showCalendar = false
+                }
+            }
+            .frame(height: 40)
+            .onAppear {
+              if task.deadline != nil {
+                isToggled = true
               } else {
-                Text("\(formatDate(for: .now + 24 * 60 * 60))")
-                  .padding(.leading, 16)
-                  .foregroundColor(Color(uiColor: Colors.color(for: .blue)))
-                  .font(Font(Fonts.font(for: .footnote)))
+                isToggled = false
+              }
+            }
+
+            if showCalendar {
+              Divider()
+              DatePicker(
+                "Start Date",
+                selection: $showedDate,
+                displayedComponents: [.date]
+              )
+              .datePickerStyle(.graphical)
+              .padding(.leading, -8)
+              .padding(.trailing, -8)
+              .onChange(of: showedDate) { newValue in
+                showedDate = newValue
+                showCalendar = false
               }
             }
           }
+          .padding(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
+          .background(Color(Colors.color(for: .backSecondary)))
+          .cornerRadius(16)
+
+          Button(action: {}) {
+            Text("Удалить")
+          }
+          .frame(maxWidth: .infinity, minHeight: 56)
+          .disabled(true)
+          .foregroundColor(Color(uiColor: Colors.color(for: .labelTertiary)))
+          .background(Color(uiColor: Colors.color(for: .backSecondary)))
+          .cornerRadius(16)
 
           Spacer()
-
-          Toggle("", isOn: $isToggled)
-            .padding(.trailing, 18)
         }
-        .frame(height: 40)
-        .padding(.top, 2)
-        .onAppear {
-          if task.deadline != nil {
-            isToggled = true
-          } else {
-            isToggled = false
+        .background(Color(Colors.color(for: .backPrimary)))
+        .padding([.leading, .trailing, .top], 16)
+      }
+      .scrollContentBackground(.hidden)
+      .background(Color(Colors.color(for: .backPrimary)))
+      .navigationTitle("Дело")
+      .navigationBarTitleDisplayMode(.inline)
+      .toolbar {
+        ToolbarItem(placement: .navigationBarLeading) {
+          Button {
+            dismiss()
+          } label: {
+            Text("Отменить")
+              .font(Font(Fonts.font(for: .body)))
+              .foregroundColor(Color(Colors.color(for: .blue)))
           }
         }
-
-        Divider()
-          .padding(.leading, 16)
-          .padding(.trailing, 16)
-
-        DatePicker(
-          "Start Date",
-          selection: $date,
-          displayedComponents: [.date]
-        )
-        .datePickerStyle(.graphical)
-        .padding(.leading, 8)
-        .padding(.trailing, 8)
+        ToolbarItem(placement: .navigationBarTrailing) {
+          Button {} label: {
+            Text("Сохранить")
+              .font(Font(Fonts.font(for: .headline)))
+              .foregroundColor(Color(Colors.color(for: .blue)))
+          }
+        }
       }
-      .scrollDisabled(true)
-      .background(Color(Colors.color(for: .backSecondary)))
-      .cornerRadius(16)
-      .padding(.leading, 16)
-      .padding(.trailing, 16)
-      .frame(height: 435)
-
-      Button(action: {}) {
-        Text("Удалить")
-          .frame(width: 343, height: 56)
-      }
-      .disabled(true)
-      .foregroundColor(Color(uiColor: Colors.color(for: .labelTertiary)))
-      .background(Color(uiColor: Colors.color(for: .backSecondary)))
-      .cornerRadius(16)
-
-      Spacer()
+//      .padding([.leading, .trailing], 16)
     }
-    .background(Color(Colors.color(for: .backPrimary)))
   }
 }
 
@@ -140,7 +168,7 @@ struct TaskDetails_Previews: PreviewProvider {
     TaskDetails(task: Task(
       text: "Покормить кота",
       createdAt: .now,
-      deadline: .now + 24 * 60 * 60 * 10,
+      deadline: .now + 24 * 60 * 60 * 3,
       importance: .normal,
       isDone: false
     ))

@@ -44,7 +44,7 @@ struct TaskListView: View {
   ]
 
   @State private var showTaskDetails = false
-  @State private var selectedItem: Task?
+  @State private var selectedItem: Task = .init(text: "", createdAt: .now, importance: .normal, isDone: false)
 
   var body: some View {
     NavigationStack {
@@ -65,46 +65,56 @@ struct TaskListView: View {
           }
           .padding(.bottom, 12)) {
             ForEach(data, id: \.task.id) { item in
-              NavigationLink(destination: TaskDetails(task: item.task)) {
-                item
-                  .listRowBackground(Color(uiColor: Colors.color(for: .backSecondary)))
-                  .swipeActions(edge: .leading) {
-                    Button(action: {}) {
-                      Image(uiImage: Images.image(for: .circleCheckmark))
-                    }
-                    .tint(Color(Colors.color(for: .green)))
+              item
+                .listRowBackground(Color(uiColor: Colors.color(for: .backSecondary)))
+                .swipeActions(edge: .leading) {
+                  Button(action: {}) {
+                    Image(uiImage: Images.image(for: .circleCheckmark))
                   }
-                  .swipeActions(edge: .trailing) {
-                    Button(action: {}) {
-                      Image(uiImage: Images.image(for: .trash))
-                    }
-                    .tint(Color(Colors.color(for: .red)))
-                    Button(action: {}) {
-                      Image(uiImage: Images.image(for: .circleInfo))
-                    }
-                    .tint(Color(Colors.color(for: .grayLight)))
+                  .tint(Color(Colors.color(for: .green)))
+                }
+                .swipeActions(edge: .trailing) {
+                  Button(action: {}) {
+                    Image(uiImage: Images.image(for: .trash))
                   }
-              }
+                  .tint(Color(Colors.color(for: .red)))
+                  Button(action: {}) {
+                    Image(uiImage: Images.image(for: .circleInfo))
+                  }
+                  .tint(Color(Colors.color(for: .grayLight)))
+                }
+                .padding(.top, 16)
+                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
+                .onTapGesture {
+                  selectedItem = item.task
+                  showTaskDetails = true
+                }
+                .listRowSeparator(.hidden)
+            }
+            NewTaskCellView()
               .padding(.top, 16)
               .padding(.bottom, 16)
-              .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
-            }
-
-            NavigationLink(destination: TaskDetails(task: Task(text: "", createdAt: .now, importance: .normal, isDone: false))) {
-              NewTaskCellView()
-            }
-            .padding(.top, 16)
-            .padding(.bottom, 16)
-            .listRowInsets(EdgeInsets(top: 0, leading: 52, bottom: 0, trailing: 0))
+              .listRowInsets(EdgeInsets(top: 0, leading: 52, bottom: 0, trailing: 0))
+              .onTapGesture {
+                selectedItem = Task(text: "", createdAt: .now, importance: .normal, isDone: false)
+                showTaskDetails = true
+              }
           }
+        }
+        .sheet(isPresented: $showTaskDetails) {
+          TaskDetails(task: selectedItem)
         }
         .navigationTitle("Мои дела")
         .scrollContentBackground(.hidden)
         .background(Color(uiColor: Colors.color(for: .backPrimary)))
         .foregroundColor(Color(uiColor: Colors.color(for: .backSecondary)))
+
         VStack {
           Spacer()
-          Button {} label: {
+          Button {
+            selectedItem = Task(text: "", createdAt: .now, importance: .normal, isDone: false)
+            showTaskDetails = true
+          } label: {
             Image(uiImage: Images.image(for: .addButton))
           }
           .shadow(color: Color(red: 0, green: 0.19, blue: 0.4).opacity(0.3), radius: 10, x: 0, y: 8)
