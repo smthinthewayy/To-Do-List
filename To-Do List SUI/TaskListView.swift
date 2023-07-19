@@ -10,26 +10,10 @@ import SwiftUI
 // MARK: - TaskListView
 
 struct TaskListView: View {
-//  let data = [
-//    TaskCellView(task: Task(text: "Покормить кота", createdAt: .now, importance: .normal, isDone: false)),
-//    TaskCellView(task: Task(text: "Погладить собаку", createdAt: .now, importance: .important, isDone: false)),
-//    TaskCellView(task: Task(text: "Поняшить капибару", createdAt: .now, importance: .low, isDone: true)),
-//    TaskCellView(task: Task(text: "Вкусно покушать", createdAt: .now, deadline: .now + 24 * 60 * 60, importance: .normal, isDone: false)),
-//    TaskCellView(task: Task(text: "Вредно покушать", createdAt: .now, deadline: .now + 24 * 60 * 60, importance: .low, isDone: true)),
-//    TaskCellView(task: Task(
-//      text: "Очень много текста ну вот прям мега супер дупер ультра гипер экстра пета кила декта гига много",
-//      createdAt: .now,
-//      deadline: .now + 24 * 60 * 60 * 3,
-//      importance: .normal,
-//      isDone: false
-//    )),
-//  ]
-
   let data = [
     TaskCellView(task: Task(text: "Купить что-то", createdAt: .now, importance: .normal, isDone: true)),
     TaskCellView(task: Task(text: "Купить что-то", createdAt: .now, importance: .normal, isDone: true)),
     TaskCellView(task: Task(text: "Задание", createdAt: .now, deadline: .now + 24 * 60 * 60, importance: .normal, isDone: false)),
-//    TaskCellView(task: Task(text: "Задание", createdAt: .now, deadline: .now + 24 * 60 * 60, importance: .normal, isDone: false)),
     TaskCellView(task: Task(text: "Купить что-то", createdAt: .now, importance: .important, isDone: false)),
     TaskCellView(task: Task(text: "Купить что-то", createdAt: .now, importance: .normal, isDone: true)),
     TaskCellView(task: Task(text: "сделать зарядку", createdAt: .now, importance: .normal, isDone: false)),
@@ -39,12 +23,10 @@ struct TaskListView: View {
       importance: .normal,
       isDone: false
     )),
-//    TaskCellView(task: Task(text: "Купить что-то, где-то, зачем-то, но зачем?", createdAt: .now, importance: .normal, isDone: false)),
-//    TaskCellView(task: Task(text: "Купить сыр", createdAt: .now, importance: .normal, isDone: false)),
   ]
 
   @State private var showTaskDetails = false
-  @State private var selectedItem: Task = .init(text: "", createdAt: .now, importance: .normal, isDone: false)
+  @State private var selectedTask: Task = .init(text: "", createdAt: .now, importance: .normal, isDone: false)
 
   var body: some View {
     NavigationStack {
@@ -64,8 +46,8 @@ struct TaskListView: View {
             }
           }
           .padding(.bottom, 12)) {
-            ForEach(data, id: \.task.id) { item in
-              item
+            ForEach(data, id: \.task.id) { task in
+              task
                 .contentShape(Rectangle())
                 .listRowBackground(Color(uiColor: Colors.color(for: .backSecondary)))
                 .swipeActions(edge: .leading) {
@@ -87,23 +69,26 @@ struct TaskListView: View {
                 .padding(.top, 16)
                 .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
                 .onTapGesture {
-                  selectedItem = item.task
-                  showTaskDetails = true
+                  selectedTask = task.task
+                  showTaskDetails.toggle()
                 }
                 .listRowSeparator(.hidden)
             }
 
-            Button("Новое") {
-              selectedItem = Task(text: "", createdAt: .now, importance: .normal, isDone: false)
-              showTaskDetails = true
+            Button {
+              selectedTask = Task(text: "Что надо сделать?", createdAt: .now, importance: .normal, isDone: false)
+              showTaskDetails.toggle()
+            } label: {
+              Text("Новое")
+                .foregroundColor(Color(uiColor: Colors.color(for: .labelTertiary)))
+                .padding(.vertical, 8)
+                .padding(.leading, 36)
             }
-            .foregroundColor(Color(uiColor: Colors.color(for: .labelTertiary)))
-            .padding(.vertical, 12)
-            .padding(.leading, 36)
+            .listRowBackground(Color(uiColor: Colors.color(for: .backSecondary)))
           }
         }
         .sheet(isPresented: $showTaskDetails) {
-          TaskDetails(task: selectedItem)
+          TaskDetails(task: $selectedTask)
         }
         .navigationTitle("Мои дела")
         .scrollContentBackground(.hidden)
@@ -113,8 +98,8 @@ struct TaskListView: View {
         VStack {
           Spacer()
           Button {
-            selectedItem = Task(text: "", createdAt: .now, importance: .normal, isDone: false)
-            showTaskDetails = true
+            selectedTask = Task(text: "Что надо сделать?", createdAt: .now, importance: .normal, isDone: false)
+            showTaskDetails.toggle()
           } label: {
             Image(uiImage: Images.image(for: .addButton))
           }
@@ -122,6 +107,9 @@ struct TaskListView: View {
           .padding(.bottom, -10)
         }
       }
+    }
+    .onAppear {
+      UINavigationBar.appearance().layoutMargins.left = 32
     }
   }
 }

@@ -10,19 +10,24 @@ import SwiftUI
 // MARK: - TaskDetails
 
 struct TaskDetails: View {
-  @State private var editedText: String
   @State private var selectedSegment = 1
   @State private var isToggled = false
-  @State private var showedDate = .now + 24 * 60 * 60
+  @State private var showedDate = Date()
   @State private var showCalendar = false
   @Environment(\.dismiss) private var dismiss
-  let task: Task
+  @Binding var task: Task
 
-  init(task: Task) {
-    self.task = task
-    _editedText = State(initialValue: task.text == "" ? "Что надо сделать?" : task.text)
-    if let deadline = task.deadline {
-      showedDate = deadline
+  init(task: Binding<Task>) {
+    _isToggled = State(initialValue: task.wrappedValue.deadline == nil ? false : true)
+    _showedDate = State(initialValue: task.wrappedValue.deadline ?? .now + 24 * 60 * 60)
+    _task = task
+    switch task.wrappedValue.importance {
+    case .low:
+      _selectedSegment = State(initialValue: 0)
+    case .important:
+      _selectedSegment = State(initialValue: 2)
+    default:
+      _selectedSegment = State(initialValue: 1)
     }
   }
 
@@ -30,14 +35,15 @@ struct TaskDetails: View {
     NavigationStack {
       ScrollView {
         VStack(spacing: 16) {
-          TextEditor(text: $editedText)
+          TextEditor(text: $task.text)
             .padding(EdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10))
             .scrollContentBackground(.hidden)
             .background(Color(Colors.color(for: .backSecondary)))
             .tint(Color(Colors.color(for: .red)))
             .cornerRadius(16)
             .foregroundColor(task
-              .text == "" ? Color(uiColor: Colors.color(for: .labelTertiary)) : Color(uiColor: Colors.color(for: .labelPrimary)))
+              .text == "Что надо сделать?" ? Color(uiColor: Colors.color(for: .labelTertiary)) :
+              Color(uiColor: Colors.color(for: .labelPrimary)))
             .font(Font(Fonts.font(for: .body)))
             .frame(height: 120)
 
@@ -65,7 +71,7 @@ struct TaskDetails: View {
             Divider()
 
             HStack {
-              VStack(alignment: .leading) {
+              Toggle(isOn: $isToggled) {
                 Text("Сделать до")
                   .font(Font(Fonts.font(for: .body)))
                   .foregroundColor(Color(Colors.color(for: .labelPrimary)))
@@ -82,22 +88,20 @@ struct TaskDetails: View {
                   }
                 }
               }
-
-              Spacer()
-
-              Toggle("", isOn: $isToggled)
-                .padding(.trailing, 2)
-                .onChange(of: isToggled) { _ in
+              .onAppear {
+                if task.deadline != nil {
+                  isToggled = true
+                } else {
+                  isToggled = false
+                }
+              }
+              .onChange(of: isToggled) { _ in
+                withAnimation {
                   showCalendar = false
                 }
-            }
-            .frame(height: 40)
-            .onAppear {
-              if task.deadline != nil {
-                isToggled = true
-              } else {
-                isToggled = false
               }
+              .animation(.easeOut(duration: 0.2), value: isToggled)
+              .frame(height: 40)
             }
 
             if showCalendar {
@@ -111,8 +115,10 @@ struct TaskDetails: View {
               .padding(.leading, -8)
               .padding(.trailing, -8)
               .onChange(of: showedDate) { newValue in
-                showedDate = newValue
-                showCalendar = false
+                withAnimation {
+                  showedDate = newValue
+                  showCalendar = false
+                }
               }
             }
           }
@@ -120,12 +126,15 @@ struct TaskDetails: View {
           .background(Color(Colors.color(for: .backSecondary)))
           .cornerRadius(16)
 
-          Button(action: {}) {
+          Button {
+            dismiss()
+          } label: {
             Text("Удалить")
+              .foregroundColor(task
+                .text == "Что надо сделать?" ? Color(uiColor: Colors.color(for: .labelTertiary)) : Color(uiColor: Colors.color(for: .red)))
+              .frame(maxWidth: .infinity, minHeight: 56)
           }
-          .frame(maxWidth: .infinity, minHeight: 56)
-          .disabled(true)
-          .foregroundColor(Color(uiColor: Colors.color(for: .labelTertiary)))
+          .disabled(task.text == "Что надо сделать?" ? true : false)
           .background(Color(uiColor: Colors.color(for: .backSecondary)))
           .cornerRadius(16)
 
@@ -149,14 +158,20 @@ struct TaskDetails: View {
           }
         }
         ToolbarItem(placement: .navigationBarTrailing) {
-          Button {} label: {
+          Button {
+            dismiss()
+          } label: {
             Text("Сохранить")
               .font(Font(Fonts.font(for: .headline)))
-              .foregroundColor(Color(Colors.color(for: .blue)))
+              .foregroundColor(Color(uiColor: Colors.color(for: .blue)))
+//              .foregroundColor(task
+//                .text == "Что надо сделать?" ? Color(uiColor: Colors.color(for: .labelTertiary)) : Color(uiColor: Colors.color(for:
+//                .blue)))
+              .frame(maxWidth: .infinity, minHeight: 56)
           }
+//          .disabled(task.text == "Что надо сделать?" ? true : false)
         }
       }
-//      .padding([.leading, .trailing], 16)
     }
   }
 }
@@ -165,12 +180,13 @@ struct TaskDetails: View {
 
 struct TaskDetails_Previews: PreviewProvider {
   static var previews: some View {
-    TaskDetails(task: Task(
+    let task = Task(
       text: "Покормить кота",
       createdAt: .now,
       deadline: .now + 24 * 60 * 60 * 3,
-      importance: .normal,
+      importance: .important,
       isDone: false
-    ))
+    )
+    return TaskDetails(task: .constant(task))
   }
 }

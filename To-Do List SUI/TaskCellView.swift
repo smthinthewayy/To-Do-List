@@ -48,7 +48,6 @@ struct TaskCellView: View {
         .padding(.leading, 36)
     }
     .frame(minHeight: 24)
-//    .background(Color(uiColor: Colors.color(for: .backSecondary)))
   }
 }
 
