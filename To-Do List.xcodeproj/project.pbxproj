@@ -50,7 +50,6 @@
 		71ED5BF52A4DF0CC00F809B1 /* TasksListHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71ED5BF42A4DF0CC00F809B1 /* TasksListHeaderView.swift */; };
 		71F9B1912A3EFDA8000CB4EF /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F9B1902A3EFDA8000CB4EF /* Images.swift */; };
 		71F9B1952A3F0690000CB4EF /* TaskDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71F9B1942A3F0690000CB4EF /* TaskDetailsView.swift */; };
-		71FF6A642A574AF3003240AB /* URLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71FF6A632A574AF3003240AB /* URLSession.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -152,6 +151,7 @@
 				716B18042A3AD91A0028C660 /* Tests */,
 				71DC495E2A627EDA006119F6 /* To-Do List SUI */,
 				71228C9B2A356BB300405091 /* Products */,
+				718021B02A6AB0A500198B6D /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -230,7 +230,6 @@
 			children = (
 				71D4BBC42A41E158001E373D /* Services */,
 				71D4BBBE2A41DCCB001E373D /* Enums */,
-				71FF6A652A574D25003240AB /* Extensions */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -242,6 +241,14 @@
 				71228CA82A356BB400405091 /* LaunchScreen.storyboard */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		718021B02A6AB0A500198B6D /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				71FF6A632A574AF3003240AB /* URLSession.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		7199D3342A3B4184000469CD /* Models */ = {
@@ -451,7 +458,6 @@
 			files = (
 				71F9B1912A3EFDA8000CB4EF /* Images.swift in Sources */,
 				710CAACD2A47599000D7BF02 /* Helpers.swift in Sources */,
-				71FF6A642A574AF3003240AB /* URLSession.swift in Sources */,
 				71228C9E2A356BB300405091 /* AppDelegate.swift in Sources */,
 				71BA75DC2A5D3A5B00570F88 /* Task.xcdatamodeld in Sources */,
 				71B1DFE62A3DDE690069C2E8 /* Colors.swift in Sources */,
